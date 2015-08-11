@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends Activity {
@@ -29,7 +30,6 @@ public class MainActivity extends Activity {
         // Initialize gameView and set it as the view
         gameView = new GameView(this);
         setContentView(gameView);
-
     }
 
     // Here is our implementation of GameView
@@ -80,6 +80,8 @@ public class MainActivity extends Activity {
         // Moves
         int movesLeft = 7;
 
+        private BallTracker ballTracker;
+
         // When the we initialize (call new()) on gameView
         // This special constructor method runs
         public GameView(Context context) {
@@ -87,6 +89,8 @@ public class MainActivity extends Activity {
             // SurfaceView class to set up our object.
             // How kind.
             super(context);
+            this.setBackgroundColor(0X00000000);
+
 
             // Initialize ourHolder and paint objects
             ourHolder = getHolder();
@@ -101,8 +105,8 @@ public class MainActivity extends Activity {
             screenX = size.x;
             screenY = size.y;
 
-            //ball = new Ball(screenX, screenY);
 
+            this.ballTracker = new BallTracker();
             createBallsAndRestart();
 
         }
@@ -114,7 +118,6 @@ public class MainActivity extends Activity {
                 // Capture the current time in milliseconds in startFrameTime
                 long startFrameTime = System.currentTimeMillis();
 
-                // Update the frame
                 // Update the frame
                 if(!paused){
                     update();
@@ -141,7 +144,10 @@ public class MainActivity extends Activity {
             for(Ball b : balls) {
                 b.update(fps);
             }
-            //ball.update(fps);
+
+            if (ballTracker.isReadyToCalculateScore()) {
+                score += ballTracker.calculateScore();
+            }
         }
 
         // Draw the newly updated scene
@@ -153,21 +159,32 @@ public class MainActivity extends Activity {
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255,  26, 128, 182));
+                canvas.drawColor(Color.argb(255, 26, 128, 182));
 
                 // Choose the brush color for drawing
                 paint.setColor(Color.argb(255,  255, 255, 255));
 
-                // Draw the paddle
-
-                // Draw the ball
+                // Draw the balls
                 for(int i = 0; i < numBalls; i++) {
-                    canvas.drawRect(balls[i].getRect(), paint);
+                    Ball ball = balls[i];
+                    if (ball.isVisible()) {
+                        canvas.drawCircle(ball.getX(), ball.getY(), ball.getBallRadius(), paint);
+                    }
                 }
-                //canvas.drawRect(ball.getRect(), paint);
-                // Draw the bricks
+
+                //Draw the lines connecting the already linked balls
+                ArrayList<Ball> trackedBalls = ballTracker.getBallsTracked();
+                paint.setStrokeWidth(5);
+                for (int i = 1; i < trackedBalls.size(); i++) {
+                    Ball ball1 = trackedBalls.get(i-1);
+                    Ball ball2 = trackedBalls.get(i);
+                            canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
+                                            ball2.getY(), paint);
+                }
 
                 // Draw the HUD
+               // paint.setTextSize(40);
+                //canvas.drawText("Score: " + score, 0, 0, paint);
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -187,7 +204,7 @@ public class MainActivity extends Activity {
 
         }
 
-        // If SimpleGameEngine Activity is started theb
+        // If SimpleGameEngine Activity is started then
         // start our thread.
         public void resume() {
             playing = true;
@@ -204,14 +221,23 @@ public class MainActivity extends Activity {
 
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
-
+                    System.out.println(motionEvent.getX() + "  " + motionEvent.getY());
                     paused = false;
+                    for (Ball b : balls) {
+                        if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                         //   b.stop();
+                            ballTracker.trackBall(b);
+                        }
+                    }
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
 
                     break;
 
-                // Player has removed finger from screen
+                // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
-
+                  // ballTracker.setReadyToCalculate();
                     break;
             }
             return true;
@@ -233,6 +259,12 @@ public class MainActivity extends Activity {
             // Moves
             int movesLeft = 7;
 
+        }
+
+        public void updateScore(int extraScore) {
+            System.out.println(score);
+            this.score += extraScore;
+            System.out.println(score);
         }
 
     }
@@ -257,4 +289,3 @@ public class MainActivity extends Activity {
     }
 
 }
-// This is the end of the BreakoutGame class

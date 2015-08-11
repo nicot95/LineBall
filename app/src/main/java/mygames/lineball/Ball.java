@@ -9,10 +9,17 @@ import java.util.Random;
 
 public class Ball {
     RectF rect;
+
     float xVelocity;
     float yVelocity;
     float ballWidth = 10;
     float ballHeight = 10;
+
+    private float ballRadius = 60;
+    private float x;
+    private float y;
+
+    private boolean isVisible;
 
     public Ball(int screenX, int screenY){
 
@@ -20,29 +27,28 @@ public class Ball {
 
 
         // Start the ball travelling straight up at 100 pixels per second
-        xVelocity = gen.nextInt(800) -400;
-        yVelocity = gen.nextInt(800) -400;
+        xVelocity = gen.nextInt(100) -25;
+        yVelocity = gen.nextInt(100) -25;
 
         // Place the ball in the centre of the screen at the bottom
         // Make it a 10 pixel x 10 pixel square
-        rect = new RectF();
-        rect.left = screenX;
-        rect.top = screenY;
-        rect.right = screenX + ballWidth;
-        rect.bottom = screenY - ballHeight;
 
+        x = screenX;
+        y = screenY;
 
+        isVisible = true;
     }
 
-    public RectF getRect(){
-        return rect;
+    //Checks if ball intersects with the given coordinates (the user's touch x and y)
+    public boolean intersects(float touchx, float touchy) {
+        return touchx > x - getBallRadius() && touchx < x + getBallRadius() &&
+                touchy < y + getBallRadius() && touchy > y - getBallRadius();
+
     }
 
     public void update(long fps){
-        rect.left = rect.left + (xVelocity / fps);
-        rect.top = rect.top + (yVelocity / fps);
-        rect.right = rect.left + ballWidth;
-        rect.bottom = rect.top - ballHeight;
+        x = getX() + xVelocity / fps;
+        y += yVelocity / fps;
     }
 
     public void reverseYVelocity(){
@@ -73,10 +79,33 @@ public class Ball {
     }
 
     public void reset(int x, int y){
-        rect.left = x / 2;
-        rect.top = y - 20;
-        rect.right = x / 2 + ballWidth;
-        rect.bottom = y - 20 - ballHeight;
+        this.x = x / 2;
+        this.y = y - 20;
+    }
+
+    public void stop() {
+        xVelocity = 0;
+        yVelocity = 0;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getBallRadius() {
+        return ballRadius;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setIsVisible(boolean isVisible) {
+        this.isVisible = isVisible;
     }
 
 }
