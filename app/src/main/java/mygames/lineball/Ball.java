@@ -121,6 +121,7 @@ public class Ball {
             yVelocity *= 0.1;
             isbeingTracked = true;
         }
+        //erase me
     }
 
     public float getX() {
