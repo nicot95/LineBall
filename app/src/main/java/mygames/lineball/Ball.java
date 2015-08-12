@@ -21,20 +21,18 @@ public class Ball {
 
     private boolean isbeingTracked;
 
-    public Ball(int screenX, int screenY) {
+    public Ball(int screenX, int screenY){
 
         Random gen = new Random();
 
+        // Start the ball moving at a random speed and direction
+        xVelocity = gen.nextInt(100) -50;
+        yVelocity = gen.nextInt(100) -50;
 
-        // Start the ball travelling straight up at 100 pixels per second
-        xVelocity = gen.nextInt(100) - 25;
-        yVelocity = gen.nextInt(100) - 25;
-
-        // Place the ball in the centre of the screen at the bottom
-        // Make it a 10 pixel x 10 pixel square
-
-        x = screenX;
-        y = screenY;
+        // Place the ball in a random position within the screen. All the ball
+        // must be inside the screen to avoid wallCollision bugs
+        x = gen.nextInt(screenX - 2* (int) getBallRadius()) + getBallRadius();
+        y = gen.nextInt(screenY - 2* (int) getBallRadius()) + getBallRadius();
 
         isbeingTracked = false;
     }
@@ -44,6 +42,17 @@ public class Ball {
         return touchx > x - getBallRadius() && touchx < x + getBallRadius() &&
                 touchy < y + getBallRadius() && touchy > y - getBallRadius();
 
+    }
+
+    // Checks if ball is colliding with a wall, and if so, changes velocity appropriately
+    public void checkWallCollision(int screenX, int screenY) {
+        if(y + getBallRadius() >= screenY || y - getBallRadius() <= 0) {
+            reverseYVelocity();
+        }
+
+        if(x + getBallRadius() >= screenX || x - getBallRadius() <= 0) {
+            reverseXVelocity();
+        }
     }
 
     public void update(long fps) {

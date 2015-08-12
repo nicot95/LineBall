@@ -141,6 +141,7 @@ public class MainActivity extends Activity {
         // Movement, collision detection etc.
         public void update() {
             for(Ball b : balls) {
+                b.checkWallCollision(screenX, screenY);
                 b.update(fps);
             }
 
