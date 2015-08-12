@@ -22,17 +22,27 @@ public class BallTracker {
     private Ball lastTrackedBall;
     private Ball currentTrackedBall;
 
+    private int colorChain;
+    private boolean sameColorPreserved;
+
     public BallTracker() {
 
         ballsTracked = new ArrayList<>();
         readyToCalculateScore = false;
+        colorChain = -1;
 
         lastTrackedBall    = null;
         currentTrackedBall = null;
+        sameColorPreserved = true;
 
     }
 
     public void trackBall(Ball b) {
+
+        if (ballsTracked.isEmpty()) {
+            colorChain = b.getColor();
+        }
+
         /*
             If the ball is already in the chain, check if it is closing a shape
             or if it is joining a
@@ -43,13 +53,20 @@ public class BallTracker {
                 ballsTracked.add(b);
                 shapeMultiplier = ballsTracked.size();
                 this.readyToCalculateScore = true;
-
+                checkColor(b.getColor());
             }
         } else {
             //Ball is not being tracked, add to list
             ballsTracked.add(b);
             lastTrackedBall    = currentTrackedBall;
             currentTrackedBall = b;
+            checkColor(b.getColor());
+        }
+    }
+
+    private void checkColor(int color) {
+        if (colorChain != color) {
+            sameColorPreserved = false;
         }
     }
 
@@ -64,6 +81,7 @@ public class BallTracker {
             score += 10;
         }
         score *= shapeMultiplier;
+        score *= sameColorPreserved ? 2 : 1;
         return score;
     }
 
@@ -72,6 +90,12 @@ public class BallTracker {
         ballsTracked.clear();
         readyToCalculateScore = false;
         shapeMultiplier       = 0;
+
+        colorChain = -1;
+
+        lastTrackedBall    = null;
+        currentTrackedBall = null;
+        sameColorPreserved = true;
     }
 
     public boolean isReadyToCalculateScore() {

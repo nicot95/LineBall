@@ -169,6 +169,17 @@ public class MainActivity extends Activity {
                 // Choose the brush color for drawing
                 //paint.setColor(Color.argb(255,  255, 255, 255));
 
+                //Draw the lines connecting the already linked balls
+                ArrayList<Ball> trackedBalls = ballTracker.getBallsTracked();
+                paint.setStrokeWidth(5); // Increase width of line
+                for (int i = 1; i < trackedBalls.size(); i++) {
+                    Ball ball1 = trackedBalls.get(i-1);
+                    Ball ball2 = trackedBalls.get(i);
+                    canvas.drawLine( ball1.getX(), ball1.getY(), ball2.getX(),
+                            ball2.getY(), paint);
+                }
+
+
                 // Draw the balls
                 for(int i = 0; i < balls.size(); i++) {
                     Ball ball = balls.get(i);
@@ -176,15 +187,6 @@ public class MainActivity extends Activity {
                     canvas.drawCircle(ball.getX(), ball.getY(), ball.getBallRadius(), paint);
                 }
 
-                //Draw the lines connecting the already linked balls
-                ArrayList<Ball> trackedBalls = ballTracker.getBallsTracked();
-                paint.setStrokeWidth(5); // Increase width of line
-                for (int i = 1; i < trackedBalls.size(); i++) {
-                    Ball ball1 = trackedBalls.get(i-1);
-                    Ball ball2 = trackedBalls.get(i);
-                            canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
-                                            ball2.getY(), paint);
-                }
 
                 // TODO draw the HUD
 

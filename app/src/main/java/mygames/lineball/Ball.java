@@ -64,9 +64,13 @@ public class Ball {
         int retColor = -1;
         switch (this.color) {
             case 0: retColor = Color.RED;
+                break;
             case 1: retColor = Color.YELLOW;
+                break;
             case 2: retColor = Color.GREEN;
+                break;
             case 3: retColor = Color.BLUE;
+                break;
         }
 
         return retColor;
@@ -113,8 +117,8 @@ public class Ball {
     //Slows ball when it is being tracked
     public void stop() {
         if (!isbeingTracked) {
-            xVelocity *= 0.3;
-            yVelocity *= 0.3;
+            xVelocity *= 0.1;
+            yVelocity *= 0.1;
             isbeingTracked = true;
         }
     }
