@@ -175,6 +175,7 @@ public class MainActivity extends Activity {
                 for (int i = 1; i < trackedBalls.size(); i++) {
                     Ball ball1 = trackedBalls.get(i-1);
                     Ball ball2 = trackedBalls.get(i);
+                    paint.setColor(ballTracker.getColorChain());
                     canvas.drawLine( ball1.getX(), ball1.getY(), ball2.getX(),
                             ball2.getY(), paint);
                 }

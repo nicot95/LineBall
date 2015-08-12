@@ -29,8 +29,8 @@ public class Ball {
         Random gen = new Random();
 
         // Start the ball moving at a random speed and direction
-        this.xVelocity = gen.nextInt(100) - 50;
-        this.yVelocity = gen.nextInt(100) - 50;
+        this.xVelocity = gen.nextInt(250) - 125;
+        this.yVelocity = gen.nextInt(250) - 125;
 
         // Place the ball in a random position within the screen. All the ball
         // must be inside the screen to avoid wallCollision bugs

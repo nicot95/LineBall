@@ -1,5 +1,7 @@
 package mygames.lineball;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 
 /*
@@ -96,6 +98,10 @@ public class BallTracker {
         lastTrackedBall    = null;
         currentTrackedBall = null;
         sameColorPreserved = true;
+    }
+
+    public int getColorChain() {
+        return colorChain;
     }
 
     public boolean isReadyToCalculateScore() {
