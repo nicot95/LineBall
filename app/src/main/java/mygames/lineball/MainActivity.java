@@ -167,11 +167,12 @@ public class MainActivity extends Activity {
                 canvas.drawColor(Color.argb(255, 0, 0, 0));
 
                 // Choose the brush color for drawing
-                paint.setColor(Color.argb(255,  255, 255, 255));
+                //paint.setColor(Color.argb(255,  255, 255, 255));
 
                 // Draw the balls
                 for(int i = 0; i < balls.size(); i++) {
                     Ball ball = balls.get(i);
+                    paint.setColor(ball.getColor());
                     canvas.drawCircle(ball.getX(), ball.getY(), ball.getBallRadius(), paint);
                 }
 
