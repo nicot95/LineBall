@@ -20,15 +20,16 @@ public class Ball {
     private float y;
 
     private boolean isVisible;
+    private boolean isbeingTracked;
 
-    public Ball(int screenX, int screenY){
+    public Ball(int screenX, int screenY) {
 
         Random gen = new Random();
 
 
         // Start the ball travelling straight up at 100 pixels per second
-        xVelocity = gen.nextInt(100) -25;
-        yVelocity = gen.nextInt(100) -25;
+        xVelocity = gen.nextInt(100) - 25;
+        yVelocity = gen.nextInt(100) - 25;
 
         // Place the ball in the centre of the screen at the bottom
         // Make it a 10 pixel x 10 pixel square
@@ -37,6 +38,7 @@ public class Ball {
         y = screenY;
 
         isVisible = true;
+        isbeingTracked = false;
     }
 
     //Checks if ball intersects with the given coordinates (the user's touch x and y)
@@ -46,46 +48,50 @@ public class Ball {
 
     }
 
-    public void update(long fps){
+    public void update(long fps) {
         x = getX() + xVelocity / fps;
         y += yVelocity / fps;
     }
 
-    public void reverseYVelocity(){
+    public void reverseYVelocity() {
         yVelocity = -yVelocity;
     }
 
-    public void reverseXVelocity(){
-        xVelocity = - xVelocity;
+    public void reverseXVelocity() {
+        xVelocity = -xVelocity;
     }
 
-    public void setRandomXVelocity(){
+    public void setRandomXVelocity() {
         Random generator = new Random();
         int answer = generator.nextInt(2);
 
-        if(answer == 0){
+        if (answer == 0) {
             reverseXVelocity();
         }
     }
 
-    public void clearObstacleY(float y){
+    public void clearObstacleY(float y) {
         rect.bottom = y;
         rect.top = y - ballHeight;
     }
 
-    public void clearObstacleX(float x){
+    public void clearObstacleX(float x) {
         rect.left = x;
         rect.right = x + ballWidth;
     }
 
-    public void reset(int x, int y){
+    public void reset(int x, int y) {
         this.x = x / 2;
         this.y = y - 20;
     }
 
+    //Slows ball when it is being tracked
     public void stop() {
-        xVelocity = 0;
-        yVelocity = 0;
+        if (!isbeingTracked) {
+            xVelocity *= 0.3;
+            yVelocity *= 0.3;
+            isbeingTracked = true;
+        }
     }
 
     public float getX() {
@@ -98,6 +104,7 @@ public class Ball {
 
     public float getBallRadius() {
         return ballRadius;
+
     }
 
     public boolean isVisible() {
@@ -108,4 +115,16 @@ public class Ball {
         this.isVisible = isVisible;
     }
 
+    public void setIsbeingTracked(boolean isbeingTracked) {
+        this.isbeingTracked = isbeingTracked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof  Ball) {
+            Ball ball2 = (Ball) o;
+            return this.x == ball2.x && this.y == ball2.y;
+        }
+        return false;
+    }
 }

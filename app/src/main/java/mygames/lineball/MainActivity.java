@@ -70,9 +70,8 @@ public class MainActivity extends Activity {
         int screenX;
         int screenY;
 
-        Ball[] balls = new Ball[20];
+        ArrayList<Ball> balls = new ArrayList<>();
         int numBalls = 0;
-        //Ball ball;
 
         // The score
         int score = 0;
@@ -145,8 +144,14 @@ public class MainActivity extends Activity {
                 b.update(fps);
             }
 
+            /*
+                increases the score and removes used balles from ArrayList
+                for performance issues.
+             */
             if (ballTracker.isReadyToCalculateScore()) {
                 score += ballTracker.calculateScore();
+                balls.removeAll(ballTracker.getBallsTracked());
+                ballTracker.cleanUpBallsFields();
             }
         }
 
@@ -165,16 +170,14 @@ public class MainActivity extends Activity {
                 paint.setColor(Color.argb(255,  255, 255, 255));
 
                 // Draw the balls
-                for(int i = 0; i < numBalls; i++) {
-                    Ball ball = balls[i];
-                    if (ball.isVisible()) {
-                        canvas.drawCircle(ball.getX(), ball.getY(), ball.getBallRadius(), paint);
-                    }
+                for(int i = 0; i < balls.size(); i++) {
+                    Ball ball = balls.get(i);
+                    canvas.drawCircle(ball.getX(), ball.getY(), ball.getBallRadius(), paint);
                 }
 
                 //Draw the lines connecting the already linked balls
                 ArrayList<Ball> trackedBalls = ballTracker.getBallsTracked();
-                paint.setStrokeWidth(5);
+                paint.setStrokeWidth(5); // Increase width of line
                 for (int i = 1; i < trackedBalls.size(); i++) {
                     Ball ball1 = trackedBalls.get(i-1);
                     Ball ball2 = trackedBalls.get(i);
@@ -182,9 +185,7 @@ public class MainActivity extends Activity {
                                             ball2.getY(), paint);
                 }
 
-                // Draw the HUD
-               // paint.setTextSize(40);
-                //canvas.drawText("Score: " + score, 0, 0, paint);
+                // TODO draw the HUD
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -221,16 +222,16 @@ public class MainActivity extends Activity {
 
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
-                    System.out.println(motionEvent.getX() + "  " + motionEvent.getY());
                     paused = false;
                     for (Ball b : balls) {
                         if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
-                         //   b.stop();
                             ballTracker.trackBall(b);
+                            b.stop();
                         }
                     }
                     break;
 
+                //In case we want swiping instead of just clicking
                 case MotionEvent.ACTION_MOVE:
 
                     break;
@@ -247,8 +248,7 @@ public class MainActivity extends Activity {
             Random gen = new Random();
 
             for(int ballNum = 0; ballNum < 20; ballNum ++ ){
-                   balls[numBalls] = new Ball(gen.nextInt(screenX), gen.nextInt(screenY));
-                    numBalls++;
+                   balls.add(new Ball(gen.nextInt(screenX), gen.nextInt(screenY)));
             }
 
             //ball.reset(screenX, screenY);

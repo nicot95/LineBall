@@ -15,14 +15,20 @@ public class BallTracker {
 
 
     private ArrayList<Ball> ballsTracked;
-    private Ball lastTrackedBall;
     private boolean readyToCalculateScore;
     private int shapeMultiplier;
+
+    //Fields to prevent finishing a chain in the same ball or in the previous one.
+    private Ball lastTrackedBall;
+    private Ball currentTrackedBall;
 
     public BallTracker() {
 
         ballsTracked = new ArrayList<>();
         readyToCalculateScore = false;
+
+        lastTrackedBall    = null;
+        currentTrackedBall = null;
 
     }
 
@@ -33,7 +39,7 @@ public class BallTracker {
             or if it is joining a
          */
         if (ballsTracked.contains(b)) {
-            if (!b.equals(lastTrackedBall)) {
+            if (!b.equals(currentTrackedBall)) {
                 //It is not a hack, it's a shape
                 ballsTracked.add(b);
                 shapeMultiplier = ballsTracked.size();
@@ -43,6 +49,8 @@ public class BallTracker {
         } else {
             //Ball is not being tracked, add to list
             ballsTracked.add(b);
+            lastTrackedBall    = currentTrackedBall;
+            currentTrackedBall = b;
         }
     }
 
@@ -58,14 +66,11 @@ public class BallTracker {
             b.setIsVisible(false);
         }
         score *= shapeMultiplier;
-
-        cleanUpBallsFields();
-
         return score;
     }
 
     //Resets fields to initial state after a succesfull play has been made
-    private void cleanUpBallsFields() {
+    public void cleanUpBallsFields() {
         ballsTracked.clear();
         readyToCalculateScore = false;
         shapeMultiplier       = 0;
@@ -82,4 +87,5 @@ public class BallTracker {
     public ArrayList<Ball> getBallsTracked() {
         return ballsTracked;
     }
+
 }
