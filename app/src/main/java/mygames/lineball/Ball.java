@@ -3,6 +3,8 @@ package mygames.lineball;
 /**
  * Created by nico on 11/08/15.
  */
+
+import android.graphics.Color;
 import android.graphics.RectF;
 
 import java.util.Random;
@@ -18,23 +20,26 @@ public class Ball {
     private float ballRadius = 60;
     private float x;
     private float y;
+    private int color;
 
     private boolean isbeingTracked;
 
-    public Ball(int screenX, int screenY){
+    public Ball(int screenX, int screenY) {
 
         Random gen = new Random();
 
         // Start the ball moving at a random speed and direction
-        xVelocity = gen.nextInt(100) -50;
-        yVelocity = gen.nextInt(100) -50;
+        this.xVelocity = gen.nextInt(100) - 50;
+        this.yVelocity = gen.nextInt(100) - 50;
 
         // Place the ball in a random position within the screen. All the ball
         // must be inside the screen to avoid wallCollision bugs
-        x = gen.nextInt(screenX - 2* (int) getBallRadius()) + getBallRadius();
-        y = gen.nextInt(screenY - 2* (int) getBallRadius()) + getBallRadius();
+        this.x = gen.nextInt(screenX - 2 * (int) getBallRadius()) + getBallRadius();
+        this.y = gen.nextInt(screenY - 2 * (int) getBallRadius()) + getBallRadius();
 
-        isbeingTracked = false;
+        this.color = gen.nextInt(4);
+
+        this.isbeingTracked = false;
     }
 
     //Checks if ball intersects with the given coordinates (the user's touch x and y)
@@ -46,14 +51,29 @@ public class Ball {
 
     // Checks if ball is colliding with a wall, and if so, changes velocity appropriately
     public void checkWallCollision(int screenX, int screenY) {
-        if(y + getBallRadius() >= screenY || y - getBallRadius() <= 0) {
+        if (y + getBallRadius() >= screenY || y - getBallRadius() <= 0) {
             reverseYVelocity();
         }
 
-        if(x + getBallRadius() >= screenX || x - getBallRadius() <= 0) {
+        if (x + getBallRadius() >= screenX || x - getBallRadius() <= 0) {
             reverseXVelocity();
         }
     }
+
+    public int getColor() {
+        int color = Color.BLUE;
+        switch (this.color) {
+            case 1: color = Color.RED;
+            case 2: color = Color.YELLOW;
+            case 3: color = Color.GREEN;
+            case 4: color = Color.BLUE;
+
+
+        }
+
+        return color;
+    }
+
 
     public void update(long fps) {
         x = getX() + xVelocity / fps;

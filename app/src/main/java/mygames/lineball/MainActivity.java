@@ -14,7 +14,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MainActivity extends Activity {
 
@@ -165,7 +164,7 @@ public class MainActivity extends Activity {
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255, 26, 128, 182));
+                canvas.drawColor(Color.argb(255, 0, 0, 0));
 
                 // Choose the brush color for drawing
                 paint.setColor(Color.argb(255,  255, 255, 255));
@@ -246,10 +245,8 @@ public class MainActivity extends Activity {
         }
 
         public void createBallsAndRestart() {
-            Random gen = new Random();
-
             for(int ballNum = 0; ballNum < 20; ballNum ++ ){
-                   balls.add(new Ball(gen.nextInt(screenX), gen.nextInt(screenY)));
+                   balls.add(new Ball(screenX, screenY));
             }
 
             //ball.reset(screenX, screenY);
