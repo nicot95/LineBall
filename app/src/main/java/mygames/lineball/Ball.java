@@ -61,17 +61,15 @@ public class Ball {
     }
 
     public int getColor() {
-        int color = Color.BLUE;
+        int retColor = -1;
         switch (this.color) {
-            case 1: color = Color.RED;
-            case 2: color = Color.YELLOW;
-            case 3: color = Color.GREEN;
-            case 4: color = Color.BLUE;
-
-
+            case 0: retColor = Color.RED;
+            case 1: retColor = Color.YELLOW;
+            case 2: retColor = Color.GREEN;
+            case 3: retColor = Color.BLUE;
         }
 
-        return color;
+        return retColor;
     }
 
 
