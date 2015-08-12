@@ -32,7 +32,6 @@ public class BallTracker {
 
     }
 
-
     public void trackBall(Ball b) {
         /*
             If the ball is already in the chain, check if it is closing a shape
@@ -63,7 +62,6 @@ public class BallTracker {
         // special number of balls... etc
         for (Ball b: ballsTracked) {
             score += 10;
-            b.setIsVisible(false);
         }
         score *= shapeMultiplier;
         return score;

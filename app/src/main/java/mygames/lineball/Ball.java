@@ -19,7 +19,6 @@ public class Ball {
     private float x;
     private float y;
 
-    private boolean isVisible;
     private boolean isbeingTracked;
 
     public Ball(int screenX, int screenY) {
@@ -37,7 +36,6 @@ public class Ball {
         x = screenX;
         y = screenY;
 
-        isVisible = true;
         isbeingTracked = false;
     }
 
@@ -105,14 +103,6 @@ public class Ball {
     public float getBallRadius() {
         return ballRadius;
 
-    }
-
-    public boolean isVisible() {
-        return isVisible;
-    }
-
-    public void setIsVisible(boolean isVisible) {
-        this.isVisible = isVisible;
     }
 
     public void setIsbeingTracked(boolean isbeingTracked) {
