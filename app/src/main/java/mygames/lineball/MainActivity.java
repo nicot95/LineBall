@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -21,6 +22,8 @@ public class MainActivity extends Activity {
     // It will also hold the logic of the game
     // and respond to screen touches as well
     GameView gameView;
+
+    private ArrayList<RectF> lines = new ArrayList<RectF>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +142,11 @@ public class MainActivity extends Activity {
         // Everything that needs to be updated goes in here
         // Movement, collision detection etc.
         public void update() {
+
             for(Ball b : balls) {
+                if(b.ballHitLineGameOver(ballTracker)) {
+                    pause();
+                }
                 b.checkWallCollision(screenX, screenY);
                 b.update(fps);
             }
@@ -168,6 +175,7 @@ public class MainActivity extends Activity {
 
                 // Choose the brush color for drawing
                 //paint.setColor(Color.argb(255,  255, 255, 255));
+
 
                 //Draw the lines connecting the already linked balls
                 ArrayList<Ball> trackedBalls = ballTracker.getBallsTracked();

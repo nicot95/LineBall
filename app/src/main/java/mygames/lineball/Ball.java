@@ -7,6 +7,7 @@ package mygames.lineball;
 import android.graphics.Color;
 import android.graphics.RectF;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Ball {
@@ -17,7 +18,7 @@ public class Ball {
     float ballWidth = 10;
     float ballHeight = 10;
 
-    private float ballRadius = 60;
+    private float ballRadius = 30;
     private float x;
     private float y;
     private int color;
@@ -58,6 +59,16 @@ public class Ball {
         if (x + getBallRadius() >= screenX || x - getBallRadius() <= 0) {
             reverseXVelocity();
         }
+    }
+
+    public boolean ballHitLineGameOver(BallTracker ballTracker) {
+        ArrayList<RectF> rects = ballTracker.getLinesCollisionRects();
+        for(RectF rect : rects) {
+            if(rect.contains((int) Math.round(x), (int) Math.round(y))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getColor() {
