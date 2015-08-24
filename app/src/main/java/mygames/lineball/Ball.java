@@ -5,6 +5,7 @@ package mygames.lineball;
  */
 
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.RectF;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Random;
 
 public class Ball {
     RectF rect;
+    final int LINEWIDTH = 4;
 
     float xVelocity;
     float yVelocity;
@@ -61,14 +63,27 @@ public class Ball {
         }
     }
 
+    // returns true if a ball has hit a line and therefore game is over
     public boolean ballHitLineGameOver(BallTracker ballTracker) {
-        ArrayList<RectF> rects = ballTracker.getLinesCollisionRects();
-        for(RectF rect : rects) {
-            if(rect.contains((int) Math.round(x), (int) Math.round(y))) {
+        ArrayList<Ball> ballsTracked = ballTracker.getBallsTracked();
+        Point thisPoint = new Point((int)x,(int)y);
+
+        for(int i = 1; i < ballsTracked.size(); i++) {
+            Ball ball1 = ballsTracked.get(i-1);
+            Ball ball2 = ballsTracked.get(i);
+            Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
+            Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
+
+            if(!ball1.equals(this) && !ball2.equals(this)
+                    && (float) Util.getDistanceToSegment(point1, point2, thisPoint) <= ballRadius+LINEWIDTH) {
+
                 return true;
             }
+
         }
+
         return false;
+
     }
 
     public int getColor() {
@@ -156,8 +171,16 @@ public class Ball {
     public boolean equals(Object o) {
         if (o instanceof  Ball) {
             Ball ball2 = (Ball) o;
-            return this.x == ball2.x && this.y == ball2.y;
+            return this.x == ball2.x && this.y == ball2.y && this.color == ball2.color;
         }
         return false;
     }
+
+    //buggy, not working correctly
+    public double pointToLineDistance(Point A, Point B, Point P) {
+        double normalLength = Math.sqrt((B.x-A.x)*(B.x-A.x)+(B.y-A.y)*(B.y-A.y));
+        return Math.abs((P.x-A.x)*(B.y-A.y)-(P.y-A.y)*(B.x-A.x))/normalLength;
+    }
+
+
 }

@@ -1,7 +1,5 @@
 package mygames.lineball;
 
-import android.graphics.RectF;
-
 import java.util.ArrayList;
 
 /*
@@ -114,20 +112,6 @@ public class BallTracker {
 
     public ArrayList<Ball> getBallsTracked() {
         return ballsTracked;
-    }
-
-    public ArrayList<RectF> getLinesCollisionRects() {
-        ArrayList<RectF> rects = new ArrayList<RectF>();
-
-        for(int i = 1; i < ballsTracked.size(); i++) {
-            Ball startBall = ballsTracked.get(i-1);
-            Ball endBall = ballsTracked.get(i);
-            RectF newRect = new RectF((int) Math.round(startBall.getX()), (int) Math.round(startBall.getY()),
-                                      (int) Math.round(endBall.getX()), (int) Math.round(endBall.getY()));
-            rects.add(newRect);
-        }
-
-        return rects;
     }
 
 
