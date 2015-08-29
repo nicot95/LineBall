@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class BallTracker {
 
 
+    public int numBalls;
     private ArrayList<Ball> ballsTracked;
     private boolean readyToCalculateScore;
     private int shapeMultiplier;
@@ -24,35 +25,42 @@ public class BallTracker {
 
     private int colorChain;
     private boolean sameColorPreserved;
+    private boolean isGameOver;
 
-    public BallTracker() {
+    public BallTracker(int totalBalls) {
 
         ballsTracked = new ArrayList<>();
         readyToCalculateScore = false;
+        isGameOver = false;
         colorChain = -1;
 
         lastTrackedBall    = null;
         currentTrackedBall = null;
         sameColorPreserved = true;
 
+        numBalls = totalBalls;
+
     }
 
     public void trackBall(Ball b) {
 
+        /*
+            Generates the colour of the chain that is gonna link all balls
+         */
         if (ballsTracked.isEmpty()) {
             colorChain = b.getColor();
         }
 
         /*
             If the ball is already in the chain, check if it is closing a shape
-            or if it is joining a
          */
         if (ballsTracked.contains(b)) {
-            if (!b.equals(currentTrackedBall)) {
-                //It is not a hack, it's a shape
+            if (!(b.equals(currentTrackedBall) || b.equals(lastTrackedBall))) {
+                //Shape has been completed, prepare to calculate score
                 ballsTracked.add(b);
                 shapeMultiplier = ballsTracked.size();
                 this.readyToCalculateScore = true;
+                numBalls -= ballsTracked.size() - 1;
                 checkColor(b.getColor());
             }
         } else {
@@ -61,6 +69,11 @@ public class BallTracker {
             lastTrackedBall    = currentTrackedBall;
             currentTrackedBall = b;
             checkColor(b.getColor());
+        }
+
+        //If there is only one ball, end game
+        if (numBalls <= 1) {
+            isGameOver = true;
         }
     }
 
@@ -115,4 +128,7 @@ public class BallTracker {
     }
 
 
+    public boolean isGameOver() {
+        return isGameOver;
+    }
 }

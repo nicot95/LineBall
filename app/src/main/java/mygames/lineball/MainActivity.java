@@ -2,6 +2,7 @@ package mygames.lineball;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -73,7 +74,7 @@ public class MainActivity extends Activity {
         int screenY;
 
         ArrayList<Ball> balls = new ArrayList<>();
-        int numBalls = 0;
+        int numBalls = 20; //TODO get rid of magic number
 
         // The score
         int score = 0;
@@ -107,8 +108,8 @@ public class MainActivity extends Activity {
             screenY = size.y;
 
 
-            this.ballTracker = new BallTracker();
-            createBallsAndRestart();
+            this.ballTracker = new BallTracker(numBalls);
+            createBallsAndRestart(numBalls);
 
         }
 
@@ -143,10 +144,14 @@ public class MainActivity extends Activity {
         // Movement, collision detection etc.
         public void update() {
 
+            if (ballTracker.isGameOver()) {
+                goToMenu();
+            }
+
             for(Ball b : balls) {
-                if(b.ballHitLineGameOver(ballTracker)) {
+             /*   if(b.ballHitLineGameOver(ballTracker)) {
                     pause();
-                }
+                }*/
                 b.checkWallCollision(screenX, screenY);
                 b.update(fps);
             }
@@ -197,7 +202,12 @@ public class MainActivity extends Activity {
                 }
 
 
-                // TODO draw the HUD
+                // TODO draw the Score
+                paint.setTextSize(40);
+                canvas.drawText("Score: " + score, 30, 70, paint);
+                canvas.drawText("Numballs: " + ballTracker.numBalls, 30, 130, paint);
+
+
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -256,8 +266,8 @@ public class MainActivity extends Activity {
             return true;
         }
 
-        public void createBallsAndRestart() {
-            for(int ballNum = 0; ballNum < 20; ballNum ++ ){
+        public void createBallsAndRestart(int numBalls) {
+            for(int ballNum = 0; ballNum < numBalls; ballNum ++ ){
                    balls.add(new Ball(screenX, screenY));
             }
 
@@ -272,11 +282,14 @@ public class MainActivity extends Activity {
         }
 
         public void updateScore(int extraScore) {
-            System.out.println(score);
             this.score += extraScore;
-            System.out.println(score);
         }
 
+    }
+
+    private void goToMenu() {
+        Intent intent = new Intent(gameView.getContext(), MainMenuActivity.class);
+        startActivity(intent);
     }
     // This is the end of our BreakoutView inner class
 
