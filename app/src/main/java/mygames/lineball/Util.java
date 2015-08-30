@@ -2,6 +2,7 @@ package mygames.lineball;
 
 import android.graphics.Point;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -88,6 +89,32 @@ public class Util{
         // return Math.hypot(x2 - x1, y2 - y1); // Extremely slow
         // return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)); // 20 times faster than hypot
         return Math.sqrt(dx * dx + dy * dy); // 10 times faster then previous line
+    }
+
+    // returns true if a ball has hit a line and therefore game is over
+    public static  boolean ballHitLineGameOver(BallTracker ballTracker, Ball b) {
+        final int LINEWIDTH = 4;
+
+        ArrayList<Ball> ballsTracked = ballTracker.getBallsTracked();
+        float x = b.getX(); float y = b.getY(); float ballRadius = b.getBallRadius();
+        Point thisPoint = new Point((int) x, (int) y);
+
+        for(int i = 1; i < ballsTracked.size(); i++) {
+            Ball ball1 = ballsTracked.get(i-1);
+            Ball ball2 = ballsTracked.get(i);
+            Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
+            Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
+
+            List<Point> intersectPoint1 = Util.getCircleLineIntersectionPoint(point1, point2, point1, ballRadius);
+            List<Point> intersectPoint2 = Util.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
+
+            if(!ball1.equals(b) && !ball2.equals(b)
+                    && Util.getDistanceToSegment(intersectPoint1.get(0), intersectPoint2.get(0), thisPoint) <= ballRadius + LINEWIDTH - 5)
+
+                return true;
+        }
+        return false;
+
     }
 
     /**

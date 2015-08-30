@@ -149,7 +149,7 @@ public class MainActivity extends Activity {
             }
 
             for(Ball b : balls) {
-                if(b.ballHitLineGameOver(ballTracker)) {
+                if(Util.ballHitLineGameOver(ballTracker, b)) {
                     goToMenu();
                 }
                 b.checkWallCollision(screenX, screenY);
@@ -192,6 +192,7 @@ public class MainActivity extends Activity {
                     canvas.drawLine( ball1.getX(), ball1.getY(), ball2.getX(),
                             ball2.getY(), paint);
                 }
+
 
 
                 // Draw the balls

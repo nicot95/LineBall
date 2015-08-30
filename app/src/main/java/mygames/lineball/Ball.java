@@ -12,12 +12,10 @@ import java.util.List;
 import java.util.Random;
 
 public class Ball {
-    final int LINEWIDTH = 4;
-
     float xVelocity;
     float yVelocity;
 
-    private float ballRadius = 30;
+    private float ballRadius = 35;
     private float x;
     private float y;
     private int color;
@@ -72,28 +70,7 @@ public class Ball {
         }
     }
 
-    // returns true if a ball has hit a line and therefore game is over
-    public boolean ballHitLineGameOver(BallTracker ballTracker) {
-        ArrayList<Ball> ballsTracked = ballTracker.getBallsTracked();
-        Point thisPoint = new Point((int) x, (int) y);
 
-        for(int i = 1; i < ballsTracked.size(); i++) {
-            Ball ball1 = ballsTracked.get(i-1);
-            Ball ball2 = ballsTracked.get(i);
-            Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
-            Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
-
-            List<Point> intersectPoint1 = Util.getCircleLineIntersectionPoint(point1, point2, point1, ballRadius);
-            List<Point> intersectPoint2 = Util.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
-
-            if(!ball1.equals(this) && !ball2.equals(this)
-                    && Util.getDistanceToSegment(intersectPoint1.get(0), intersectPoint2.get(0), thisPoint) <= ballRadius+ LINEWIDTH)
-
-                   return true;
-            }
-        return false;
-
-    }
 
     public int getColor() {
         int retColor = -1;
