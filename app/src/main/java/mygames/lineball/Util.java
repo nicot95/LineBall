@@ -2,6 +2,10 @@ package mygames.lineball;
 
 import android.graphics.Point;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by nico on 24/08/15.
  */
@@ -147,4 +151,46 @@ public class Util{
 
         return closestPoint;
     }
+
+
+    //buggy, not working correctly
+    public double pointToLineDistance(Point A, Point B, Point P) {
+        double normalLength = Math.sqrt((B.x-A.x)*(B.x-A.x)+(B.y-A.y)*(B.y-A.y));
+        return Math.abs((P.x-A.x)*(B.y-A.y)-(P.y-A.y)*(B.x-A.x))/normalLength;
+    }
+
+    public static List<Point> getCircleLineIntersectionPoint(Point pointA,
+                                                             Point pointB, Point center, float radius) {
+        float baX = pointB.x - pointA.x;
+        float baY = pointB.y - pointA.y;
+        float caX = center.x - pointA.x;
+        float caY = center.y - pointA.y;
+
+        float a = baX * baX + baY * baY;
+        float bBy2 = baX * caX + baY * caY;
+        float c = caX * caX + caY * caY - radius * radius;
+
+        float pBy2 = bBy2 / a;
+        float q = c / a;
+
+        float disc = pBy2 * pBy2 - q;
+        if (disc < 0) {
+            return Collections.emptyList();
+        }
+        // if disc == 0 ... dealt with later
+        float tmpSqrt = (float) Math.sqrt(disc);
+        float abScalingFactor1 = -pBy2 + tmpSqrt;
+        float abScalingFactor2 = -pBy2 - tmpSqrt;
+
+        Point p1 = new Point((int) (pointA.x - baX * abScalingFactor1),(int) (pointA.y
+                - baY * abScalingFactor1));
+        if (disc == 0) { // abScalingFactor1 == abScalingFactor2
+            return Collections.singletonList(p1);
+        }
+        Point p2 = new Point((int) (pointA.x - baX * abScalingFactor2), (int) (pointA.y
+                - baY * abScalingFactor2));
+        return Arrays.asList(p1, p2);
+    }
+
+
 }
