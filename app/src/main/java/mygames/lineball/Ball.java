@@ -73,11 +73,14 @@ public class Ball {
             Ball ball2 = ballsTracked.get(i);
             Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
             Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
+            float lineLength = (float) Util.getDistance(point1, point2);
 
             if(!ball1.equals(this) && !ball2.equals(this)
-                    && (float) Util.getDistanceToSegment(point1, point2, thisPoint) <= ballRadius+LINEWIDTH) {
+                 && (float) Util.getDistanceToSegment(point1, point2, thisPoint) <= ballRadius+LINEWIDTH
+                 && Util.getDistance(thisPoint, point1) < lineLength-10
+                 && Util.getDistance(thisPoint, point2) < lineLength-10) {
 
-                return true;
+                    return true;
             }
 
         }
@@ -143,8 +146,8 @@ public class Ball {
     //Slows ball when it is being tracked
     public void stop() {
         if (!isbeingTracked) {
-            xVelocity *= 0.1;
-            yVelocity *= 0.1;
+            xVelocity = 0;
+            yVelocity = 0;
             isbeingTracked = true;
         }
         //erase me

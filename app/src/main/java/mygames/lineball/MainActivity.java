@@ -149,9 +149,9 @@ public class MainActivity extends Activity {
             }
 
             for(Ball b : balls) {
-             /*   if(b.ballHitLineGameOver(ballTracker)) {
-                    pause();
-                }*/
+                if(b.ballHitLineGameOver(ballTracker)) {
+                    goToMenu();
+                }
                 b.checkWallCollision(screenX, screenY);
                 b.update(fps);
             }
@@ -245,10 +245,12 @@ public class MainActivity extends Activity {
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
                     paused = false;
-                    for (Ball b : balls) {
+                    for(int i = balls.size()-1; i >= 0; i--) {
+                        Ball b = balls.get(i);
                         if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
                             ballTracker.trackBall(b);
                             b.stop();
+                            break;
                         }
                     }
                     break;
