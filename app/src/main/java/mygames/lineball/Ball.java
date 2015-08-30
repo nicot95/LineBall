@@ -15,16 +15,19 @@ public class Ball {
     float xVelocity;
     float yVelocity;
 
-    private float ballRadius = 35;
+    private float ballRadius = 30;
     private float x;
     private float y;
     private int color;
 
+    public final static int RANDOM_COLOR = 4;
+
     private boolean isbeingTracked;
 
-    public Ball(int screenX, int screenY) {
+    private static Random gen = new Random();
 
-        Random gen = new Random();
+
+    public Ball(int screenX, int screenY) {
 
         // Start the ball moving at a random speed and direction
         this.xVelocity = gen.nextInt(250) - 125;
@@ -35,7 +38,7 @@ public class Ball {
         this.x = gen.nextInt(screenX - 2 * (int) getBallRadius()) + getBallRadius();
         this.y = gen.nextInt(screenY - 2 * (int) getBallRadius()) + getBallRadius();
 
-        this.color = gen.nextInt(4);
+        this.color = gen.nextInt(5);
 
         this.isbeingTracked = false;
     }
@@ -74,7 +77,11 @@ public class Ball {
 
     public int getColor() {
         int retColor = -1;
-        switch (this.color) {
+        int ballColor = this.color;
+        if (color == RANDOM_COLOR) {
+            ballColor = gen.nextInt(4);
+        }
+        switch (ballColor) {
             case 0: retColor = Color.RED;
                 break;
             case 1: retColor = Color.YELLOW;
@@ -90,8 +97,10 @@ public class Ball {
 
 
     public void update(long fps) {
-        x = getX() + xVelocity / fps;
-        y += yVelocity / fps;
+        if (!isbeingTracked) {
+            x = getX() + xVelocity / fps;
+            y += yVelocity / fps;
+        }
     }
 
     public void reverseYVelocity() {
@@ -126,12 +135,11 @@ public class Ball {
 
     //Slows ball when it is being tracked
     public void stop() {
-        if (!isbeingTracked) {
-            xVelocity = 0;
-            yVelocity = 0;
-            isbeingTracked = true;
-        }
-        //erase me
+        isbeingTracked = true;
+    }
+
+    public void resumeMovement() {
+        isbeingTracked = false;
     }
 
     public float getX() {
@@ -147,8 +155,8 @@ public class Ball {
 
     }
 
-    public void setIsbeingTracked(boolean isbeingTracked) {
-        this.isbeingTracked = isbeingTracked;
+    public boolean isBeingTracked() {
+        return isbeingTracked;
     }
 
     @Override

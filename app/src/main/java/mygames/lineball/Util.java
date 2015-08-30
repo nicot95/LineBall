@@ -109,7 +109,7 @@ public class Util{
             List<Point> intersectPoint2 = Util.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
 
             if(!ball1.equals(b) && !ball2.equals(b)
-                    && Util.getDistanceToSegment(intersectPoint1.get(0), intersectPoint2.get(0), thisPoint) <= ballRadius + LINEWIDTH - 5)
+                    && Util.getDistanceToSegment(intersectPoint1.get(0), intersectPoint2.get(0), thisPoint) <= ballRadius + LINEWIDTH - 10)
 
                 return true;
         }

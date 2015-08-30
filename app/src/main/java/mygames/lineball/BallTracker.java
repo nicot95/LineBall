@@ -1,5 +1,7 @@
 package mygames.lineball;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 
 /*
@@ -44,36 +46,58 @@ public class BallTracker {
 
     public void trackBall(Ball b) {
 
-        /*
-            Generates the colour of the chain that is gonna link all balls
-         */
-        if (ballsTracked.isEmpty()) {
-            colorChain = b.getColor();
-        }
+        //Generates the colour of the chain that is gonna link all balls
+        getChainColor(b);
 
-        /*
-            If the ball is already in the chain, check if it is closing a shape
-         */
+        //Stop tracking ball if tapped again
+        boolean wantedToUntrack = checkForResumeMovement(b);
+        if (wantedToUntrack) return;
+
+        //If the ball is already in the chain, check if it is closing a shape
         if (ballsTracked.contains(b)) {
-            if (!(b.equals(currentTrackedBall) || b.equals(lastTrackedBall))) {
-                //Shape has been completed, prepare to calculate score
-                ballsTracked.add(b);
-                shapeMultiplier = ballsTracked.size();
-                this.readyToCalculateScore = true;
-                numBalls -= ballsTracked.size() - 1;
-                checkColor(b.getColor());
-            }
+            checkForShape(b);
         } else {
             //Ball is not being tracked, add to list
             ballsTracked.add(b);
-            lastTrackedBall    = currentTrackedBall;
-            currentTrackedBall = b;
-            checkColor(b.getColor());
+            trackNewBall(b);
         }
 
         //If there is only one ball, end game
         if (numBalls <= 1) {
             isGameOver = true;
+        }
+    }
+
+    private boolean checkForResumeMovement(Ball b) {
+        if ( currentTrackedBall != null && currentTrackedBall.equals(b)) {
+            ballsTracked.remove(b);
+            b.resumeMovement();
+            return true;
+        }
+        return false;
+    }
+
+    private void getChainColor(Ball b) {
+        if (ballsTracked.isEmpty() || colorChain == Ball.RANDOM_COLOR) {
+            colorChain = b.getColor();
+        }
+    }
+
+    private void trackNewBall(Ball b) {
+        lastTrackedBall    = currentTrackedBall;
+        currentTrackedBall = b;
+        checkColor(b.getColor());
+        b.stop();
+    }
+
+    private void checkForShape(Ball b) {
+        if (!(b.equals(currentTrackedBall) || b.equals(lastTrackedBall))) {
+            //Shape has been completed, prepare to calculate score
+            ballsTracked.add(b);
+            shapeMultiplier = ballsTracked.size();
+            this.readyToCalculateScore = true;
+            numBalls -= ballsTracked.size() - 1;
+            checkColor(b.getColor());
         }
     }
 

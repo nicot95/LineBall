@@ -206,9 +206,6 @@ public class MainActivity extends Activity {
                 // TODO draw the Score
                 paint.setTextSize(40);
                 canvas.drawText("Score: " + score, 30, 70, paint);
-                canvas.drawText("Numballs: " + ballTracker.numBalls, 30, 130, paint);
-
-
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -250,7 +247,7 @@ public class MainActivity extends Activity {
                         Ball b = balls.get(i);
                         if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
                             ballTracker.trackBall(b);
-                            b.stop();
+                            b.isBeingTracked();
                             break;
                         }
                     }
