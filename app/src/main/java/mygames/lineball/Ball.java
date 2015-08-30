@@ -6,20 +6,16 @@ package mygames.lineball;
 
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.RectF;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Ball {
-    RectF rect;
     final int LINEWIDTH = 4;
 
     float xVelocity;
     float yVelocity;
-    float ballWidth = 10;
-    float ballHeight = 10;
 
     private float ballRadius = 30;
     private float x;
@@ -55,12 +51,24 @@ public class Ball {
 
     // Checks if ball is colliding with a wall, and if so, changes velocity appropriately
     public void checkWallCollision(int screenX, int screenY) {
-        if (y + getBallRadius() >= screenY || y - getBallRadius() <= 0) {
+        if (y + getBallRadius() >= screenY) {
             reverseYVelocity();
+            clearObstacleY(2);
+        }
+        if(y - getBallRadius() <= 0) {
+            reverseYVelocity();
+            clearObstacleY(-2);
         }
 
-        if (x + getBallRadius() >= screenX || x - getBallRadius() <= 0) {
+
+        if (x + getBallRadius() >= screenX) {
             reverseXVelocity();
+            clearObstacleX(2);
+        }
+
+        if(x - getBallRadius() <= 0) {
+            reverseXVelocity();
+            clearObstacleX(-2);
         }
     }
 
@@ -126,14 +134,12 @@ public class Ball {
         }
     }
 
-    public void clearObstacleY(float y) {
-        rect.bottom = y;
-        rect.top = y - ballHeight;
+    public void clearObstacleY(int diff) {
+        this.y -= diff;
     }
 
-    public void clearObstacleX(float x) {
-        rect.left = x;
-        rect.right = x + ballWidth;
+    public void clearObstacleX(int diff) {
+        this.x -= diff;
     }
 
     public void reset(int x, int y) {
