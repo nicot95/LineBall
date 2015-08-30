@@ -70,8 +70,10 @@ public class BallTracker {
 
     private boolean checkForResumeMovement(Ball b) {
         if ( currentTrackedBall != null && currentTrackedBall.equals(b)) {
-            ballsTracked.remove(b);
-            b.resumeMovement();
+            for (Ball ball: ballsTracked) {
+                ball.resumeMovement();
+            }
+            cleanUpBallsFields();
             return true;
         }
         return false;
