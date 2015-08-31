@@ -63,7 +63,7 @@ public class BallTracker {
         }
 
         //If there is only one ball, end game
-        if (numBalls <= 1) {
+        if (numBalls <= 2) {
             isGameOver = true;
         }
     }

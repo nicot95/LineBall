@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
         int screenY;
 
         ArrayList<Ball> balls = new ArrayList<>();
-        int numBalls = 20; //TODO get rid of magic number
+        int numBalls = 15; //TODO get rid of magic number
 
         // The score
         int score = 0;
@@ -289,6 +289,7 @@ public class MainActivity extends Activity {
 
     private void goToMenu() {
         Intent intent = new Intent(gameView.getContext(), MainMenuActivity.class);
+        intent.putExtra("score", gameView.score);
         startActivity(intent);
     }
     // This is the end of our BreakoutView inner class

@@ -82,6 +82,8 @@ public class MainMenuActivity extends Activity {
                 paint.setTextSize(40);
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 canvas.drawText("LineBall", 30, 70, paint);
+                int score = getIntent().getIntExtra("score", 0);
+                canvas.drawText("Score: " + score, 30, 150, paint);
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
