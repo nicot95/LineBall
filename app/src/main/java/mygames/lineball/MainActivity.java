@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
         private int[] numberOfBallsPerType;
 
         ArrayList<Ball> balls = new ArrayList<>();
-        int numBalls = 7; //TODO get rid of magic number
+        int numBalls = 15; //TODO get rid of magic number
 
         // The score
         int score = 0;
