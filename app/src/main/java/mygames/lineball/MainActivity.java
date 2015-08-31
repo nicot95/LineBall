@@ -16,7 +16,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends Activity {
 
@@ -115,7 +114,6 @@ public class MainActivity extends Activity {
             screenY = size.y;
 
             numberOfBallsPerType = new int[DIFFERENT_TYPES_OF_BALLS];
-            Arrays.fill(numberOfBallsPerType, 0);
             createBallsAndRestart(numBalls);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
 
@@ -191,15 +189,22 @@ public class MainActivity extends Activity {
                 //paint.setColor(Color.argb(255,  255, 255, 255));
 
 
-                //Draw the lines connecting the already linked balls
+                //Draw the lines connecting the already linked balls and a white border surrounding
+                // the selected balls
                 ArrayList<Ball> trackedBalls = ballTracker.getBallsTracked();
                 paint.setStrokeWidth(5); // Increase width of line
-                for (int i = 1; i < trackedBalls.size(); i++) {
-                    Ball ball1 = trackedBalls.get(i-1);
+                for (int i = 0; i < trackedBalls.size(); i++) {
                     Ball ball2 = trackedBalls.get(i);
-                    paint.setColor(ballTracker.getColorChain());
-                    canvas.drawLine( ball1.getX(), ball1.getY(), ball2.getX(),
-                            ball2.getY(), paint);
+                    if(i > 0) {
+                        //draw lines
+                        Ball ball1 = trackedBalls.get(i - 1);
+                        paint.setColor(ballTracker.getColorChain());
+                        canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
+                                ball2.getY(), paint);
+                    }
+                    //draw white border
+                    paint.setColor(Color.WHITE);
+                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius()+2, paint);
                 }
 
 
