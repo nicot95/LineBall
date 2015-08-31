@@ -73,6 +73,12 @@ public class MainActivity extends Activity {
         int screenX;
         int screenY;
 
+        /*
+            Fields used by the ball tracker in order to check for gameOver state
+        */
+        private final int DIFFERENT_TYPES_OF_BALLS = 5;
+        private int[] numberOfBallsPerType;
+
         ArrayList<Ball> balls = new ArrayList<>();
         int numBalls = 15; //TODO get rid of magic number
 
@@ -107,9 +113,9 @@ public class MainActivity extends Activity {
             screenX = size.x;
             screenY = size.y;
 
-
-            this.ballTracker = new BallTracker(numBalls);
+            numberOfBallsPerType = new int[DIFFERENT_TYPES_OF_BALLS];
             createBallsAndRestart(numBalls);
+            this.ballTracker = new BallTracker(numberOfBallsPerType);
 
         }
 
@@ -144,10 +150,6 @@ public class MainActivity extends Activity {
         // Movement, collision detection etc.
         public void update() {
 
-            if (ballTracker.isGameOver()) {
-                goToMenu();
-            }
-
             for(Ball b : balls) {
                 if(Util.ballHitLineGameOver(ballTracker, b)) {
                     goToMenu();
@@ -165,6 +167,11 @@ public class MainActivity extends Activity {
                 balls.removeAll(ballTracker.getBallsTracked());
                 ballTracker.cleanUpBallsFields();
             }
+
+            if (ballTracker.isGameOver()) {
+                goToMenu();
+            }
+
         }
 
         // Draw the newly updated scene
@@ -268,7 +275,9 @@ public class MainActivity extends Activity {
 
         public void createBallsAndRestart(int numBalls) {
             for(int ballNum = 0; ballNum < numBalls; ballNum ++ ){
-                   balls.add(new Ball(screenX, screenY));
+                   Ball b = new Ball(screenX, screenY);
+                   balls.add(b);
+                   addToNumBallsPerType(b.getColorSimple());
             }
 
             //ball.reset(screenX, screenY);
@@ -279,6 +288,10 @@ public class MainActivity extends Activity {
             // Moves
             int movesLeft = 7;
 
+        }
+
+        private void addToNumBallsPerType(int ballColor) {
+            numberOfBallsPerType[ballColor]++;
         }
 
         public void updateScore(int extraScore) {

@@ -117,6 +117,12 @@ public class Util{
 
     }
 
+    public static boolean matchingColor(Ball b1, Ball b2) {
+        return b1.getColor() == b2.getColor() ||
+                b1.getColor() == Ball.RANDOM_COLOR ||
+                b2.getColor() == Ball.RANDOM_COLOR;
+    }
+
     /**
      * Returns closest point on segment to point
      *

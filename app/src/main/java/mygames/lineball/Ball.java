@@ -95,6 +95,10 @@ public class Ball {
         return retColor;
     }
 
+    public int getColorSimple() {
+        return this.color;
+    }
+
 
     public void update(long fps) {
         if (!isbeingTracked) {
@@ -109,15 +113,6 @@ public class Ball {
 
     public void reverseXVelocity() {
         xVelocity = -xVelocity;
-    }
-
-    public void setRandomXVelocity() {
-        Random generator = new Random();
-        int answer = generator.nextInt(2);
-
-        if (answer == 0) {
-            reverseXVelocity();
-        }
     }
 
     public void clearObstacleY(int diff) {

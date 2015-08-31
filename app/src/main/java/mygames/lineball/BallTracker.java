@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class BallTracker {
 
 
-    public int numBalls;
+    private int[] numBallsPerType;
     private ArrayList<Ball> ballsTracked;
     private boolean readyToCalculateScore;
     private int shapeMultiplier;
@@ -26,10 +26,10 @@ public class BallTracker {
     private Ball currentTrackedBall;
 
     private int colorChain;
-    private boolean sameColorPreserved;
+    private int colorComparison;
     private boolean isGameOver;
 
-    public BallTracker(int totalBalls) {
+    public BallTracker(int[] numBallsPerType) {
 
         ballsTracked = new ArrayList<>();
         readyToCalculateScore = false;
@@ -38,9 +38,8 @@ public class BallTracker {
 
         lastTrackedBall    = null;
         currentTrackedBall = null;
-        sameColorPreserved = true;
 
-        numBalls = totalBalls;
+        this.numBallsPerType = numBallsPerType;
 
     }
 
@@ -53,6 +52,15 @@ public class BallTracker {
         boolean wantedToUntrack = checkForResumeMovement(b);
         if (wantedToUntrack) return;
 
+        int ballColor = b.getColorSimple();
+        if (ballColor == Ball.RANDOM_COLOR || ballColor == colorComparison) {
+            checkForChainProperties(b);
+        }
+
+        gameOverCheck();
+    }
+
+    private void checkForChainProperties(Ball b) {
         //If the ball is already in the chain, check if it is closing a shape
         if (ballsTracked.contains(b)) {
             checkForShape(b);
@@ -60,11 +68,6 @@ public class BallTracker {
             //Ball is not being tracked, add to list
             ballsTracked.add(b);
             trackNewBall(b);
-        }
-
-        //If there is only one ball, end game
-        if (numBalls <= 2) {
-            isGameOver = true;
         }
     }
 
@@ -82,13 +85,13 @@ public class BallTracker {
     private void getChainColor(Ball b) {
         if (ballsTracked.isEmpty() || colorChain == Ball.RANDOM_COLOR) {
             colorChain = b.getColor();
+            colorComparison = b.getColorSimple();
         }
     }
 
     private void trackNewBall(Ball b) {
         lastTrackedBall    = currentTrackedBall;
         currentTrackedBall = b;
-        checkColor(b.getColor());
         b.stop();
     }
 
@@ -98,15 +101,28 @@ public class BallTracker {
             ballsTracked.add(b);
             shapeMultiplier = ballsTracked.size();
             this.readyToCalculateScore = true;
-            numBalls -= ballsTracked.size() - 1;
-            checkColor(b.getColor());
+            for (Ball ball: ballsTracked) {
+                numBallsPerType[ball.getColorSimple()]--;
+            }
+
         }
     }
 
-    private void checkColor(int color) {
-        if (colorChain != color) {
-            sameColorPreserved = false;
+    /*
+        Calculates if there is a minimum amount of balls required to make a link.
+        Otherwise, the game is over.
+     */
+    private void gameOverCheck() {
+        int MINIMUM_BALLS_FOR_LINK = 3;
+        int randomBalls = numBallsPerType[Ball.RANDOM_COLOR];
+        for (int i = 0; i < numBallsPerType.length; i++) {
+            if (i == Ball.RANDOM_COLOR)
+                randomBalls = 0;
+            if (numBallsPerType[i] + randomBalls >= MINIMUM_BALLS_FOR_LINK) {
+                return;
+            }
         }
+        isGameOver = true;
     }
 
     //Very basic algorithm to calculate score depending on the number of balls tracked
@@ -120,7 +136,6 @@ public class BallTracker {
             score += 10;
         }
         score *= shapeMultiplier;
-        score *= sameColorPreserved ? 2 : 1;
         return score;
     }
 
@@ -134,7 +149,6 @@ public class BallTracker {
 
         lastTrackedBall    = null;
         currentTrackedBall = null;
-        sameColorPreserved = true;
     }
 
     public int getColorChain() {
