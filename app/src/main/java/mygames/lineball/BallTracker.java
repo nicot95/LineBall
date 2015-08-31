@@ -1,7 +1,5 @@
 package mygames.lineball;
 
-import android.graphics.Color;
-
 import java.util.ArrayList;
 
 /*
@@ -97,9 +95,8 @@ public class BallTracker {
     }
 
     private void checkForShape(Ball b) {
-        if (!(b.equals(currentTrackedBall) || b.equals(lastTrackedBall))) {
+        if (!(b.equals(currentTrackedBall) || (b.equals(lastTrackedBall) && ballsTracked.size() > 2))) {
             //Shape has been completed, prepare to calculate score
-            ballsTracked.add(b);
             shapeMultiplier = ballsTracked.size();
             this.readyToCalculateScore = true;
             for (Ball ball: ballsTracked) {
@@ -114,8 +111,8 @@ public class BallTracker {
         Otherwise, the game is over.
      */
     private void gameOverCheck() {
-        int MINIMUM_BALLS_FOR_LINK = 3;
-        int randomBalls = numBallsPerType[Ball.RANDOM_COLOR];
+        int MINIMUM_BALLS_FOR_LINK = 2;
+        int randomBalls = numBallsPerType[Ball.RANDOM_COLOR] ;
         for (int i = 0; i < numBallsPerType.length; i++) {
             if (i == Ball.RANDOM_COLOR)
                 randomBalls = 0;

@@ -5,17 +5,14 @@ package mygames.lineball;
  */
 
 import android.graphics.Color;
-import android.graphics.Point;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Ball {
     float xVelocity;
     float yVelocity;
 
-    private float ballRadius = 30;
+    private float ballRadius = 40;
     private float x;
     private float y;
     private int color;
@@ -32,6 +29,7 @@ public class Ball {
         // Start the ball moving at a random speed and direction
         this.xVelocity = gen.nextInt(250) - 125;
         this.yVelocity = gen.nextInt(250) - 125;
+
 
         // Place the ball in a random position within the screen. All the ball
         // must be inside the screen to avoid wallCollision bugs

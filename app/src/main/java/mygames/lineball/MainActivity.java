@@ -16,6 +16,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends Activity {
 
@@ -80,7 +81,7 @@ public class MainActivity extends Activity {
         private int[] numberOfBallsPerType;
 
         ArrayList<Ball> balls = new ArrayList<>();
-        int numBalls = 15; //TODO get rid of magic number
+        int numBalls = 7; //TODO get rid of magic number
 
         // The score
         int score = 0;
@@ -114,6 +115,7 @@ public class MainActivity extends Activity {
             screenY = size.y;
 
             numberOfBallsPerType = new int[DIFFERENT_TYPES_OF_BALLS];
+            Arrays.fill(numberOfBallsPerType, 0);
             createBallsAndRestart(numBalls);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
 
@@ -254,7 +256,6 @@ public class MainActivity extends Activity {
                         Ball b = balls.get(i);
                         if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
                             ballTracker.trackBall(b);
-                            b.isBeingTracked();
                             break;
                         }
                     }
