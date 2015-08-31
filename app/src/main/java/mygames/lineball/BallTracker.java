@@ -53,7 +53,8 @@ public class BallTracker {
         if (wantedToUntrack) return;
 
         int ballColor = b.getColorSimple();
-        if (ballColor == Ball.RANDOM_COLOR || ballColor == colorComparison) {
+        if (ballColor == Ball.RANDOM_COLOR || ballColor == colorComparison ||
+                colorComparison == Ball.RANDOM_COLOR) {
             checkForChainProperties(b);
         }
 
@@ -83,7 +84,7 @@ public class BallTracker {
     }
 
     private void getChainColor(Ball b) {
-        if (ballsTracked.isEmpty() || colorChain == Ball.RANDOM_COLOR) {
+        if (ballsTracked.isEmpty() || colorComparison == Ball.RANDOM_COLOR) {
             colorChain = b.getColor();
             colorComparison = b.getColorSimple();
         }
