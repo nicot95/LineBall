@@ -47,8 +47,7 @@ public class BallTracker {
         getChainColor(b);
 
         //Stop tracking ball if tapped again
-        boolean wantedToUntrack = checkForResumeMovement(b);
-        if (wantedToUntrack) return;
+
 
         int ballColor = b.getColorSimple();
         if (ballColor == Ball.RANDOM_COLOR || ballColor == colorComparison ||
@@ -56,7 +55,7 @@ public class BallTracker {
             checkForChainProperties(b);
         }
 
-        gameOverCheck();
+
     }
 
     private void checkForChainProperties(Ball b) {
@@ -102,6 +101,7 @@ public class BallTracker {
             for (Ball ball: ballsTracked) {
                 numBallsPerType[ball.getColorSimple()]--;
             }
+            gameOverCheck();
 
         }
     }
@@ -147,6 +147,13 @@ public class BallTracker {
 
         lastTrackedBall    = null;
         currentTrackedBall = null;
+    }
+
+    public void resumeBall() {
+
+        boolean wantedToUntrack = checkForResumeMovement(ballsTracked.get(0));
+        if (wantedToUntrack) return;
+
     }
 
     public int getColorChain() {

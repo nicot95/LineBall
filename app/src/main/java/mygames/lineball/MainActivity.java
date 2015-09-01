@@ -268,12 +268,25 @@ public class MainActivity extends Activity {
 
                 //In case we want swiping instead of just clicking
                 case MotionEvent.ACTION_MOVE:
-
+                    paused = false;
+                    for(int i = balls.size()-1; i >= 0; i--) {
+                        Ball b = balls.get(i);
+                        if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                            ballTracker.trackBall(b);
+                            break;
+                        }
+                    }
                     break;
 
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
-                  // ballTracker.setReadyToCalculate();
+                    int ballsTracked = ballTracker.getBallsTracked().size();
+                    if(ballsTracked == 1) {
+                        ballTracker.resumeBall();
+                    } else if(ballsTracked > 1){
+                        ballTracker.setReadyToCalculate();
+                    }
+
                     break;
             }
             return true;
