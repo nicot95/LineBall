@@ -25,13 +25,20 @@ public class BallTracker {
 
     private int colorChain;
     private int colorComparison;
-    private boolean isGameOver;
+    private Game_State game_state;
+
+    public enum Game_State {
+        NOT_OVER,
+        LINE_CONTACT,
+        NO_POSSIBLE_MOVE,
+        BOARD_CLEARED
+    }
 
     public BallTracker(int[] numBallsPerType) {
 
         ballsTracked = new ArrayList<>();
         readyToCalculateScore = false;
-        isGameOver = false;
+        game_state = Game_State.NOT_OVER;
         colorChain = -1;
 
         lastTrackedBall    = null;
@@ -110,14 +117,27 @@ public class BallTracker {
     private void gameOverCheck() {
         int MINIMUM_BALLS_FOR_LINK = 2;
         int randomBalls = numBallsPerType[Ball.RANDOM_COLOR];
+        boolean isBoardCleared = true;
         for (int i = 0; i < numBallsPerType.length; i++) {
             if (i == Ball.RANDOM_COLOR)
                 randomBalls = 0;
+            if (numBallsPerType[i] > 0) {
+                isBoardCleared = false;
+            }
             if (numBallsPerType[i] + randomBalls > MINIMUM_BALLS_FOR_LINK) {
                 return;
             }
         }
-        isGameOver = true;
+        if (isBoardCleared) {
+            game_state = Game_State.BOARD_CLEARED;
+        } else {
+            game_state = Game_State.NO_POSSIBLE_MOVE;
+        }
+    }
+
+    //A line has been touched by a ball, game should stop
+    public void setGameStateToLineContact() {
+        game_state = Game_State.LINE_CONTACT;
     }
 
     //Very basic algorithm to calculate score depending on the number of balls tracked
@@ -154,15 +174,13 @@ public class BallTracker {
         return readyToCalculateScore;
     }
 
-    public void setReadyToCalculate() {
-        this.readyToCalculateScore = true;
-    }
-
     public ArrayList<Ball> getBallsTracked() {
         return ballsTracked;
     }
 
     public boolean isGameOver() {
-        return isGameOver;
+        return game_state != Game_State.NOT_OVER;
     }
+
+    public Game_State getGameState() { return game_state; }
 }

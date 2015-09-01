@@ -7,7 +7,7 @@ import android.graphics.Color;
  */
 public class RandomBall extends Ball {
 
-    private int FRAMES_PER_COLOR = 10;
+    private int FRAMES_PER_COLOR = 3;
     private int ticks_left_with_current_color;
     private int current_color;
 
@@ -31,6 +31,9 @@ public class RandomBall extends Ball {
                 case 3: current_color = Color.BLUE;
                     break;
             }
+            ticks_left_with_current_color = FRAMES_PER_COLOR;
+        } else {
+            ticks_left_with_current_color--;
         }
         return current_color;
     }

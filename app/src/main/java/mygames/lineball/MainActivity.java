@@ -153,7 +153,8 @@ public class MainActivity extends Activity {
 
             for(Ball b : balls) {
                 if(Util.ballHitLineGameOver(ballTracker, b)) {
-                    goToMenu();
+                    paused = true;
+                    ballTracker.setGameStateToLineContact();
                 }
                 b.checkWallCollision(screenX, screenY);
                 b.update(fps);
@@ -167,10 +168,6 @@ public class MainActivity extends Activity {
                 score += ballTracker.calculateScore();
                 balls.removeAll(ballTracker.getBallsTracked());
                 ballTracker.cleanUpBallsFields();
-            }
-
-            if (ballTracker.isGameOver()) {
-                goToMenu();
             }
 
         }
@@ -224,6 +221,12 @@ public class MainActivity extends Activity {
                 paint.setTextSize(20);
                 canvas.drawText(Arrays.toString(ballTracker.numBallsPerType), 30, 120, paint);
 
+                //Draw the game_overState
+                if (ballTracker.isGameOver()) {
+                    paint.setTextSize(110);
+                    canvas.drawText(ballTracker.getGameState().toString(), 30, screenY / 2, paint);
+                }
+
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
             }
@@ -259,8 +262,26 @@ public class MainActivity extends Activity {
 
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
-                    paused = false;
-                    if (ballTracker.getBallsTracked().isEmpty()) {
+                    if (!ballTracker.isGameOver()) {
+                        paused = false;
+                        if (ballTracker.getBallsTracked().isEmpty()) {
+                            for (int i = balls.size() - 1; i >= 0; i--) {
+                                Ball b = balls.get(i);
+                                if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                                    ballTracker.trackBall(b);
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        goToMenu();
+                    }
+                    break;
+
+                //In case we want swiping instead of just clicking
+                case MotionEvent.ACTION_MOVE:
+                    if (!ballTracker.isGameOver()) {
+                        paused = false;
                         for (int i = balls.size() - 1; i >= 0; i--) {
                             Ball b = balls.get(i);
                             if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
@@ -271,25 +292,15 @@ public class MainActivity extends Activity {
                     }
                     break;
 
-                //In case we want swiping instead of just clicking
-                case MotionEvent.ACTION_MOVE:
-                    paused = false;
-                    for(int i = balls.size()-1; i >= 0; i--) {
-                        Ball b = balls.get(i);
-                        if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
-                            ballTracker.trackBall(b);
-                            break;
-                        }
-                    }
-                    break;
-
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
-                    for(int i = balls.size()-1; i >= 0; i--) {
-                        Ball b = balls.get(i);
-                        if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
-                            ballTracker.checkForResumeMovement(b);
-                            break;
+                    if (!ballTracker.isGameOver()) {
+                        for (int i = balls.size() - 1; i >= 0; i--) {
+                            Ball b = balls.get(i);
+                            if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                                ballTracker.checkForResumeMovement(b);
+                                break;
+                            }
                         }
                     }
                     break;
