@@ -12,16 +12,16 @@ public class Ball {
     float xVelocity;
     float yVelocity;
 
-    private float ballRadius = 40;
+    private float ballRadius = 30;
     private float x;
     private float y;
-    private int color;
+    protected int color;
 
     public final static int RANDOM_COLOR = 4;
 
     private boolean isbeingTracked;
 
-    private static Random gen = new Random();
+    protected static Random gen = new Random();
 
 
     public Ball(int screenX, int screenY) {
@@ -36,15 +36,18 @@ public class Ball {
         this.x = gen.nextInt(screenX - 2 * (int) getBallRadius()) + getBallRadius();
         this.y = gen.nextInt(screenY - 2 * (int) getBallRadius()) + getBallRadius();
 
-        this.color = gen.nextInt(5);
+        this.color = gen.nextInt(4);
 
         this.isbeingTracked = false;
     }
 
     //Checks if ball intersects with the given coordinates (the user's touch x and y)
     public boolean intersects(float touchx, float touchy) {
-        return touchx > x - getBallRadius() && touchx < x + getBallRadius() &&
-                touchy < y + getBallRadius() && touchy > y - getBallRadius();
+        double extraRadius = 2.5;
+        return touchx > x - getBallRadius() - extraRadius &&
+                touchx < x + getBallRadius() + extraRadius &&
+                touchy < y + getBallRadius() + extraRadius &&
+                touchy > y - getBallRadius() - extraRadius;
 
     }
 
@@ -76,9 +79,6 @@ public class Ball {
     public int getColor() {
         int retColor = -1;
         int ballColor = this.color;
-        if (color == RANDOM_COLOR) {
-            ballColor = gen.nextInt(4);
-        }
         switch (ballColor) {
             case 0: retColor = Color.RED;
                 break;

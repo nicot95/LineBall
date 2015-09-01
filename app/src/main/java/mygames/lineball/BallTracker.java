@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class BallTracker {
 
 
-    private int[] numBallsPerType;
+    public int[] numBallsPerType;
     private ArrayList<Ball> ballsTracked;
     private boolean readyToCalculateScore;
     private int shapeMultiplier;
@@ -46,14 +46,12 @@ public class BallTracker {
         //Generates the colour of the chain that is gonna link all balls
         getChainColor(b);
 
-        //Stop tracking ball if tapped again
-
-
         int ballColor = b.getColorSimple();
         if (ballColor == Ball.RANDOM_COLOR || ballColor == colorComparison ||
                 colorComparison == Ball.RANDOM_COLOR) {
             checkForChainProperties(b);
         }
+
 
 
     }
@@ -69,7 +67,7 @@ public class BallTracker {
         }
     }
 
-    private boolean checkForResumeMovement(Ball b) {
+    public boolean checkForResumeMovement(Ball b) {
         if ( currentTrackedBall != null && currentTrackedBall.equals(b)) {
             for (Ball ball: ballsTracked) {
                 ball.resumeMovement();
@@ -102,7 +100,6 @@ public class BallTracker {
                 numBallsPerType[ball.getColorSimple()]--;
             }
             gameOverCheck();
-
         }
     }
 
@@ -116,7 +113,7 @@ public class BallTracker {
         for (int i = 0; i < numBallsPerType.length; i++) {
             if (i == Ball.RANDOM_COLOR)
                 randomBalls = 0;
-            if (numBallsPerType[i] + randomBalls >= MINIMUM_BALLS_FOR_LINK) {
+            if (numBallsPerType[i] + randomBalls > MINIMUM_BALLS_FOR_LINK) {
                 return;
             }
         }
@@ -149,13 +146,6 @@ public class BallTracker {
         currentTrackedBall = null;
     }
 
-    public void resumeBall() {
-
-        boolean wantedToUntrack = checkForResumeMovement(ballsTracked.get(0));
-        if (wantedToUntrack) return;
-
-    }
-
     public int getColorChain() {
         return colorChain;
     }
@@ -171,7 +161,6 @@ public class BallTracker {
     public ArrayList<Ball> getBallsTracked() {
         return ballsTracked;
     }
-
 
     public boolean isGameOver() {
         return isGameOver;

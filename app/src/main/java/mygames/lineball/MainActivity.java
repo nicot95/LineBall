@@ -16,6 +16,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends Activity {
 
@@ -204,7 +205,7 @@ public class MainActivity extends Activity {
                     }
                     //draw white border
                     paint.setColor(Color.WHITE);
-                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius()+2, paint);
+                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius()+4, paint);
                 }
 
 
@@ -220,6 +221,8 @@ public class MainActivity extends Activity {
                 // TODO draw the Score
                 paint.setTextSize(40);
                 canvas.drawText("Score: " + score, 30, 70, paint);
+                paint.setTextSize(20);
+                canvas.drawText(Arrays.toString(ballTracker.numBallsPerType), 30, 120, paint);
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -257,11 +260,13 @@ public class MainActivity extends Activity {
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
                     paused = false;
-                    for(int i = balls.size()-1; i >= 0; i--) {
-                        Ball b = balls.get(i);
-                        if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
-                            ballTracker.trackBall(b);
-                            break;
+                    if (ballTracker.getBallsTracked().isEmpty()) {
+                        for (int i = balls.size() - 1; i >= 0; i--) {
+                            Ball b = balls.get(i);
+                            if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                                ballTracker.trackBall(b);
+                                break;
+                            }
                         }
                     }
                     break;
@@ -280,43 +285,30 @@ public class MainActivity extends Activity {
 
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
-                    int ballsTracked = ballTracker.getBallsTracked().size();
-                    if(ballsTracked == 1) {
-                        ballTracker.resumeBall();
-                    } else if(ballsTracked > 1){
-                        ballTracker.setReadyToCalculate();
+                    for(int i = balls.size()-1; i >= 0; i--) {
+                        Ball b = balls.get(i);
+                        if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                            ballTracker.checkForResumeMovement(b);
+                            break;
+                        }
                     }
-
                     break;
             }
             return true;
         }
 
         public void createBallsAndRestart(int numBalls) {
-            for(int ballNum = 0; ballNum < numBalls; ballNum ++ ){
-                   Ball b = new Ball(screenX, screenY);
-                   balls.add(b);
-                   addToNumBallsPerType(b.getColorSimple());
-            }
-
-            //ball.reset(screenX, screenY);
+            BallGenerator ballGenerator = new BallGenerator(numBalls, DIFFERENT_TYPES_OF_BALLS,
+                                                            screenX, screenY);
+            balls = ballGenerator.generateBalls();
+            numberOfBallsPerType = ballGenerator.getDifferentTypesOfBalls();
 
             // The score
             int score = 0;
 
             // Moves
             int movesLeft = 7;
-
         }
-
-        private void addToNumBallsPerType(int ballColor) {
-            numberOfBallsPerType[ballColor]++;
-        }
-
-        public void updateScore(int extraScore) {
-            this.score += extraScore;
-        }
-
     }
 
     private void goToMenu() {
