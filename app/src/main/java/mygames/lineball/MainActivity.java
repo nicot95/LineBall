@@ -218,18 +218,35 @@ public class MainActivity extends Activity {
                 // TODO draw the Score
                 paint.setTextSize(40);
                 canvas.drawText("Score: " + score, 30, 70, paint);
-                paint.setTextSize(20);
-                canvas.drawText(Arrays.toString(ballTracker.numBallsPerType), 30, 120, paint);
 
                 //Draw the game_overState
                 if (ballTracker.isGameOver()) {
-                    paint.setTextSize(110);
-                    canvas.drawText(ballTracker.getGameState().toString(), 30, screenY / 2, paint);
+                    drawGameOverText(50, ballTracker.getGameState(), screenY / 2, paint);
                 }
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
             }
+
+        }
+
+        private void drawGameOverText(int textSize, BallTracker.Game_State text, int y, Paint paint) {
+            paint.setTextSize(textSize);
+            String gameOverText = "";
+            switch (text) {
+                case BOARD_CLEARED:
+                    gameOverText = "All balls cleared";
+                    break;
+                case NO_POSSIBLE_MOVE:
+                    gameOverText = "No more moves";
+                    break;
+                case LINE_CONTACT:
+                    gameOverText = "Line contact";
+                    break;
+                default:
+                    break;
+            }
+            canvas.drawText(gameOverText, (float) 30, y, paint);
 
         }
 

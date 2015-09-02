@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class BallTracker {
 
 
-    public int[] numBallsPerType;
+    private int[] numBallsPerType;
     private ArrayList<Ball> ballsTracked;
     private boolean readyToCalculateScore;
     private int shapeMultiplier;
@@ -124,7 +124,7 @@ public class BallTracker {
             if (numBallsPerType[i] > 0) {
                 isBoardCleared = false;
             }
-            if (numBallsPerType[i] + randomBalls > MINIMUM_BALLS_FOR_LINK) {
+            if (numBallsPerType[i] + randomBalls >= MINIMUM_BALLS_FOR_LINK) {
                 return;
             }
         }
