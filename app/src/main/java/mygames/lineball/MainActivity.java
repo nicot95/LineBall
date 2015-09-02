@@ -177,6 +177,7 @@ public class MainActivity extends Activity {
 
             // Make sure our drawing surface is valid or we crash
             if (ourHolder.getSurface().isValid()) {
+                paint.setAntiAlias(true);
                 // Lock the canvas ready to draw
                 canvas = ourHolder.lockCanvas();
 
@@ -311,13 +312,7 @@ public class MainActivity extends Activity {
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
                     if (!ballTracker.isGameOver()) {
-                        for (int i = balls.size() - 1; i >= 0; i--) {
-                            Ball b = balls.get(i);
-                            if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
-                                ballTracker.checkForResumeMovement(b);
-                                break;
-                            }
-                        }
+                        ballTracker.resumeMovement();
                     }
                     break;
             }

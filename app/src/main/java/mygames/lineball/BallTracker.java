@@ -74,15 +74,13 @@ public class BallTracker {
         }
     }
 
-    public boolean checkForResumeMovement(Ball b) {
-        if ( currentTrackedBall != null && currentTrackedBall.equals(b)) {
+    public void resumeMovement() {
+        if ( currentTrackedBall != null) {
             for (Ball ball: ballsTracked) {
                 ball.resumeMovement();
             }
             cleanUpBallsFields();
-            return true;
         }
-        return false;
     }
 
     private void getChainColor(Ball b) {
