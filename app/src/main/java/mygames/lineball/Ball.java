@@ -4,7 +4,9 @@ package mygames.lineball;
  * Created by nico on 11/08/15.
  */
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 
 import java.util.Random;
 
@@ -12,9 +14,9 @@ public class Ball {
     float xVelocity;
     float yVelocity;
 
-    private float ballRadius = 30;
-    private float x;
-    private float y;
+    protected float ballRadius = 30;
+    protected float x;
+    protected float y;
     protected int color;
 
     public final static int RANDOM_COLOR = 4;
@@ -162,5 +164,8 @@ public class Ball {
     }
 
 
-
+    public void draw(Paint paint, Canvas canvas) {
+        paint.setColor(getColor());
+        canvas.drawCircle(x, y, ballRadius, paint);
+    }
 }

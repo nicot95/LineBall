@@ -1,6 +1,9 @@
 package mygames.lineball;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 
 /**
  * Created by Daniel on 01/09/2015.
@@ -36,5 +39,11 @@ public class RandomBall extends Ball {
             ticks_left_with_current_color--;
         }
         return current_color;
+    }
+
+    @Override
+    public void draw(Paint paint, Canvas canvas) {
+        RectF oval = new RectF(x - ballRadius, y + ballRadius, x + ballRadius, y - ballRadius);
+        canvas.drawArc(oval, 0, 90, true, paint);
     }
 }

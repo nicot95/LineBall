@@ -210,8 +210,7 @@ public class MainActivity extends Activity {
                 // Draw the balls
                 for(int i = 0; i < balls.size(); i++) {
                     Ball ball = balls.get(i);
-                    paint.setColor(ball.getColor());
-                    canvas.drawCircle(ball.getX(), ball.getY(), ball.getBallRadius(), paint);
+                    ball.draw(paint, canvas);
                 }
 
 
