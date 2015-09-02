@@ -193,6 +193,9 @@ public class MainActivity extends Activity {
                 paint.setStrokeWidth(5); // Increase width of line
                 for (int i = 0; i < trackedBalls.size(); i++) {
                     Ball ball2 = trackedBalls.get(i);
+                    //draw white border
+                    paint.setColor(Color.WHITE);
+                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius()+4, paint);
                     if(i > 0) {
                         //draw lines
                         Ball ball1 = trackedBalls.get(i - 1);
@@ -200,9 +203,6 @@ public class MainActivity extends Activity {
                         canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
                                 ball2.getY(), paint);
                     }
-                    //draw white border
-                    paint.setColor(Color.WHITE);
-                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius()+4, paint);
                 }
 
 
