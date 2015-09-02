@@ -16,7 +16,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends Activity {
 
@@ -195,8 +194,10 @@ public class MainActivity extends Activity {
                 for (int i = 0; i < trackedBalls.size(); i++) {
                     Ball ball2 = trackedBalls.get(i);
                     //draw white border
-                    paint.setColor(Color.WHITE);
-                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius()+4, paint);
+                    if(i == trackedBalls.size()-1) {
+                        paint.setColor(Color.WHITE);
+                        canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius() + 4, paint);
+                    }
                     if(i > 0) {
                         //draw lines
                         Ball ball1 = trackedBalls.get(i - 1);

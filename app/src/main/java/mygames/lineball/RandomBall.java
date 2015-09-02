@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 
 /**
  * Created by Daniel on 01/09/2015.
@@ -44,16 +43,16 @@ public class RandomBall extends Ball {
 
     @Override
     public void draw(Paint paint, Canvas canvas) {
-        RectF rect = new RectF(x - ballRadius, y + ballRadius, x + ballRadius, y - ballRadius);
+        RectF rect = new RectF(x - ballRadius, y - ballRadius, x + ballRadius, y + ballRadius);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.GREEN);
         canvas.drawArc(rect, 0, 90, true, paint);
         paint.setColor(Color.RED);
-        canvas.drawArc(rect, 90, 180, true, paint);
+        canvas.drawArc(rect, 90, 90, true, paint);
         paint.setColor(Color.YELLOW);
-        canvas.drawArc(rect, 180, 270, true, paint);
+        canvas.drawArc(rect, 180, 90, true, paint);
         paint.setColor(Color.BLUE);
-        canvas.drawArc(rect, 270, 360, true, paint);
+        canvas.drawArc(rect, 270, 90, true, paint);
 
 
     }
