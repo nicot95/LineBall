@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import java.util.Random;
 
 public class Ball {
+    //commit test iml shitty bug
     float xVelocity;
     float yVelocity;
 
