@@ -17,7 +17,7 @@ public class BallGenerator {
 
     public BallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY) {
         this.numBalls = numBalls;
-        this.balls = new ArrayList<>();
+        this.balls = new ArrayList<Ball>();
         this.differentTypesOfBalls = new int[differentTypesOfBalls];
 
         this.screenX = screenX;

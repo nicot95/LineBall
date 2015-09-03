@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
         private final int DIFFERENT_TYPES_OF_BALLS = 5;
         private int[] numberOfBallsPerType;
 
-        ArrayList<Ball> balls = new ArrayList<>();
+        ArrayList<Ball> balls = new ArrayList<Ball>();
         int numBalls = 15; //TODO get rid of magic number
 
         // The score

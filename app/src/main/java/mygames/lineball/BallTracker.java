@@ -36,7 +36,7 @@ public class BallTracker {
 
     public BallTracker(int[] numBallsPerType) {
 
-        ballsTracked = new ArrayList<>();
+        ballsTracked = new ArrayList<Ball>();
         readyToCalculateScore = false;
         game_state = Game_State.NOT_OVER;
         colorChain = -1;
