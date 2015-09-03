@@ -50,6 +50,7 @@ public class BallTracker {
 
     public void trackBall(Ball b) {
 
+
         //Generates the colour of the chain that is gonna link all balls
         getChainColor(b);
 
@@ -74,6 +75,14 @@ public class BallTracker {
         }
     }
 
+    /*private void checkForChainProperties(Ball b) {
+        if (!ballsTracked.contains(b) || (ballsTracked.size() > 1 && b.equals(ballsTracked.get(0)))) {
+            //Ball is not being tracked, add to list
+            ballsTracked.add(b);
+            trackNewBall(b);
+        }
+    }*/
+
     public void resumeMovement() {
         if ( currentTrackedBall != null) {
             for (Ball ball: ballsTracked) {
@@ -96,9 +105,14 @@ public class BallTracker {
         b.stop();
     }
 
-    private void checkForShape(Ball b) {
+    public void checkForShape(Ball b) {
+        /*if(ballsTracked.size() <= 1) {
+            return;
+        }
+        Ball b = ballsTracked.get(ballsTracked.size()-1);*/
         if (!(b.equals(currentTrackedBall) || (b.equals(lastTrackedBall) && ballsTracked.size() > 2))) {
             //Shape has been completed, prepare to calculate score
+            //ballsTracked.remove(ballsTracked.size()-1);
             shapeMultiplier = ballsTracked.size();
             this.readyToCalculateScore = true;
             for (Ball ball: ballsTracked) {

@@ -27,6 +27,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.games.Game;
+import com.google.android.gms.games.Games;
 
 import android.support.v4.app.FragmentActivity;
 
@@ -49,6 +51,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
+    final String LEADERBOARD_ID = "leaderboard";
+    final int REQUEST_LEADERBOARD = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -368,6 +373,10 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 //Draw the game_overState
                 if (ballTracker.isGameOver()) {
                     drawGameOverText(50, ballTracker.getGameState(), screenY / 2, paint);
+                    //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
+                    //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
+                    //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
+
                 }
 
                 // Draw everything to the screen
@@ -458,7 +467,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
                     if (!ballTracker.isGameOver()) {
-                        ballTracker.resumeMovement();
+                        //ballTracker.checkForShape();
+                        //ballTracker.resumeMovement();
+
                     }
                     break;
             }
