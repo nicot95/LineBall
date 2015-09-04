@@ -342,10 +342,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 for (int i = 0; i < trackedBalls.size(); i++) {
                     Ball ball2 = trackedBalls.get(i);
                     //draw white border
-                    if(i == trackedBalls.size()-1) {
-                        paint.setColor(Color.WHITE);
-                        canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius() + 4, paint);
-                    }
+                    paint.setColor(Color.WHITE);
+                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius() + 4, paint);
                     if(i > 0) {
                         //draw lines
                         Ball ball1 = trackedBalls.get(i - 1);

@@ -133,6 +133,7 @@ public class BallTracker {
     }
 
     public void clearShape() {
+        ballsTracked.remove(0);
         for (Ball ball: ballsTracked) {
                 numBallsPerType[ball.getColorSimple()]--;
         }
