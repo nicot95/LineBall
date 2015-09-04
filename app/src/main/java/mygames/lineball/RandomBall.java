@@ -56,7 +56,7 @@ public class RandomBall extends Ball {
         paint.setColor(Color.BLUE);
         canvas.drawArc(rect, 270 + rotation, 90, true, paint);
 
-        rotation++;
+        rotation += 3;
         if (rotation > 360) {
             rotation = rotation%360;
         }

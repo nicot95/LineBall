@@ -156,7 +156,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     @Override
     protected void onStart() {
         super.onStart();
-        if (!mResolvingError) {  // more about this later
+        if (!mResolvingError) {
             //mGoogleApiClient.connect();
         }
     }
@@ -333,7 +333,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255, 0, 0, 0));
+                canvas.drawColor(Color.BLACK);
 
                 // Choose the brush color for drawing
                 //paint.setColor(Color.argb(255,  255, 255, 255));
