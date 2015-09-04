@@ -225,6 +225,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         int screenX;
         int screenY;
 
+
+
         /*
             Fields used by the ball tracker in order to check for gameOver state
         */
