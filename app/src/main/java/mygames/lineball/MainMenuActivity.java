@@ -8,28 +8,38 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 
 public class MainMenuActivity extends Activity {
 
-    MenuView menuView;
+    //View that will hold the menu and its logic
+    private MenuView menuView;
+
+    //View that will hold the add
+   // private AdView addView;
+
+    private static final String AD_UNIT_ID = "PLACE ID HERE";
 
     private ArrayList<RectF> lines = new ArrayList<RectF>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         menuView = new MenuView(this);
         setContentView(menuView);
+
     }
 
-    class MenuView extends SurfaceView implements Runnable {
+    public class MenuView extends SurfaceView implements Runnable {
 
         Thread gameThread = null;
 
@@ -54,6 +64,14 @@ public class MainMenuActivity extends Activity {
             ourHolder = getHolder();
             paint = new Paint();
 
+        }
+
+        public MenuView(Context context, AttributeSet attrs) {
+            super(context, attrs);
+            this.setBackgroundColor(0X0ff00000);
+
+            ourHolder = getHolder();
+            paint = new Paint();
         }
 
         @Override
@@ -143,6 +161,11 @@ public class MainMenuActivity extends Activity {
         super.onPause();
 
         menuView.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
 }

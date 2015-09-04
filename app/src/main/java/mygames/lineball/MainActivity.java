@@ -33,6 +33,8 @@ import com.google.android.gms.games.Games;
 import android.support.v4.app.FragmentActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ConnectionCallbacks,
         OnConnectionFailedListener {
@@ -229,7 +231,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         private final int DIFFERENT_TYPES_OF_BALLS = 5;
         private int[] numberOfBallsPerType;
 
-        ArrayList<Ball> balls = new ArrayList<Ball>();
+        List<Ball> balls;
         int numBalls = 15; //TODO get rid of magic number
 
         // The score
@@ -300,13 +302,15 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         // Movement, collision detection etc.
         public void update() {
 
-            for(Ball b : balls) {
-                if(Util.ballHitLineGameOver(ballTracker, b)) {
-                    paused = true;
-                    ballTracker.setGameStateToLineContact();
+            synchronized (balls) {
+                for (Ball b : balls) {
+                    if (Util.ballHitLineGameOver(ballTracker, b)) {
+                        paused = true;
+                        ballTracker.setGameStateToLineContact();
+                    }
+                    b.checkWallCollision(screenX, screenY);
+                    b.update(fps);
                 }
-                b.checkWallCollision(screenX, screenY);
-                b.update(fps);
             }
 
             /*
@@ -364,11 +368,11 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
 
                 // Draw the balls
-                for(int i = 0; i < balls.size(); i++) {
-                    Ball ball = balls.get(i);
-                    ball.draw(paint, canvas);
+                synchronized (balls) {
+                    for (Ball b: balls) {
+                        b.draw(paint, canvas);
+                    }
                 }
-
 
                 // TODO draw the Score
                 paint.setTextSize(40);
@@ -441,11 +445,12 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     if (!ballTracker.isGameOver()) {
                         paused = false;
                         if (ballTracker.getBallsTracked().isEmpty()) {
-                            for (int i = balls.size() - 1; i >= 0; i--) {
-                                Ball b = balls.get(i);
-                                if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
-                                    ballTracker.trackBall(b);
-                                    break;
+                            synchronized (balls) {
+                                for (Ball b: balls) {
+                                    if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                                        ballTracker.trackBall(b);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -458,11 +463,12 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 case MotionEvent.ACTION_MOVE:
                     if (!ballTracker.isGameOver()) {
                         paused = false;
-                        for (int i = balls.size() - 1; i >= 0; i--) {
-                            Ball b = balls.get(i);
-                            if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
-                                ballTracker.trackBall(b);
-                                break;
+                        synchronized (balls) {
+                            for (Ball b: balls) {
+                                if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                                    ballTracker.trackBall(b);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -476,8 +482,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         balls.removeAll(ballTracker.getBallsTracked());
                         ballTracker.cleanUpBallsFields();
                         //ballTracker.checkForShape();
-                        //ballTracker.resumeMovement();
 
+                    } else if (!ballTracker.isGameOver()){
+                        ballTracker.resumeMovement();
                     }
                     break;
             }
