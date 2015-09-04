@@ -42,7 +42,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     // gameView will be the view of the game
     // It will also hold the logic of the game
     // and respond to screen touches as well
-    GameView gameView;
+    GameView survivalView;
 
     private ArrayList<RectF> lines = new ArrayList<RectF>();
     private GoogleApiClient mGoogleApiClient;
@@ -55,9 +55,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
     final String LEADERBOARD_ID = "leaderboard";
     final int REQUEST_LEADERBOARD = 1;
-    // The size of the screen in pixels
-    static int screenX;
-    static int screenY;
+
+    int NUM_BALLS = 15;
 
 
     @Override
@@ -75,11 +74,14 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        // Load the resolution into a Point object
+        Point size = new Point();
+        display.getSize(size);
         // Initialize gameView and set it as the view
-        gameView = new GameView(this);
-        setContentView(gameView);
+        survivalView = new SurvivalView(this, size.x, size.y, NUM_BALLS);
+        setContentView(survivalView);
     }
-
 
 
     @Override
@@ -116,6 +118,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             // Show dialog using GoogleApiAvailability.getErrorDialog()
             showErrorDialog(result.getErrorCode());
             mResolvingError = true;
+
         }
     }
 
@@ -139,7 +142,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
     /* A fragment to display an error dialog */
     public static class ErrorDialogFragment extends DialogFragment {
-        public ErrorDialogFragment() { }
+        public ErrorDialogFragment() {
+        }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -197,36 +201,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
     // Notice we implement runnable so we have
     // A thread and can override the run method.
-    class GameView extends SurfaceView implements Runnable {
-
-        // This is our thread
-        Thread gameThread = null;
-
-        // This is new. We need a SurfaceHolder
-        // When we use Paint and Canvas in a thread
-        // We will see it in action in the draw method soon.
-        SurfaceHolder ourHolder;
-
-        // A boolean which we will set and unset
-        // when the game is running- or not.
-        volatile boolean playing;
-
-        // Game is paused at the start
-        boolean paused = true;
-
-        // A Canvas and a Paint object
-        Canvas canvas;
-        Paint paint;
-
-        // This variable tracks the game frame rate
-        long fps;
-
-        // This is used to help calculate the fps
-        private long timeThisFrame;
-
-
-
-
+    class SurvivalView extends GameView {
 
         /*
             Fields used by the ball tracker in order to check for gameOver state
@@ -234,39 +209,15 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         private final int DIFFERENT_TYPES_OF_BALLS = 5;
         private int[] numberOfBallsPerType;
 
-        List<Ball> balls;
-        int numBalls = 15; //TODO get rid of magic number
-
         // The score
         int score = 0;
-
-        // Moves
-        int movesLeft = 7;
 
         private BallTracker ballTracker;
 
         // When the we initialize (call new()) on gameView
         // This special constructor method runs
-        public GameView(Context context) {
-            // The next line of code asks the
-            // SurfaceView class to set up our object.
-            // How kind.
-            super(context);
-            this.setBackgroundColor(0X00000000);
-
-
-            // Initialize ourHolder and paint objects
-            ourHolder = getHolder();
-            paint = new Paint();
-
-            // Get a Display object to access screen details
-            Display display = getWindowManager().getDefaultDisplay();
-            // Load the resolution into a Point object
-            Point size = new Point();
-            display.getSize(size);
-
-            screenX = size.x;
-            screenY = size.y;
+        public SurvivalView(Context context, int screenWidth, int screenHeight, int numBalls) {
+            super(context, screenWidth, screenHeight);
 
             numberOfBallsPerType = new int[DIFFERENT_TYPES_OF_BALLS];
             createBallsAndRestart(numBalls);
@@ -274,33 +225,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         }
 
+
         @Override
-        public void run() {
-            while (playing) {
-
-                // Capture the current time in milliseconds in startFrameTime
-                long startFrameTime = System.currentTimeMillis();
-
-                // Update the frame
-                if(!paused){
-                    update();
-                }
-
-                // Draw the frame
-                draw();
-
-                // Calculate the fps this frame
-                // We can then use the result to
-                // time animations and more.
-                timeThisFrame = System.currentTimeMillis() - startFrameTime;
-                if (timeThisFrame >= 1) {
-                    fps = 1000 / timeThisFrame;
-                }
-
-            }
-
-        }
-
         // Everything that needs to be updated goes in here
         // Movement, collision detection etc.
         public void update() {
@@ -311,7 +237,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         paused = true;
                         ballTracker.setGameStateToLineContact();
                     }
-                    b.checkWallCollision(screenX, screenY);
+                    b.checkWallCollision(screenWidth, screenHeight);
                     b.update(fps);
                 }
             }
@@ -326,6 +252,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         }
 
+        @Override
         // Draw the newly updated scene
         public void draw() {
 
@@ -349,7 +276,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
                 // Draw the balls
                 synchronized (balls) {
-                    for (Ball b: balls) {
+                    for (Ball b : balls) {
                         b.draw(paint, canvas);
                     }
                 }
@@ -360,7 +287,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
                 //Draw the game_overState
                 if (ballTracker.isGameOver()) {
-                    drawGameOverText(50, ballTracker.getGameState(), screenY / 2, paint);
+                    drawGameOverText(50, ballTracker.getGameState(), screenHeight / 2, paint);
                     //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
                     //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
                     //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
@@ -420,26 +347,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         }
 
-        // If SimpleGameEngine Activity is paused/stopped
-        // shutdown our thread.
-        public void pause() {
-            playing = false;
-            try {
-                gameThread.join();
-            } catch (InterruptedException e) {
-                Log.e("Error:", "joining thread");
-            }
-
-        }
-
-        // If SimpleGameEngine Activity is started then
-        // start our thread.
-        public void resume() {
-            playing = true;
-            gameThread = new Thread(this);
-            gameThread.start();
-        }
-
         // The SurfaceView class implements onTouchListener
         // So we can override this method and detect screen touches.
         @Override
@@ -453,7 +360,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         paused = false;
                         if (ballTracker.getBallsTracked().isEmpty()) {
                             synchronized (balls) {
-                                for (Ball b: balls) {
+                                for (Ball b : balls) {
                                     if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
                                         ballTracker.trackBall(b);
                                         break;
@@ -471,7 +378,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     if (!ballTracker.isGameOver()) {
                         paused = false;
                         synchronized (balls) {
-                            for (Ball b: balls) {
+                            for (Ball b : balls) {
                                 if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
                                     ballTracker.trackBall(b);
                                     break;
@@ -490,7 +397,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         ballTracker.cleanUpBallsFields();
                         //ballTracker.checkForShape();
 
-                    } else if (!ballTracker.isGameOver()){
+                    } else if (!ballTracker.isGameOver()) {
                         ballTracker.resumeMovement();
                     }
                     break;
@@ -498,26 +405,26 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             return true;
         }
 
-        public void createBallsAndRestart(int numBalls) {
+        private void createBallsAndRestart(int numBalls) {
             BallGenerator ballGenerator = new BallGenerator(numBalls, DIFFERENT_TYPES_OF_BALLS,
-                                                            screenX, screenY);
+                    screenWidth, screenHeight);
             balls = ballGenerator.generateBalls();
             numberOfBallsPerType = ballGenerator.getDifferentTypesOfBalls();
 
             // The score
             int score = 0;
 
-            // Moves
-            int movesLeft = 7;
-        }
-    }
 
-    private void goToMenu() {
-        Intent intent = new Intent(gameView.getContext(), MainMenuActivity.class);
-        intent.putExtra("score", gameView.score);
-        startActivity(intent);
+        }
+
+
+        private void goToMenu() {
+            Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
+            intent.putExtra("score", this.score);
+            startActivity(intent);
+        }
+        // This is the end of our BreakoutView inner class
     }
-    // This is the end of our BreakoutView inner class
 
     // This method executes when the player starts the game
     @Override
@@ -525,7 +432,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         super.onResume();
 
         // Tell the gameView resume method to execute
-        gameView.resume();
+        survivalView.resume();
     }
 
     // This method executes when the player quits the game
@@ -534,7 +441,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         super.onPause();
 
         // Tell the gameView pause method to execute
-        gameView.pause();
+        survivalView.pause();
     }
 
 
