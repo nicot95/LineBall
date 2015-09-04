@@ -155,7 +155,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     protected void onStart() {
         super.onStart();
         if (!mResolvingError) {  // more about this later
-            mGoogleApiClient.connect();
+            //mGoogleApiClient.connect();
         }
     }
 
@@ -347,6 +347,14 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     if(i > 0) {
                         //draw lines
                         Ball ball1 = trackedBalls.get(i - 1);
+                        //draw white border
+                        Paint whitePaint = new Paint();
+                        whitePaint.setAntiAlias(true);
+                        whitePaint.setColor(Color.WHITE);
+                        whitePaint.setStrokeWidth(10);
+                        canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
+                                ball2.getY(), whitePaint);
+                        //draw actual line
                         paint.setColor(ballTracker.getColorChain());
                         canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
                                 ball2.getY(), paint);

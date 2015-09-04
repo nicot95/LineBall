@@ -124,6 +124,8 @@ public class BallTracker {
             this.readyToCalculateScore = true;
             ballsTracked.add(b);
 
+        } else {
+          //  resumeMovement();
         }
     }
 
