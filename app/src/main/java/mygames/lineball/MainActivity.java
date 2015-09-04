@@ -55,6 +55,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
     final String LEADERBOARD_ID = "leaderboard";
     final int REQUEST_LEADERBOARD = 1;
+    // The size of the screen in pixels
+    static int screenX;
+    static int screenY;
 
 
     @Override
@@ -221,9 +224,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         // This is used to help calculate the fps
         private long timeThisFrame;
 
-        // The size of the screen in pixels
-        int screenX;
-        int screenY;
+
 
 
 
