@@ -1,6 +1,8 @@
 package mygames.lineball;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /*
     The ball tracker keeps an account of what balls have been linked so far.
@@ -15,7 +17,7 @@ public class BallTracker {
 
 
     private int[] numBallsPerType;
-    private ArrayList<Ball> ballsTracked;
+    private List<Ball> ballsTracked;
     private boolean readyToCalculateScore;
     private int shapeMultiplier;
 
@@ -38,7 +40,7 @@ public class BallTracker {
 
     public BallTracker(int[] numBallsPerType) {
 
-        ballsTracked = new ArrayList<Ball>();
+        ballsTracked = Collections.synchronizedList(new ArrayList<Ball>());
         readyToCalculateScore = false;
         game_state = Game_State.NOT_OVER;
         colorChain = -1;
@@ -206,7 +208,7 @@ public class BallTracker {
         return readyToCalculateScore;
     }
 
-    public ArrayList<Ball> getBallsTracked() {
+    public List<Ball> getBallsTracked() {
         return ballsTracked;
     }
 

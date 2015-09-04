@@ -341,31 +341,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
                 //Draw the lines connecting the already linked balls and a white border surrounding
                 // the selected balls
-                ArrayList<Ball> trackedBalls = ballTracker.getBallsTracked();
-                paint.setStrokeWidth(5); // Increase width of line
-                for (int i = 0; i < trackedBalls.size(); i++) {
-                    Ball ball2 = trackedBalls.get(i);
-                    //draw white border
-                    paint.setColor(Color.WHITE);
-                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius() + 4, paint);
-                    if(i > 0) {
-                        //draw lines
-                        Ball ball1 = trackedBalls.get(i - 1);
-                        //draw white border
-                        Paint whitePaint = new Paint();
-                        whitePaint.setAntiAlias(true);
-                        whitePaint.setColor(Color.WHITE);
-                        whitePaint.setStrokeWidth(10);
-                        canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
-                                ball2.getY(), whitePaint);
-                        //draw actual line
-                        paint.setColor(ballTracker.getColorChain());
-                        canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
-                                ball2.getY(), paint);
-                    }
-                }
-
-
+                List<Ball> trackedBalls = ballTracker.getBallsTracked();
+                drawLines(trackedBalls);
 
                 // Draw the balls
                 synchronized (balls) {
@@ -391,6 +368,33 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 ourHolder.unlockCanvasAndPost(canvas);
             }
 
+        }
+
+        private void drawLines(List<Ball> trackedBalls) {
+            synchronized (trackedBalls) {
+                paint.setStrokeWidth(5); // Increase width of line
+                for (int i = 0; i < trackedBalls.size(); i++) {
+                    Ball ball2 = trackedBalls.get(i);
+                    //draw white border
+                    paint.setColor(Color.WHITE);
+                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius() + 4, paint);
+                    if (i > 0) {
+                        //draw lines
+                        Ball ball1 = trackedBalls.get(i - 1);
+                        //draw white border
+                        Paint whitePaint = new Paint();
+                        whitePaint.setAntiAlias(true);
+                        whitePaint.setColor(Color.WHITE);
+                        whitePaint.setStrokeWidth(10);
+                        canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
+                                ball2.getY(), whitePaint);
+                        //draw actual line
+                        paint.setColor(ballTracker.getColorChain());
+                        canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
+                                ball2.getY(), paint);
+                    }
+                }
+            }
         }
 
         private void drawGameOverText(int textSize, BallTracker.Game_State text, int y, Paint paint) {

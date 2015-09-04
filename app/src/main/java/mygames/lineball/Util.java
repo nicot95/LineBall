@@ -95,7 +95,7 @@ public class Util{
     public static  boolean ballHitLineGameOver(BallTracker ballTracker, Ball b) {
         final int LINEWIDTH = 4;
 
-        ArrayList<Ball> ballsTracked = ballTracker.getBallsTracked();
+        List<Ball> ballsTracked = ballTracker.getBallsTracked();
         float x = b.getX(); float y = b.getY(); float ballRadius = b.getBallRadius();
         Point thisPoint = new Point((int) x, (int) y);
 
@@ -172,7 +172,7 @@ public class Util{
 
         if ((xDelta == 0) && (yDelta == 0))
         {
-            throw new IllegalArgumentException("Segment start equals segment end");
+            return new Point(sx1, sx2);
         }
 
         double u = ((px - sx1) * xDelta + (py - sy1) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
