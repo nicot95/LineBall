@@ -10,6 +10,8 @@ import android.graphics.RectF;
  */
 public class RandomBall extends Ball {
 
+
+    private int rotation = 0;
     private int FRAMES_PER_COLOR = 3;
     private int ticks_left_with_current_color;
     private int current_color;
@@ -46,13 +48,15 @@ public class RandomBall extends Ball {
         RectF rect = new RectF(x - ballRadius, y - ballRadius, x + ballRadius, y + ballRadius);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.GREEN);
-        canvas.drawArc(rect, 0, 90, true, paint);
+        canvas.drawArc(rect, (0 + rotation)%360, 90, true, paint);
         paint.setColor(Color.RED);
-        canvas.drawArc(rect, 90, 90, true, paint);
+        canvas.drawArc(rect, (90 + rotation)%360, 90, true, paint);
         paint.setColor(Color.YELLOW);
-        canvas.drawArc(rect, 180, 90, true, paint);
+        canvas.drawArc(rect, (180 + rotation)%360, 90, true, paint);
         paint.setColor(Color.BLUE);
-        canvas.drawArc(rect, 270, 90, true, paint);
+        canvas.drawArc(rect, (270 + rotation)%360, 90, true, paint);
+
+        rotation++;
 
 
     }
