@@ -27,6 +27,8 @@ public class BallTracker {
     private int colorComparison;
     private Game_State game_state;
 
+
+
     public enum Game_State {
         NOT_OVER,
         LINE_CONTACT,
@@ -65,6 +67,10 @@ public class BallTracker {
     }
 
     private void checkForChainProperties(Ball b) {
+
+        if(isReadyToCalculateScore()) {
+            return;
+        }
         //If the ball is already in the chain, check if it is closing a shape
         if (ballsTracked.contains(b)) {
             checkForShape(b);
@@ -105,22 +111,33 @@ public class BallTracker {
         b.stop();
     }
 
+
     public void checkForShape(Ball b) {
         /*if(ballsTracked.size() <= 1) {
             return;
         }
         Ball b = ballsTracked.get(ballsTracked.size()-1);*/
-        if (!(b.equals(currentTrackedBall) || (b.equals(lastTrackedBall) && ballsTracked.size() > 2))) {
+        if (shapeIsComplete(b)) {
             //Shape has been completed, prepare to calculate score
             //ballsTracked.remove(ballsTracked.size()-1);
             shapeMultiplier = ballsTracked.size();
             this.readyToCalculateScore = true;
-            for (Ball ball: ballsTracked) {
-                numBallsPerType[ball.getColorSimple()]--;
-            }
-            gameOverCheck();
+            ballsTracked.add(b);
+
         }
     }
+
+    private boolean shapeIsComplete(Ball b) {
+        return !(b.equals(currentTrackedBall) ||
+                (b.equals(lastTrackedBall) && ballsTracked.size() > 2));
+    }
+
+    public void clearShape() {
+        for (Ball ball: ballsTracked) {
+                numBallsPerType[ball.getColorSimple()]--;
+        }
+        gameOverCheck();
+        }
 
     /*
         Calculates if there is a minimum amount of balls required to make a link.

@@ -314,9 +314,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 for performance issues.
              */
             if (ballTracker.isReadyToCalculateScore()) {
-                score += ballTracker.calculateScore();
-                balls.removeAll(ballTracker.getBallsTracked());
-                ballTracker.cleanUpBallsFields();
+
             }
 
         }
@@ -466,7 +464,11 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
-                    if (!ballTracker.isGameOver()) {
+                    if (!ballTracker.isGameOver() && ballTracker.isReadyToCalculateScore()) {
+                        ballTracker.clearShape();
+                        score += ballTracker.calculateScore();
+                        balls.removeAll(ballTracker.getBallsTracked());
+                        ballTracker.cleanUpBallsFields();
                         //ballTracker.checkForShape();
                         //ballTracker.resumeMovement();
 
