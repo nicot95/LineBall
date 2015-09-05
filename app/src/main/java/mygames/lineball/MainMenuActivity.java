@@ -50,9 +50,19 @@ public class MainMenuActivity extends Activity {
         final RelativeLayout menuLayout = new RelativeLayout(this);
         menuLayout.addView(menuView);
 
+        //addSurvivalButton(menuLayout);
+        //addAchievementsButton(menuLayout);
+       // addAboutUsButton(menuLayout);
+        addAllButtons(menuLayout);
+
+        setContentView(menuLayout);
+
+    }
+
+
+
+    private void addSurvivalButton(RelativeLayout menuLayout) {
         Button survivalBut = new Button(this);
-        survivalBut.setText("Survival");
-        survivalBut.setBackgroundColor(Color.WHITE);
         survivalBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,10 +78,49 @@ public class MainMenuActivity extends Activity {
         buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         buttonParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
-        menuLayout.addView(survivalBut, buttonParams);
+        //addButton(menuLayout, survivalBut, "Survival", buttonParams);
+    }
 
-        setContentView(menuLayout);
+    private void addAllButtons(RelativeLayout menuLayout) {
 
+        Button survivalButt = new Button(this);
+        setButton(survivalButt, "Survival");
+        survivalButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startGame();
+            }
+        });
+
+        Button achievButt = new Button(this);
+        setButton(achievButt, "Achievements");
+
+        Button aboutUsButt = new Button(this);
+        setButton(aboutUsButt, "About us");
+
+        Button[] buttons = new Button[3];
+        buttons[0] = survivalButt;
+        buttons[1] = achievButt;
+        buttons[2] = aboutUsButt;
+        int separation = 150;
+
+        for(int i = 0; i< buttons.length; i++) {
+            RelativeLayout.LayoutParams buttonParams =
+                    new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+                buttons[i].setY((menuView.screenHeight/2) + i * separation);
+                // buttonParams.addRule(RelativeLayout.BELOW, buttons[i-1].getId());
+                menuLayout.addView(buttons[i], buttonParams);
+        }
+     }
+
+    private void setButton(Button button, String name) {
+        button.setText(name);
+        button.setBackgroundColor(Color.WHITE);
     }
 
 

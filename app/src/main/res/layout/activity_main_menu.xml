@@ -25,4 +25,5 @@
         android:layout_alignStart="@+id/adView"
         android:layout_marginTop="46dp" />
 
+
 </RelativeLayout>
