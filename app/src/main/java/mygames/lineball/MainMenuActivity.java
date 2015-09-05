@@ -93,13 +93,14 @@ public class MainMenuActivity extends Activity {
 
         int separation = 150;
 
-        for(int i = 0; i< buttons.length; i++) {
-            RelativeLayout.LayoutParams buttonParams =
-                    new RelativeLayout.LayoutParams(
-                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams buttonParams =
+                new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-            buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+        for(int i = 0; i< buttons.length; i++) {
 
             buttons[i].setY((menuView.screenHeight/2) + i * separation);
             // buttonParams.addRule(RelativeLayout.BELOW, buttons[i-1].getId());
