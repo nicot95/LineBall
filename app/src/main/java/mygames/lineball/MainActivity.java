@@ -235,8 +235,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             synchronized (balls) {
                 for (Ball b : balls) {
                     if (Util.ballHitLineGameOver(ballTracker, b)) {
-                        paused = true;
                         ballTracker.setGameStateToLineContact();
+                        playing = false;
                     }
                     b.checkWallCollision(screenWidth, screenHeight);
                     b.update(fps);

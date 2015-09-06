@@ -54,8 +54,7 @@ public class GameView extends SurfaceView implements Runnable{
 
         balls = new BallGenerator(NUM_BALLS, DIFFERENT_TYPES_OF_BALLS,
                 screenWidth, screenHeight).generateBalls();
-
-    }
+        }
 
 
     @Override
@@ -65,15 +64,17 @@ public class GameView extends SurfaceView implements Runnable{
             long startFrameTime = System.currentTimeMillis();
 
 
-            draw();
-
             if(!paused) {
                 update();
             }
 
+            draw();
+
+
             timeThisFrame = System.currentTimeMillis() - startFrameTime;
             if (timeThisFrame >= 1) {
                 fps = 1000 / timeThisFrame;
+                paused = false;
             }
 
         }
@@ -118,17 +119,7 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
 
-    @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
-            // Player has touched the screen
-            case MotionEvent.ACTION_DOWN: paused = false;
-         }
-        return true;
-    }
-
-    public void pause() {
+   public void pause() {
         playing = false;
         try {
             gameThread.join();
