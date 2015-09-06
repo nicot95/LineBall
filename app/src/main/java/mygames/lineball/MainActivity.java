@@ -257,6 +257,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         // Draw the newly updated scene
         public void draw() {
 
+
             // Make sure our drawing surface is valid or we crash
             if (ourHolder.getSurface().isValid()) {
                 paint.setAntiAlias(true);
@@ -304,35 +305,40 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         private void drawLines(List<Ball> trackedBalls) {
             synchronized (trackedBalls) {
                 paint.setStrokeWidth(5); // Increase width of line
+
+                Paint borderPaint = new Paint();
+                borderPaint.setAntiAlias(true);
+                borderPaint.setStrokeWidth(10);
                 for (int i = 0; i < trackedBalls.size(); i++) {
+                    //if shape is complete, border line to lighht blue, if not stay in white
+                    if(ballTracker.isReadyToCalculateScore()) {
+                        borderPaint.setColor(Color.CYAN);
+                    } else {
+                        borderPaint.setColor(Color.WHITE);
+                    }
+                    //draw ball border
                     Ball ball2 = trackedBalls.get(i);
-                    //draw white border
-                    paint.setColor(Color.WHITE);
-                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius() + 4, paint);
+                    canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius() + 4, borderPaint);
+
+                    //draw linked lines
                     if (i > 0) {
-                        //draw lines
+                        //draw border line
                         Ball ball1 = trackedBalls.get(i - 1);
-                        //draw white border
-                        Paint whitePaint = new Paint();
-                        whitePaint.setAntiAlias(true);
-                        whitePaint.setColor(Color.WHITE);
-                        whitePaint.setStrokeWidth(10);
                         canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
-                                ball2.getY(), whitePaint);
+                                ball2.getY(), borderPaint);
                         //draw actual line
                         paint.setColor(ballTracker.getColorChain());
                         canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
                                 ball2.getY(), paint);
                     }
+
                     //draw temporay line following finger touch on screen
                     if(i == trackedBalls.size()-1 && !ballTracker.isReadyToCalculateScore()) {
-                        Ball ball = trackedBalls.get(i);
-                        Paint tempLinePaint = new Paint();
-                        tempLinePaint.setAntiAlias(true);
-                        tempLinePaint.setStrokeWidth(7);
-                        tempLinePaint.setColor(ballTracker.getColorChain());
-                        canvas.drawLine(ball.getX(), ball.getY(), touchX,
-                                touchY, tempLinePaint);
+                        paint.setStrokeWidth(7);
+                        paint.setColor(ballTracker.getColorChain());
+                        canvas.drawLine(ball2.getX(), ball2.getY(), touchX,
+                                touchY, paint);
+                        paint.setStrokeWidth(5);
                     }
                 }
             }
