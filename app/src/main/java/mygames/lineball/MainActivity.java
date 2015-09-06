@@ -329,7 +329,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         Ball ball = trackedBalls.get(i);
                         Paint tempLinePaint = new Paint();
                         tempLinePaint.setAntiAlias(true);
-                        tempLinePaint.setStrokeWidth(5);
+                        tempLinePaint.setStrokeWidth(7);
                         tempLinePaint.setColor(ballTracker.getColorChain());
                         canvas.drawLine(ball.getX(), ball.getY(), touchX,
                                 touchY, tempLinePaint);

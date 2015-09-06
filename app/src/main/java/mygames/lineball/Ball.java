@@ -46,7 +46,7 @@ public class Ball {
 
     //Checks if ball intersects with the given coordinates (the user's touch x and y)
     public boolean intersects(float touchx, float touchy) {
-        double extraRadius = 4;
+        double extraRadius = 8;
         return touchx > x - getBallRadius() - extraRadius &&
                 touchx < x + getBallRadius() + extraRadius &&
                 touchy < y + getBallRadius() + extraRadius &&
