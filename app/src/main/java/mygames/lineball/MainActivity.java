@@ -208,6 +208,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         */
         private final int DIFFERENT_TYPES_OF_BALLS = 5;
         private int[] numberOfBallsPerType;
+        private float touchX, touchY;
 
         // The score
         int score = 0;
@@ -323,6 +324,16 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
                                 ball2.getY(), paint);
                     }
+                    //draw temporay line following finger touch on screen
+                    if(i == trackedBalls.size()-1 && !ballTracker.isReadyToCalculateScore()) {
+                        Ball ball = trackedBalls.get(i);
+                        Paint tempLinePaint = new Paint();
+                        tempLinePaint.setAntiAlias(true);
+                        tempLinePaint.setStrokeWidth(5);
+                        tempLinePaint.setColor(ballTracker.getColorChain());
+                        canvas.drawLine(ball.getX(), ball.getY(), touchX,
+                                touchY, tempLinePaint);
+                    }
                 }
             }
         }
@@ -358,10 +369,12 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 case MotionEvent.ACTION_DOWN:
                     if (!ballTracker.isGameOver()) {
                         paused = false;
+                        touchX = motionEvent.getX();
+                        touchY = motionEvent.getY();
                         if (ballTracker.getBallsTracked().isEmpty()) {
                             synchronized (balls) {
                                 for (Ball b : balls) {
-                                    if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                                    if (b.intersects(touchX, touchY)) {
                                         ballTracker.trackBall(b);
                                         break;
                                     }
@@ -377,9 +390,11 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 case MotionEvent.ACTION_MOVE:
                     if (!ballTracker.isGameOver()) {
                         paused = false;
+                        touchX = motionEvent.getX();
+                        touchY = motionEvent.getY();
                         synchronized (balls) {
                             for (Ball b : balls) {
-                                if (b.intersects(motionEvent.getX(), motionEvent.getY())) {
+                                if (b.intersects(touchX, touchY)) {
                                     ballTracker.trackBall(b);
                                     break;
                                 }
