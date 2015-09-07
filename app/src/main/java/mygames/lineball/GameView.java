@@ -39,18 +39,20 @@ public class GameView extends SurfaceView implements Runnable{
     protected List<Ball> balls;
     protected boolean paused = true;
     protected int[] numberOfBallsPerType;
+    protected int color = MainActivity.RANDOM_COLOR;
 
 
     public GameView(Context context, int screenWidth, int screenHeight, int num_balls,
-                    int different_type_of_balls) {
+                    int different_type_of_balls, int color) {
         super(context);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.num_balls = num_balls;
         this.different_type_of_balls = different_type_of_balls;
+        this.color = color;
 
         BallGenerator ballGen = new BallGenerator(num_balls, different_type_of_balls,
-                screenWidth, screenHeight);
+                screenWidth, screenHeight, color);
         balls = ballGen.generateBalls();
         this.numberOfBallsPerType = ballGen.getDifferentTypesOfBalls();
 

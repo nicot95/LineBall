@@ -25,7 +25,7 @@ public class TutorialActivity extends Activity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-        tutorialView = new GameView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS);
+        tutorialView = new GameView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS, MainActivity.RANDOM_COLOR);
         setContentView(tutorialView);
 
     }
@@ -33,10 +33,9 @@ public class TutorialActivity extends Activity {
     class tutorialView extends GameView {
 
         public tutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
-                            int different_balls) {
-            super(context, screenWidth, screenHeight, num_balls, different_balls);
-            BallGenerator ballGen = new BallGenerator(3, 1, screenWidth, screenHeight);
-            balls = ballGen.generateBalls();
+                            int different_balls, int color) {
+            super(context, screenWidth, screenHeight, num_balls, different_balls, color);
+
         }
 
 

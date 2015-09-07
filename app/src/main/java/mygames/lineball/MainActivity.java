@@ -44,6 +44,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     // and respond to screen touches as well
     GameView survivalView;
 
+    public static int RANDOM_COLOR = -1;
+
     private ArrayList<RectF> lines = new ArrayList<RectF>();
     private GoogleApiClient mGoogleApiClient;
     // Request code to use when launching the resolution activity
@@ -80,7 +82,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         Point size = new Point();
         display.getSize(size);
         // Initialize gameView and set it as the view
-        survivalView = new SurvivalView(this, size.x, size.y, NUM_BALLS, DIFFERENT_TYPE_OF_BALLS);
+        survivalView = new SurvivalView(this, size.x, size.y, NUM_BALLS, DIFFERENT_TYPE_OF_BALLS, RANDOM_COLOR);
         setContentView(survivalView);
     }
 
@@ -210,8 +212,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         // When the we initialize (call new()) on gameView
         // This special constructor method runs
         public SurvivalView(Context context, int screenWidth, int screenHeight,
-                            int numBalls, int different_type_of_balls) {
-            super(context, screenWidth, screenHeight, numBalls, different_type_of_balls);
+                            int numBalls, int different_type_of_balls, int color) {
+            super(context, screenWidth, screenHeight, numBalls, different_type_of_balls, color);
             //createBallsAndRestart(numBalls);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
 
@@ -415,7 +417,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         private void createBallsAndRestart(int numBalls) {
             BallGenerator ballGenerator = new BallGenerator(numBalls, different_type_of_balls,
-                    screenWidth, screenHeight);
+                    screenWidth, screenHeight, RANDOM_COLOR);
             balls = ballGenerator.generateBalls();
             numberOfBallsPerType = ballGenerator.getDifferentTypesOfBalls();
 

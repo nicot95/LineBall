@@ -16,25 +16,35 @@ public class BallGenerator {
 
     private int screenX;
     private int screenY;
+    private int color = -1;
 
-    public BallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY) {
+    public BallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY, int color) {
         this.numBalls = numBalls;
         this.balls = Collections.synchronizedList(new ArrayList<Ball>());
         this.differentTypesOfBalls = new int[differentTypesOfBalls];
 
         this.screenX = screenX;
         this.screenY = screenY;
+        //this(numBalls, differentTypesOfBalls, screenX, screenY);
+        this.color = color;
     }
 
     public List<Ball> generateBalls() {
+        int randomColor = -1;
         Random gen = new Random();
+        // if color is given
+        if(color != -1) {
+            randomColor = color;
+        }
         for (int i = 0; i < numBalls; i++) {
-            int randomBallCheck = gen.nextInt(5);
+            if(color == -1) {
+                randomColor = gen.nextInt(5);
+            }
             Ball newBall;
-            if (randomBallCheck == 4) {
+            if (randomColor == 4) {
                 newBall = new RandomBall(screenX, screenY);
             } else {
-                newBall = new Ball(screenX, screenY);
+                newBall = new Ball(screenX, screenY, randomColor);
             }
             getDifferentTypesOfBalls()[newBall.getColorSimple()]++;
             balls.add(newBall);

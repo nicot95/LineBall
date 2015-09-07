@@ -49,7 +49,7 @@ public class MainMenuActivity extends Activity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-        menuView = new GameView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS);
+        menuView = new GameView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS, MainActivity.RANDOM_COLOR);
         final RelativeLayout menuLayout = new RelativeLayout(this);
         menuLayout.addView(menuView);
 
