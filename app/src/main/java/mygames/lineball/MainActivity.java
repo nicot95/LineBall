@@ -57,6 +57,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     final int REQUEST_LEADERBOARD = 1;
 
     int NUM_BALLS = 15;
+    int DIFFERENT_TYPE_OF_BALLS = 5;
 
 
     @Override
@@ -79,7 +80,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         Point size = new Point();
         display.getSize(size);
         // Initialize gameView and set it as the view
-        survivalView = new SurvivalView(this, size.x, size.y, NUM_BALLS);
+        survivalView = new SurvivalView(this, size.x, size.y, NUM_BALLS, DIFFERENT_TYPE_OF_BALLS);
         setContentView(survivalView);
     }
 
@@ -194,20 +195,11 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         return false;
     }
 
-    // Here is our implementation of GameView
-    // It is an inner class.
-    // Note how the final closing curly brace }
-    // is inside SimpleGameEngine
-
-    // Notice we implement runnable so we have
-    // A thread and can override the run method.
     class SurvivalView extends GameView {
 
         /*
             Fields used by the ball tracker in order to check for gameOver state
         */
-        private final int DIFFERENT_TYPES_OF_BALLS = 5;
-        private int[] numberOfBallsPerType;
         private float touchX, touchY;
 
         // The score
@@ -217,11 +209,10 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         // When the we initialize (call new()) on gameView
         // This special constructor method runs
-        public SurvivalView(Context context, int screenWidth, int screenHeight, int numBalls) {
-            super(context, screenWidth, screenHeight);
-
-            numberOfBallsPerType = new int[DIFFERENT_TYPES_OF_BALLS];
-            createBallsAndRestart(numBalls);
+        public SurvivalView(Context context, int screenWidth, int screenHeight,
+                            int numBalls, int different_type_of_balls) {
+            super(context, screenWidth, screenHeight, numBalls, different_type_of_balls);
+            //createBallsAndRestart(numBalls);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
 
         }
@@ -266,10 +257,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
                 // Draw the background color
                 canvas.drawColor(Color.BLACK);
-
-                // Choose the brush color for drawing
-                //paint.setColor(Color.argb(255,  255, 255, 255));
-
 
                 //Draw the lines connecting the already linked balls and a white border surrounding
                 // the selected balls
@@ -427,7 +414,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         }
 
         private void createBallsAndRestart(int numBalls) {
-            BallGenerator ballGenerator = new BallGenerator(numBalls, DIFFERENT_TYPES_OF_BALLS,
+            BallGenerator ballGenerator = new BallGenerator(numBalls, different_type_of_balls,
                     screenWidth, screenHeight);
             balls = ballGenerator.generateBalls();
             numberOfBallsPerType = ballGenerator.getDifferentTypesOfBalls();

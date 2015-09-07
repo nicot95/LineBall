@@ -25,9 +25,8 @@ public class GameView extends SurfaceView implements Runnable{
 
     volatile boolean playing = true;
 
-    protected int NUM_BALLS = 20;
-    protected int DIFFERENT_TYPES_OF_BALLS = 5;
-
+    protected int num_balls;
+    protected int different_type_of_balls;
     protected int screenWidth, screenHeight;
 
     Canvas canvas;
@@ -39,21 +38,26 @@ public class GameView extends SurfaceView implements Runnable{
     protected long timeThisFrame;
     protected List<Ball> balls;
     protected boolean paused = true;
+    protected int[] numberOfBallsPerType;
 
 
-    public GameView(Context context, int screenWidth, int screenHeight) {
+    public GameView(Context context, int screenWidth, int screenHeight, int num_balls,
+                    int different_type_of_balls) {
         super(context);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.setBackgroundColor(0X0ff00000);
+        this.num_balls = num_balls;
+        this.different_type_of_balls = different_type_of_balls;
 
+        BallGenerator ballGen = new BallGenerator(num_balls, different_type_of_balls,
+                screenWidth, screenHeight);
+        balls = ballGen.generateBalls();
+        this.numberOfBallsPerType = ballGen.getDifferentTypesOfBalls();
+
+        this.setBackgroundColor(0X0ff00000);
         ourHolder = getHolder();
         paint = new Paint();
         paint.setAntiAlias(true);
-
-
-        balls = new BallGenerator(NUM_BALLS, DIFFERENT_TYPES_OF_BALLS,
-                screenWidth, screenHeight).generateBalls();
         }
 
 

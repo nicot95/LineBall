@@ -31,6 +31,9 @@ public class MainMenuActivity extends Activity {
     //View that will hold the menu and its logic
     private GameView menuView;
 
+    private int NUM_BALLS = 20;
+    private int DIFFERENT_BALLS = 5;
+
     //View that will hold the add
    // private AdView addView;
 
@@ -46,7 +49,7 @@ public class MainMenuActivity extends Activity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-        menuView = new GameView(this, size.x, size.y);
+        menuView = new GameView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS);
         final RelativeLayout menuLayout = new RelativeLayout(this);
         menuLayout.addView(menuView);
 
@@ -61,7 +64,7 @@ public class MainMenuActivity extends Activity {
     private void addAllButtons(RelativeLayout menuLayout) {
 
         Button survivalButt = new Button(this);
-        setButton(survivalButt, "Survival");
+        setButton(survivalButt, "      Survival      ");
         survivalButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,20 +72,37 @@ public class MainMenuActivity extends Activity {
             }
         });
 
+        Button howToPlayButt = new Button(this);
+        setButton(howToPlayButt, "    How to play    ");
+        howToPlayButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //startTutorial();
+            }
+        });
+
+        /*Button levelsButt = new Button(this);
+        setButton(levelsButt, "       Levels       ");
+        */
+
         Button achievButt = new Button(this);
         setButton(achievButt, "Achievements");
 
         Button aboutUsButt = new Button(this);
-        setButton(aboutUsButt, "About us");
+        setButton(aboutUsButt, "      About us      ");
 
-        Button[] buttons = new Button[3];
+        Button[] buttons = new Button[4];
         buttons[0] = survivalButt;
+        //buttons[1] = levelsButt;
         buttons[1] = achievButt;
-        buttons[2] = aboutUsButt;
+        buttons[2] = howToPlayButt;
+        buttons[3] = aboutUsButt;
 
         displayButtons(buttons, menuLayout);
 
      }
+
+
 
     private void setButton(Button button, String name) {
         button.setText(name);
@@ -112,6 +132,11 @@ public class MainMenuActivity extends Activity {
     //Starts the game
     private void startGame() {
         Intent intent = new Intent(menuView.getContext(), MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void startTutorial() {
+        Intent intent = new Intent(menuView.getContext(), TutorialActivity.class);
         startActivity(intent);
     }
 
