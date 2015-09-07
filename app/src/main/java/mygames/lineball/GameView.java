@@ -96,6 +96,7 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
 
+
     // Draw the newly updated scene
     protected void draw() {
 

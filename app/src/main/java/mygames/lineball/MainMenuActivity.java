@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.games.Game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class MainMenuActivity extends Activity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-        menuView = new GameView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS, MainActivity.RANDOM_COLOR);
+        menuView = new MenuView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS, MainActivity.RANDOM_COLOR);
         final RelativeLayout menuLayout = new RelativeLayout(this);
         menuLayout.addView(menuView);
 
@@ -57,8 +58,6 @@ public class MainMenuActivity extends Activity {
         setContentView(menuLayout);
 
     }
-
-
 
 
     private void addAllButtons(RelativeLayout menuLayout) {
@@ -77,7 +76,7 @@ public class MainMenuActivity extends Activity {
         howToPlayButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startTutorial();
+                startTutorial();
             }
         });
 
@@ -128,6 +127,41 @@ public class MainMenuActivity extends Activity {
         }
     }
 
+    class MenuView extends GameView{
+        public MenuView(Context context, int screenWidth, int screenHeight, int num_balls,
+                        int different_type_of_balls, int color) {
+            super(context, screenWidth, screenHeight, num_balls, different_type_of_balls, color);
+        }
+
+        @Override
+        // Draw the newly updated scene
+        public void draw() {
+
+            if (ourHolder.getSurface().isValid()) {
+                canvas = ourHolder.lockCanvas();
+
+                // Draw the background color
+                canvas.drawColor(Color.BLACK);
+
+                // Draw the balls
+                synchronized (balls) {
+                    for (Ball b: balls) {
+                        b.draw(paint, canvas);
+                    }
+                }
+
+
+                paint.setTextSize(40);
+                paint.setColor(Color.argb(255, 255, 255, 255));
+                canvas.drawText("LineBall", 30, 70, paint);
+                //int score = getIntent().getIntExtra("score", 0);
+                //canvas.drawText("Score: " + score, 30, 150, paint);
+
+                ourHolder.unlockCanvasAndPost(canvas);
+            }
+
+        }
+    }
 
     //Starts the game
     private void startGame() {
