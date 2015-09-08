@@ -100,7 +100,7 @@ public class SurvivalBallGenerator extends BallGenerator {
         }
         Ball newBall = generateBall();
         do {
-            newBall.setVelocityAndPosition(goodX, goodY, 250, candidateDirection);
+            newBall.setVelocityAndPosition(goodX, goodY, 125, candidateDirection);
         } while (!isGoingOnDirection(candidateDirection, newBall));
         numBalls++;
         ballsPerDirection[index]++;

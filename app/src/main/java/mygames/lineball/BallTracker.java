@@ -139,7 +139,8 @@ public class BallTracker {
     }
 
     public int clearShape() {
-        ballsTracked.remove(lastTrackedBall);
+        Ball lastBall = ballsTracked.get(ballsTracked.size()-1);
+        ballsTracked.remove(lastBall);
         int balls_cleared = ballsTracked.size();
         for (Ball ball: ballsTracked) {
                 numBallsPerType[ball.getColorSimple()]--;
