@@ -1,8 +1,9 @@
-package mygames.lineball;
+package mygames.lineball.BallGenerators;
 
 import android.util.Log;
 
-import java.util.Arrays;
+import mygames.lineball.BallGenerators.BallGenerator;
+import mygames.lineball.Balls.Ball;
 
 /*
     This class holds the logic used in the survival mode regarding where should balls appear
@@ -12,7 +13,7 @@ public class SurvivalBallGenerator extends BallGenerator {
 
 
 
-    enum Direction { NORTH, WEST, SOUTH, EAST}
+   public enum Direction { NORTH, WEST, SOUTH, EAST}
     int[] ballsPerDirection;
     Direction[] directions;
     int averageBallsPerDirection;
@@ -99,7 +100,7 @@ public class SurvivalBallGenerator extends BallGenerator {
         }
         Ball newBall = generateBall();
         do {
-            newBall.setVelocityAndPosition(goodX, goodY, 250);
+            newBall.setVelocityAndPosition(goodX, goodY, 250, candidateDirection);
         } while (!isGoingOnDirection(candidateDirection, newBall));
         numBalls++;
         ballsPerDirection[index]++;
@@ -128,22 +129,8 @@ public class SurvivalBallGenerator extends BallGenerator {
     }
 
     private boolean isGoingOnDirection(Direction dir, Ball b) {
-        boolean answer = false;
-        switch (dir) {
-            case NORTH:
-                answer = (b.getyVelocity() > 0 && b.getxVelocity() != 0);
-                break;
-            case WEST:
-                answer = (b.getyVelocity() != 0 && b.getxVelocity() > 0);
-                break;
-            case SOUTH:
-                answer = (b.getyVelocity() < 0 && b.getxVelocity() != 0);
-                break;
-            case EAST:
-                answer = (b.getyVelocity() != 0 && b.getxVelocity() < 0);
-                break;
-        }
-        return answer;
+        return true;
+
     }
 
     public void deduceBalls(int ballsCleared) {

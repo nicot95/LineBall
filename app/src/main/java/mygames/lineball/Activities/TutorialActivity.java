@@ -1,17 +1,20 @@
-package mygames.lineball;
+package mygames.lineball.Activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.widget.RelativeLayout;
 
 import java.util.List;
+
+import mygames.lineball.BallTracker;
+import mygames.lineball.Balls.Ball;
+import mygames.lineball.Util.DrawingUtil;
+import mygames.lineball.Util.MathUtil;
 
 /**
  * Created by nico on 07/09/15.
@@ -21,7 +24,7 @@ public class TutorialActivity extends Activity {
     GameView tutorialView;
 
     private int NUM_BALLS = 2;
-    private int DIFFERENT_BALLS = 1;
+    private int DIFFERENT_BALLS = 5;
     private int RED = 0;
     public static int TEXTBOX_SIZE = 200;
 
@@ -69,6 +72,9 @@ public class TutorialActivity extends Activity {
             whitePaint.setColor(Color.WHITE);
             whitePaint.setTextSize(40);
 
+            for (Ball b: balls) {
+                b.setColor(0);
+            }
         }
 
         @Override
@@ -76,7 +82,7 @@ public class TutorialActivity extends Activity {
 
             synchronized (balls) {
                 for (Ball b : balls) {
-                    if (Util.ballHitLineGameOver(ballTracker, b)) {
+                    if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
                         ballTracker.setGameStateToLineContact();
                         playing = false;
                     }
@@ -103,7 +109,7 @@ public class TutorialActivity extends Activity {
                 //Draw the lines connecting the already linked balls and a white border surrounding
                 // the selected balls
                 List<Ball> trackedBalls = ballTracker.getBallsTracked();
-                Util.drawLines(canvas, ballTracker, touchX, touchY);
+                DrawingUtil.drawLines(canvas, ballTracker, touchX, touchY);
 
                 // Draw the balls
                 synchronized (balls) {

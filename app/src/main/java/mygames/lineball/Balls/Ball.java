@@ -1,4 +1,4 @@
-package mygames.lineball;
+package mygames.lineball.Balls;
 
 /**
  * Created by nico on 11/08/15.
@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import java.util.Random;
+
+import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 
 public class Ball {
     //commit test iml shitty bug
@@ -181,12 +183,35 @@ public class Ball {
         return yVelocity;
     }
 
-    public void setVelocityAndPosition(int goodX, int goodY, int maxSpeed) {
+    public void setVelocityAndPosition(int goodX, int goodY, int maxSpeed, SurvivalBallGenerator.Direction direction) {
         this.x = goodX;
         this.y = goodY;
 
         int extraMinimum = maxSpeed / 3;
-        this.xVelocity = (gen.nextInt(maxSpeed) + extraMinimum) - (maxSpeed / 2);
-        this.yVelocity = (gen.nextInt(maxSpeed) + extraMinimum) - (maxSpeed / 2);
+
+        switch (direction) {
+
+            case NORTH:
+                this.yVelocity = - (gen.nextInt(maxSpeed) + extraMinimum);
+                this.xVelocity = gen.nextInt((int) -yVelocity);
+                break;
+            case WEST:
+                this.xVelocity = - (gen.nextInt(maxSpeed) + extraMinimum);
+                this.yVelocity = gen.nextInt((int) -xVelocity);
+                break;
+            case SOUTH:
+                this.yVelocity = gen.nextInt(maxSpeed) + extraMinimum;
+                this.xVelocity = gen.nextInt((int) yVelocity);
+                break;
+            case EAST:
+                this.xVelocity = gen.nextInt(maxSpeed) + extraMinimum;
+                this.yVelocity = gen.nextInt((int) xVelocity);
+                break;
+        }
+
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }

@@ -1,4 +1,4 @@
-package mygames.lineball;
+package mygames.lineball.Activities;
 
 import android.app.Dialog;
 
@@ -27,6 +27,13 @@ import android.support.v4.app.FragmentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import mygames.lineball.BallGenerators.InitialStateBallGenerator;
+import mygames.lineball.BallGenerators.SurvivalBallGenerator;
+import mygames.lineball.BallTracker;
+import mygames.lineball.Balls.Ball;
+import mygames.lineball.Util.DrawingUtil;
+import mygames.lineball.Util.MathUtil;
 
 public class MainActivity extends FragmentActivity implements ConnectionCallbacks,
         OnConnectionFailedListener {
@@ -202,12 +209,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         private BallTracker ballTracker;
         private SurvivalBallGenerator survivalBallGenerator;
 
-        // When the we initialize (call new()) on gameView
-        // This special constructor method runs
         public SurvivalView(Context context, int screenWidth, int screenHeight,
                             int numBalls, int different_type_of_balls, int color) {
             super(context, screenWidth, screenHeight, numBalls, different_type_of_balls, color);
-            //createBallsAndRestart(numBalls);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
             this.survivalBallGenerator =
                     new SurvivalBallGenerator(numBalls, different_type_of_balls, screenWidth,
@@ -223,7 +227,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
             synchronized (balls) {
                 for (Ball b : balls) {
-                    if (Util.ballHitLineGameOver(ballTracker, b)) {
+                    if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
                         ballTracker.setGameStateToLineContact();
                         playing = false;
                     }
@@ -261,7 +265,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 //Draw the lines connecting the already linked balls and a white border surrounding
                 // the selected balls
                 List<Ball> trackedBalls = ballTracker.getBallsTracked();
-                Util.drawLines(canvas, ballTracker, touchX, touchY);
+                DrawingUtil.drawLines(canvas, ballTracker, touchX, touchY);
 
                 // Draw the balls
                 synchronized (balls) {

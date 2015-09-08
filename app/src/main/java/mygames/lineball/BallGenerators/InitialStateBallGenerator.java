@@ -1,9 +1,11 @@
-package mygames.lineball;
+package mygames.lineball.BallGenerators;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+
+import mygames.lineball.BallGenerators.BallGenerator;
+import mygames.lineball.Balls.Ball;
 
 /**
  * Created by Daniel on 01/09/2015.

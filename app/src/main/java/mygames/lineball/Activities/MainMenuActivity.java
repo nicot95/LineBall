@@ -1,31 +1,20 @@
-package mygames.lineball;
+package mygames.lineball.Activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.games.Game;
-
 import java.util.ArrayList;
-import java.util.List;
+
+import mygames.lineball.Balls.Ball;
 
 public class MainMenuActivity extends Activity {
 

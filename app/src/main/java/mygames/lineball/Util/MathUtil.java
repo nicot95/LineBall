@@ -1,21 +1,20 @@
-package mygames.lineball;
+package mygames.lineball.Util;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import mygames.lineball.BallTracker;
+import mygames.lineball.Balls.Ball;
 
 /**
  * Created by nico on 24/08/15.
  */
 
 
-public class Util{
+public class MathUtil {
 
     /**
      * Returns distance to segment
@@ -108,8 +107,8 @@ public class Util{
             Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
             Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
 
-            List<Point> intersectPoints1 = Util.getCircleLineIntersectionPoint(point1, point2, point1, ballRadius);
-            List<Point> intersectPoints2 = Util.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
+            List<Point> intersectPoints1 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point1, ballRadius);
+            List<Point> intersectPoints2 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
 
             Point point1A = intersectPoints1.get(0);
             Point point1B = intersectPoints1.get(1);
@@ -121,34 +120,12 @@ public class Util{
             Point intersectPoint2 = getDistance(point2A, point1A) < getDistance(point2B, point1A) ?
                                          point2A : point2B;
             if(!ball1.equals(b) && !ball2.equals(b)
-                    && Util.getDistanceToSegment(intersectPoint1, intersectPoint2, thisPoint) <= ballRadius + LINEWIDTH)
+                    && MathUtil.getDistanceToSegment(intersectPoint1, intersectPoint2, thisPoint) <= ballRadius + LINEWIDTH)
 
                 return true;
         }
         return false;
 
-    }
-
-    public static boolean matchingColor(Ball b1, Ball b2) {
-        return b1.getColor() == b2.getColor() ||
-                b1.getColor() == Ball.RANDOM_COLOR ||
-                b2.getColor() == Ball.RANDOM_COLOR;
-    }
-
-    /**
-     * Returns closest point on segment to point
-     *
-     * @param ss
-     *            segment start point
-     * @param se
-     *            segment end point
-     * @param p
-     *            point to found closest point on segment
-     * @return closest point on segment to p
-     */
-    public static Point getClosestPointOnSegment(Point ss, Point se, Point p)
-    {
-        return getClosestPointOnSegment(ss.x, ss.y, se.x, se.y, p.x, p.y);
     }
 
     /**
@@ -197,13 +174,6 @@ public class Util{
         return closestPoint;
     }
 
-
-    //buggy, not working correctly
-    public double pointToLineDistance(Point A, Point B, Point P) {
-        double normalLength = Math.sqrt((B.x-A.x)*(B.x-A.x)+(B.y-A.y)*(B.y-A.y));
-        return Math.abs((P.x-A.x)*(B.y-A.y)-(P.y-A.y)*(B.x-A.x))/normalLength;
-    }
-
     public static List<Point> getCircleLineIntersectionPoint(Point pointA,
                                                              Point pointB, Point center, float radius) {
         float baX = pointB.x - pointA.x;
@@ -237,51 +207,7 @@ public class Util{
         return Arrays.asList(p1, p2);
     }
 
-    public static void drawLines(Canvas canvas, BallTracker ballTracker, float touchX, float touchY) {
-        List<Ball> trackedBalls = ballTracker.getBallsTracked();
-        synchronized (trackedBalls) {
-            Paint paint = new Paint();
-            paint.setStrokeWidth(5); // Increase width of line
 
-            Paint borderPaint = new Paint();
-            borderPaint.setAntiAlias(true);
-            borderPaint.setStrokeWidth(10);
-            for (int i = 0; i < trackedBalls.size(); i++) {
-                //if shape is complete, border line to lighht blue, if not stay in white
-                if (ballTracker.isGameOver()) {
-                   borderPaint.setColor(Color.RED);
-                }else if(ballTracker.isReadyToCalculateScore()) {
-                    borderPaint.setColor(Color.CYAN);
-                } else {
-                    borderPaint.setColor(Color.WHITE);
-                }
-                //draw ball border
-                Ball ball2 = trackedBalls.get(i);
-                canvas.drawCircle(ball2.getX(), ball2.getY(), ball2.getBallRadius() + 4, borderPaint);
-
-                //draw linked lines
-                if (i > 0) {
-                    //draw border line
-                    Ball ball1 = trackedBalls.get(i - 1);
-                    canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
-                            ball2.getY(), borderPaint);
-                    //draw actual line
-                    paint.setColor(ballTracker.getColorChain());
-                    canvas.drawLine(ball1.getX(), ball1.getY(), ball2.getX(),
-                            ball2.getY(), paint);
-                }
-
-                //draw temporay line following finger touch on screen
-                if(i == trackedBalls.size()-1 && !ballTracker.isReadyToCalculateScore()) {
-                    paint.setStrokeWidth(7);
-                    paint.setColor(ballTracker.getColorChain());
-                    canvas.drawLine(ball2.getX(), ball2.getY(), touchX,
-                            touchY, paint);
-                    paint.setStrokeWidth(5);
-                }
-            }
-        }
-    }
 
 
 }

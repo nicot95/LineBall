@@ -1,4 +1,4 @@
-package mygames.lineball;
+package mygames.lineball.Activities;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.List;
+
+import mygames.lineball.BallGenerators.InitialStateBallGenerator;
+import mygames.lineball.Balls.Ball;
 
 /**
  * Created by nico on 05/09/15.

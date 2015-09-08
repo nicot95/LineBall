@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import mygames.lineball.Balls.Ball;
+
 /*
     The ball tracker keeps an account of what balls have been linked so far.
 
