@@ -19,9 +19,8 @@ public class RandomBall extends Ball {
     private int current_color;
 
     public RandomBall(int screenX, int screenY) {
-        super(screenX, screenY);
+        super(screenX, screenY, 4);
         this.ticks_left_with_current_color = 0;
-        this.color = 4;
     }
 
     @Override

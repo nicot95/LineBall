@@ -34,7 +34,7 @@ public abstract class BallGenerator {
         if (randomColor == 4) {
             newBall = new RandomBall(screenX, screenY);
         } else {
-            newBall = new Ball(screenX, screenY);
+            newBall = new Ball(screenX, screenY, randomColor);
         }
         return newBall;
     }

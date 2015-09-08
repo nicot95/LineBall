@@ -29,7 +29,7 @@ public class Ball {
     protected static Random gen = new Random();
 
 
-    public Ball(int screenX, int screenY) {
+    public Ball(int screenX, int screenY, int color) {
 
         // Start the ball moving at a random speed and direction
         this.xVelocity = gen.nextInt(250) - 125;
@@ -41,7 +41,7 @@ public class Ball {
         this.x = gen.nextInt(screenX - 2 * (int) getBallRadius()) + getBallRadius();
         this.y = gen.nextInt(screenY - 2 * (int) getBallRadius()) + getBallRadius();
 
-        this.color = gen.nextInt(4); // Random color from: GREEN, BLUE, YELLOW, RED
+        this.color = color;
 
         this.isbeingTracked = false;
     }
