@@ -260,6 +260,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 // Draw the background color
                 canvas.drawColor(Color.BLACK);
 
+                drawScreenBorder();
+
                 //Draw the lines connecting the already linked balls and a white border surrounding
                 // the selected balls
                 List<Ball> trackedBalls = ballTracker.getBallsTracked();
@@ -291,6 +293,14 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         }
 
+        private void drawScreenBorder() {
+
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(Color.WHITE);
+            canvas.drawRect(0, 0, screenWidth, screenHeight, paint);
+            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        }
 
 
         private void drawGameOverText(int textSize, BallTracker.Game_State text, int y, Paint paint) {

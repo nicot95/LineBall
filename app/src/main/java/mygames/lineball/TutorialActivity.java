@@ -3,7 +3,9 @@ package mygames.lineball;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -21,6 +23,9 @@ public class TutorialActivity extends Activity {
     private int NUM_BALLS = 3;
     private int DIFFERENT_BALLS = 1;
     private int RED = 0;
+    public static int TEXTBOX_SIZE = 200;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,20 +35,38 @@ public class TutorialActivity extends Activity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-        tutorialView = new tutorialView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS, RED);
+        tutorialView = new tutorialView(this, size.x, size.y - TEXTBOX_SIZE, NUM_BALLS, DIFFERENT_BALLS, RED);
         setContentView(tutorialView);
 
     }
 
-    class tutorialView extends GameView {
+    static class tutorialView extends GameView {
 
         private BallTracker ballTracker;
         private float touchX, touchY;
+        private Tutorial_State tutorial_state;
+        Paint whitePaint = new Paint();
+
+        public enum Tutorial_State {
+            INITIAL,
+            FIRST_BALL,
+            SECOND_BALL,
+            SHAPE_COMPLETE;
+
+            public Tutorial_State getNext() {
+                return values()[(ordinal()+1) % values().length];
+            }
+
+        }
 
         public tutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
                             int different_balls, int color) {
             super(context, screenWidth, screenHeight, num_balls, different_balls, color);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
+            this.tutorial_state = Tutorial_State.INITIAL;
+            whitePaint.setAntiAlias(true);
+            whitePaint.setColor(Color.WHITE);
+            whitePaint.setTextSize(40);
 
         }
 
@@ -73,6 +96,8 @@ public class TutorialActivity extends Activity {
                 // Draw the background color
                 canvas.drawColor(Color.BLACK);
 
+                drawCommentsBox();
+
                 //Draw the lines connecting the already linked balls and a white border surrounding
                 // the selected balls
                 List<Ball> trackedBalls = ballTracker.getBallsTracked();
@@ -86,7 +111,8 @@ public class TutorialActivity extends Activity {
                 }
 
                 //Draw the game_overState
-                if (ballTracker.isGameOver()) {
+                if (!playing) {
+                    drawComment();
                     //drawGameOverText(50, ballTracker.getGameState(), screenHeight / 2, paint);
                     //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
                     //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
@@ -97,6 +123,37 @@ public class TutorialActivity extends Activity {
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
             }
+        }
+
+        public void drawComment() {
+            String comment = "";
+            String comment2 = "";
+            String comment3 = "";
+            switch (tutorial_state) {
+                case FIRST_BALL    : comment = "Very well, now that the ball is selected,";
+                                     comment2 = "hold the finger and try selecting";
+                                     comment3 = "another ball of the same color.";
+                    playing = false;
+                    break;
+                case SECOND_BALL   : comment = "Well done! Now, keep holding the finger and touch the initial ball" +
+                        " to 'close' the shape";
+                    playing = false;
+                    break;
+                case SHAPE_COMPLETE:
+                    comment = "Shape is complete! Both balls dissappear and the first step of the tutorial is complete!";
+            }
+
+            canvas.drawText(comment, 10, screenHeight + 50, whitePaint);
+            canvas.drawText(comment2, 10, screenHeight+110, whitePaint);
+            canvas.drawText(comment3, 10, screenHeight+170, whitePaint);
+
+        }
+
+        public void drawCommentsBox() {
+            whitePaint.setStyle(Paint.Style.STROKE);
+            canvas.drawRect(0, screenHeight, screenWidth, screenHeight + TEXTBOX_SIZE, whitePaint);
+            whitePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
         }
 
         // The SurfaceView class implements onTouchListener
@@ -110,6 +167,7 @@ public class TutorialActivity extends Activity {
                 case MotionEvent.ACTION_DOWN:
                     if (!ballTracker.isGameOver()) {
                         paused = false;
+                        playing = true;
                         touchX = motionEvent.getX();
                         touchY = motionEvent.getY();
                         if (ballTracker.getBallsTracked().isEmpty()) {
@@ -117,6 +175,8 @@ public class TutorialActivity extends Activity {
                                 for (Ball b : balls) {
                                     if (b.intersects(touchX, touchY)) {
                                         ballTracker.trackBall(b);
+                                        nextState();
+
                                         break;
                                     }
                                 }
@@ -160,6 +220,20 @@ public class TutorialActivity extends Activity {
             return true;
         }
 
+        public void nextState() {
+
+            tutorial_state = tutorial_state.getNext();
+            switch (tutorial_state) {
+                case FIRST_BALL    : playing = false;
+                                     break;
+                case SECOND_BALL   : playing = false;
+                                     break;
+                case SHAPE_COMPLETE:
+
+            }
+
+
+        }
     }
         @Override
         protected void onResume() {
