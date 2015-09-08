@@ -248,7 +248,9 @@ public class Util{
             borderPaint.setStrokeWidth(10);
             for (int i = 0; i < trackedBalls.size(); i++) {
                 //if shape is complete, border line to lighht blue, if not stay in white
-                if(ballTracker.isReadyToCalculateScore()) {
+                if (ballTracker.isGameOver()) {
+                   borderPaint.setColor(Color.RED);
+                }else if(ballTracker.isReadyToCalculateScore()) {
                     borderPaint.setColor(Color.CYAN);
                 } else {
                     borderPaint.setColor(Color.WHITE);

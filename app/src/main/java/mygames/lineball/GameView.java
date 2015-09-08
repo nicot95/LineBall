@@ -1,14 +1,10 @@
 package mygames.lineball;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -51,7 +47,7 @@ public class GameView extends SurfaceView implements Runnable{
         this.different_type_of_balls = different_type_of_balls;
         this.color = color;
 
-        BallGenerator ballGen = new BallGenerator(num_balls, different_type_of_balls,
+        InitialStateBallGenerator ballGen = new InitialStateBallGenerator(num_balls, different_type_of_balls,
                 screenWidth, screenHeight, color);
         balls = ballGen.generateBalls();
         this.numberOfBallsPerType = ballGen.getDifferentTypesOfBalls();

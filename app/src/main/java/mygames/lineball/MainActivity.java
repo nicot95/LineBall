@@ -1,24 +1,19 @@
 package mygames.lineball;
 
-import android.app.Activity;
 import android.app.Dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -27,13 +22,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.games.Game;
-import com.google.android.gms.games.Games;
 
 import android.support.v4.app.FragmentActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ConnectionCallbacks,
@@ -208,6 +200,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         int score = 0;
 
         private BallTracker ballTracker;
+        private SurvivalBallGenerator survivalBallGenerator;
 
         // When the we initialize (call new()) on gameView
         // This special constructor method runs
@@ -216,6 +209,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             super(context, screenWidth, screenHeight, numBalls, different_type_of_balls, color);
             //createBallsAndRestart(numBalls);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
+            this.survivalBallGenerator =
+                    new SurvivalBallGenerator(numBalls, different_type_of_balls, screenWidth,
+                                                screenHeight, numBalls);
 
         }
 
@@ -240,8 +236,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 increases the score and removes used balles from ArrayList
                 for performance issues.
              */
-            if (ballTracker.isReadyToCalculateScore()) {
-
+            if (survivalBallGenerator.notEnoughBalls()) {
+                balls.add(survivalBallGenerator.generateSurvivalBall());
             }
 
         }
@@ -371,7 +367,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
                     if (!ballTracker.isGameOver() && ballTracker.isReadyToCalculateScore()) {
-                        ballTracker.clearShape();
+                        int balls_removed = ballTracker.clearShape();
+                        survivalBallGenerator.deduceBalls(balls_removed);
                         score += ballTracker.calculateScore();
                         balls.removeAll(ballTracker.getBallsTracked());
                         ballTracker.cleanUpBallsFields();
@@ -386,7 +383,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         }
 
         private void createBallsAndRestart(int numBalls) {
-            BallGenerator ballGenerator = new BallGenerator(numBalls, different_type_of_balls,
+            InitialStateBallGenerator ballGenerator = new InitialStateBallGenerator(numBalls, different_type_of_balls,
                     screenWidth, screenHeight, RANDOM_COLOR);
             balls = ballGenerator.generateBalls();
             numberOfBallsPerType = ballGenerator.getDifferentTypesOfBalls();

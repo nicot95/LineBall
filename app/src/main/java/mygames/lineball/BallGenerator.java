@@ -1,59 +1,38 @@
 package mygames.lineball;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 /**
- * Created by Daniel on 01/09/2015.
+ * Created by Daniel on 08/09/2015.
  */
-public class BallGenerator {
+public abstract class BallGenerator {
 
-    private List<Ball> balls;
-    private int[] differentTypesOfBalls;
-    private int numBalls;
+    protected int differentTypesOfBalls;
+    protected int numBalls;
 
-    private int screenX;
-    private int screenY;
-    private int color = -1;
+    protected int screenX;
+    protected int screenY;
 
-    public BallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY, int color) {
+    protected Random gen;
+
+    public BallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY) {
         this.numBalls = numBalls;
-        this.balls = Collections.synchronizedList(new ArrayList<Ball>());
-        this.differentTypesOfBalls = new int[differentTypesOfBalls];
 
+        this.differentTypesOfBalls = differentTypesOfBalls;
         this.screenX = screenX;
         this.screenY = screenY;
-        //this(numBalls, differentTypesOfBalls, screenX, screenY);
-        this.color = color;
+
+        this.gen = new Random();
     }
 
-    public List<Ball> generateBalls() {
-        int randomColor = -1;
-        Random gen = new Random();
-        // if color is given
-        if(color != -1) {
-            randomColor = color;
+    protected Ball generateBall() {
+        int randomColor = gen.nextInt(differentTypesOfBalls);
+        Ball newBall;
+        if (randomColor == 4) {
+            newBall = new RandomBall(screenX, screenY);
+        } else {
+            newBall = new Ball(screenX, screenY);
         }
-        for (int i = 0; i < numBalls; i++) {
-            if(color == -1) {
-                randomColor = gen.nextInt(5);
-            }
-            Ball newBall;
-            if (randomColor == 4) {
-                newBall = new RandomBall(screenX, screenY);
-            } else {
-                newBall = new Ball(screenX, screenY, randomColor);
-            }
-            getDifferentTypesOfBalls()[newBall.getColorSimple()]++;
-            balls.add(newBall);
-        }
-        return balls;
-    }
-
-
-    public int[] getDifferentTypesOfBalls() {
-        return differentTypesOfBalls;
+        return newBall;
     }
 }

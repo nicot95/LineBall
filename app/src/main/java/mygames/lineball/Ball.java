@@ -12,8 +12,8 @@ import java.util.Random;
 
 public class Ball {
     //commit test iml shitty bug
-    float xVelocity;
-    float yVelocity;
+    private float xVelocity;
+    private float yVelocity;
 
     protected float ballRadius = 30;
     protected float x;
@@ -27,7 +27,7 @@ public class Ball {
     protected static Random gen = new Random();
 
 
-    public Ball(int screenX, int screenY, int color) {
+    public Ball(int screenX, int screenY) {
 
         // Start the ball moving at a random speed and direction
         this.xVelocity = gen.nextInt(250) - 125;
@@ -39,7 +39,7 @@ public class Ball {
         this.x = gen.nextInt(screenX - 2 * (int) getBallRadius()) + getBallRadius();
         this.y = gen.nextInt(screenY - 2 * (int) getBallRadius()) + getBallRadius();
 
-        this.color = color;
+        this.color = gen.nextInt(4); // Random color from: GREEN, BLUE, YELLOW, RED
 
         this.isbeingTracked = false;
     }
@@ -54,24 +54,27 @@ public class Ball {
 
     }
 
-    // Checks if ball is colliding with a wall, and if so, changes velocity appropriately
+    /* Checks if ball is colliding with a wall, and if so, changes velocity appropriately
+        The speed checks on each if statement prevent balls coming from outside the board
+        from bouncing off to oblivion
+     */
     public void checkWallCollision(int screenX, int screenY) {
-        if (y + getBallRadius() >= screenY) {
+        if (y + getBallRadius() >= screenY && yVelocity > 0) {
             reverseYVelocity();
             clearObstacleY(2);
         }
-        if(y - getBallRadius() <= 0) {
+        if(y - getBallRadius() <= 0 && yVelocity < 0) {
             reverseYVelocity();
             clearObstacleY(-2);
         }
 
 
-        if (x + getBallRadius() >= screenX) {
+        if (x + getBallRadius() >= screenX && xVelocity > 0) {
             reverseXVelocity();
             clearObstacleX(2);
         }
 
-        if(x - getBallRadius() <= 0) {
+        if(x - getBallRadius() <= 0 && xVelocity < 0) {
             reverseXVelocity();
             clearObstacleX(-2);
         }
@@ -103,17 +106,17 @@ public class Ball {
 
     public void update(long fps) {
         if (!isbeingTracked) {
-            x = getX() + xVelocity / fps;
-            y += yVelocity / fps;
+            x = getX() + getxVelocity() / fps;
+            y += getyVelocity() / fps;
         }
     }
 
     public void reverseYVelocity() {
-        yVelocity = -yVelocity;
+        yVelocity = -getyVelocity();
     }
 
     public void reverseXVelocity() {
-        xVelocity = -xVelocity;
+        xVelocity = -getxVelocity();
     }
 
     public void clearObstacleY(int diff) {
@@ -168,5 +171,22 @@ public class Ball {
     public void draw(Paint paint, Canvas canvas) {
         paint.setColor(getColor());
         canvas.drawCircle(x, y, ballRadius, paint);
+    }
+
+    public float getxVelocity() {
+        return xVelocity;
+    }
+
+    public float getyVelocity() {
+        return yVelocity;
+    }
+
+    public void setVelocityAndPosition(int goodX, int goodY, int maxSpeed) {
+        this.x = goodX;
+        this.y = goodY;
+
+        int extraMinimum = maxSpeed / 3;
+        this.xVelocity = (gen.nextInt(maxSpeed) + extraMinimum) - (maxSpeed / 2);
+        this.yVelocity = (gen.nextInt(maxSpeed) + extraMinimum) - (maxSpeed / 2);
     }
 }

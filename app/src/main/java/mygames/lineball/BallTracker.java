@@ -136,13 +136,15 @@ public class BallTracker {
                 (b.equals(lastTrackedBall) && ballsTracked.size() > 2));
     }
 
-    public void clearShape() {
-        ballsTracked.remove(0);
+    public int clearShape() {
+        ballsTracked.remove(lastTrackedBall);
+        int balls_cleared = ballsTracked.size();
         for (Ball ball: ballsTracked) {
                 numBallsPerType[ball.getColorSimple()]--;
         }
         gameOverCheck();
-        }
+        return balls_cleared;
+    }
 
     /*
         Calculates if there is a minimum amount of balls required to make a link.
