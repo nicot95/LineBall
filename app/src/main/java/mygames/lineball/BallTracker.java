@@ -150,7 +150,10 @@ public class BallTracker {
      */
     private void gameOverCheck() {
         int MINIMUM_BALLS_FOR_LINK = 2;
-        int randomBalls = numBallsPerType[Ball.RANDOM_COLOR];
+        int randomBalls = 0;
+        if(numBallsPerType.length == 5) {
+            randomBalls = numBallsPerType[Ball.RANDOM_COLOR];
+        }
         boolean isBoardCleared = true;
         for (int i = 0; i < numBallsPerType.length; i++) {
             if (i == Ball.RANDOM_COLOR)

@@ -20,7 +20,7 @@ public class TutorialActivity extends Activity {
 
     GameView tutorialView;
 
-    private int NUM_BALLS = 3;
+    private int NUM_BALLS = 2;
     private int DIFFERENT_BALLS = 1;
     private int RED = 0;
     public static int TEXTBOX_SIZE = 200;
@@ -44,6 +44,7 @@ public class TutorialActivity extends Activity {
 
         private BallTracker ballTracker;
         private float touchX, touchY;
+
         private Tutorial_State tutorial_state;
         Paint whitePaint = new Paint();
 
@@ -72,6 +73,7 @@ public class TutorialActivity extends Activity {
 
         @Override
         public void update() {
+
             synchronized (balls) {
                 for (Ball b : balls) {
                     if (Util.ballHitLineGameOver(ballTracker, b)) {
@@ -111,14 +113,14 @@ public class TutorialActivity extends Activity {
                 }
 
                 //Draw the game_overState
-                if (!playing) {
+
                     drawComment();
                     //drawGameOverText(50, ballTracker.getGameState(), screenHeight / 2, paint);
                     //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
                     //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
                     //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
 
-                }
+
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -130,22 +132,25 @@ public class TutorialActivity extends Activity {
             String comment2 = "";
             String comment3 = "";
             switch (tutorial_state) {
+                case INITIAL:        comment = "Touch and hold any ball!";
+                                     break;
                 case FIRST_BALL    : comment = "Very well, now that the ball is selected,";
                                      comment2 = "hold the finger and try selecting";
                                      comment3 = "another ball of the same color.";
-                    playing = false;
-                    break;
-                case SECOND_BALL   : comment = "Well done! Now, keep holding the finger and touch the initial ball" +
-                        " to 'close' the shape";
-                    playing = false;
-                    break;
+                                     break;
+                case SECOND_BALL   : comment = "Well done! Now, keep holding the finger";
+                                     comment2 = "and touch the initial ball to finish";
+                                     comment3 = "the shape.";
+                                     break;
                 case SHAPE_COMPLETE:
-                    comment = "Shape is complete! Both balls dissappear and the first step of the tutorial is complete!";
+                                     comment = "Shape is complete! Both balls vanish";
+                                     comment2 = "and the first step of tutorial is";
+                                     comment3 = "complete!";
             }
 
             canvas.drawText(comment, 10, screenHeight + 50, whitePaint);
-            canvas.drawText(comment2, 10, screenHeight+110, whitePaint);
-            canvas.drawText(comment3, 10, screenHeight+170, whitePaint);
+            canvas.drawText(comment2, 10, screenHeight + 110, whitePaint);
+            canvas.drawText(comment3, 10, screenHeight + 170, whitePaint);
 
         }
 
@@ -167,7 +172,7 @@ public class TutorialActivity extends Activity {
                 case MotionEvent.ACTION_DOWN:
                     if (!ballTracker.isGameOver()) {
                         paused = false;
-                        playing = true;
+                        //stop = false;
                         touchX = motionEvent.getX();
                         touchY = motionEvent.getY();
                         if (ballTracker.getBallsTracked().isEmpty()) {
@@ -176,7 +181,6 @@ public class TutorialActivity extends Activity {
                                     if (b.intersects(touchX, touchY)) {
                                         ballTracker.trackBall(b);
                                         nextState();
-
                                         break;
                                     }
                                 }
@@ -196,7 +200,11 @@ public class TutorialActivity extends Activity {
                         synchronized (balls) {
                             for (Ball b : balls) {
                                 if (b.intersects(touchX, touchY)) {
+                                    int start_balls = ballTracker.getBallsTracked().size();
                                     ballTracker.trackBall(b);
+                                    if(ballTracker.getBallsTracked().size() > start_balls) {
+                                        tutorial_state = tutorial_state.getNext();
+                                    }
                                     break;
                                 }
                             }
@@ -210,10 +218,13 @@ public class TutorialActivity extends Activity {
                         ballTracker.clearShape();
                         balls.removeAll(ballTracker.getBallsTracked());
                         ballTracker.cleanUpBallsFields();
+                        nextState();
                         //ballTracker.checkForShape();
 
                     } else if (!ballTracker.isGameOver()) {
                         ballTracker.resumeMovement();
+                        tutorial_state = Tutorial_State.INITIAL;
+
                     }
                     break;
             }
@@ -222,14 +233,8 @@ public class TutorialActivity extends Activity {
 
         public void nextState() {
 
-            tutorial_state = tutorial_state.getNext();
-            switch (tutorial_state) {
-                case FIRST_BALL    : playing = false;
-                                     break;
-                case SECOND_BALL   : playing = false;
-                                     break;
-                case SHAPE_COMPLETE:
-
+            if(tutorial_state != Tutorial_State.SHAPE_COMPLETE) {
+                tutorial_state = tutorial_state.getNext();
             }
 
 
