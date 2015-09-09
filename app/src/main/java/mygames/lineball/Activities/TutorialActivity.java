@@ -2,6 +2,7 @@ package mygames.lineball.Activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mygames.lineball.BallTracker;
@@ -30,6 +32,7 @@ public class TutorialActivity extends Activity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,31 +46,20 @@ public class TutorialActivity extends Activity {
 
     }
 
-    static class tutorialView extends GameView {
+    class tutorialView extends GameView {
 
         private BallTracker ballTracker;
         private float touchX, touchY;
+        private Level level = new Tutorial_Level_1();
 
-        private Tutorial_State tutorial_state;
         Paint whitePaint = new Paint();
 
-        public enum Tutorial_State {
-            INITIAL,
-            FIRST_BALL,
-            SECOND_BALL,
-            SHAPE_COMPLETE;
 
-            public Tutorial_State getNext() {
-                return values()[(ordinal()+1) % values().length];
-            }
-
-        }
 
         public tutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
                             int different_balls, int color) {
             super(context, screenWidth, screenHeight, num_balls, different_balls, color);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
-            this.tutorial_state = Tutorial_State.INITIAL;
             whitePaint.setAntiAlias(true);
             whitePaint.setColor(Color.WHITE);
             whitePaint.setTextSize(40);
@@ -89,6 +81,17 @@ public class TutorialActivity extends Activity {
                     b.checkWallCollision(screenWidth, screenHeight);
                     b.update(fps);
                 }
+            }
+
+            if(level.isEndState()) {
+                if(level.getClass().equals(Tutorial_Level_2.class)) {
+                      level = level.nextLevel();
+                }
+                else {
+                    Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
+                    startActivity(intent);
+                }
+
             }
         }
 
@@ -134,29 +137,16 @@ public class TutorialActivity extends Activity {
         }
 
         public void drawComment() {
-            String comment = "";
-            String comment2 = "";
-            String comment3 = "";
-            switch (tutorial_state) {
-                case INITIAL:        comment = "Touch and hold any ball!";
-                                     break;
-                case FIRST_BALL    : comment = "Very well, now that the ball is selected,";
-                                     comment2 = "hold the finger and try selecting";
-                                     comment3 = "another ball of the same color.";
-                                     break;
-                case SECOND_BALL   : comment = "Well done! Now, keep holding the finger";
-                                     comment2 = "and touch the initial ball to finish";
-                                     comment3 = "the shape.";
-                                     break;
-                case SHAPE_COMPLETE:
-                                     comment = "Shape is complete! Both balls vanish";
-                                     comment2 = "and the first step of tutorial is";
-                                     comment3 = "complete!";
+            String[] comments = level.getComments();
+            int separation = 50;
+            for(String c : comments) {
+                canvas.drawText(c, 10, screenHeight + separation, whitePaint);
+                separation += 60;
             }
 
-            canvas.drawText(comment, 10, screenHeight + 50, whitePaint);
-            canvas.drawText(comment2, 10, screenHeight + 110, whitePaint);
-            canvas.drawText(comment3, 10, screenHeight + 170, whitePaint);
+            //canvas.drawText(comment, 10, screenHeight + 50, whitePaint);
+            //canvas.drawText(comment2, 10, screenHeight + 110, whitePaint);
+            //canvas.drawText(comment3, 10, screenHeight + 170, whitePaint);
 
         }
 
@@ -186,7 +176,7 @@ public class TutorialActivity extends Activity {
                                 for (Ball b : balls) {
                                     if (b.intersects(touchX, touchY)) {
                                         ballTracker.trackBall(b);
-                                        nextState();
+                                        level.nextState();
                                         break;
                                     }
                                 }
@@ -209,7 +199,7 @@ public class TutorialActivity extends Activity {
                                     int start_balls = ballTracker.getBallsTracked().size();
                                     ballTracker.trackBall(b);
                                     if(ballTracker.getBallsTracked().size() > start_balls) {
-                                        tutorial_state = tutorial_state.getNext();
+                                        level.nextState();
                                     }
                                     break;
                                 }
@@ -224,12 +214,12 @@ public class TutorialActivity extends Activity {
                         ballTracker.clearShape();
                         balls.removeAll(ballTracker.getBallsTracked());
                         ballTracker.cleanUpBallsFields();
-                        nextState();
+                        level.nextState();
                         //ballTracker.checkForShape();
 
                     } else if (!ballTracker.isGameOver()) {
                         ballTracker.resumeMovement();
-                        tutorial_state = Tutorial_State.INITIAL;
+                        level.setInitialState();
 
                     }
                     break;
@@ -237,14 +227,7 @@ public class TutorialActivity extends Activity {
             return true;
         }
 
-        public void nextState() {
 
-            if(tutorial_state != Tutorial_State.SHAPE_COMPLETE) {
-                tutorial_state = tutorial_state.getNext();
-            }
-
-
-        }
     }
         @Override
         protected void onResume() {
@@ -265,5 +248,6 @@ public class TutorialActivity extends Activity {
         protected void onDestroy() {
             super.onDestroy();
         }
+
 
 }
