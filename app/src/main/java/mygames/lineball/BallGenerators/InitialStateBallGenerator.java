@@ -23,7 +23,7 @@ public class InitialStateBallGenerator extends BallGenerator {
     public List<Ball> generateBalls() {
         for (int i = 0; i < numBalls; i++) {
             Ball newBall = generateBall();
-            getDifferentTypesOfBalls()[newBall.getColorSimple()]++;
+            differentTypesOfBalls[newBall.getColorSimple()]++;
             balls.add(newBall);
         }
         return balls;

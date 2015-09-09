@@ -31,7 +31,9 @@ public class BallTracker {
     private int colorComparison;
     private Game_State game_state;
 
-
+    public void addToBallList(Ball newBall) {
+        numBallsPerType[newBall.getColorSimple()]++;
+    }
 
     public enum Game_State {
         NOT_OVER,
@@ -211,8 +213,12 @@ public class BallTracker {
     }
 
     public boolean isGameOver() {
-        return game_state != Game_State.NOT_OVER;
+        return game_state == Game_State.LINE_CONTACT;
     }
 
+    public boolean isRoundFinished() { return game_state != Game_State.NOT_OVER; }
+
     public Game_State getGameState() { return game_state; }
+
+    public void newRoundStarted() { this.game_state = Game_State.NOT_OVER; }
 }

@@ -240,8 +240,14 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 increases the score and removes used balles from ArrayList
                 for performance issues.
              */
-            if (survivalBallGenerator.notEnoughBalls()) {
-                balls.add(survivalBallGenerator.generateSurvivalBall());
+            if (ballTracker.isRoundFinished()) {
+                if (survivalBallGenerator.loadNewRound()) {
+                    Ball newBall = survivalBallGenerator.generateSurvivalBall();
+                    ballTracker.addToBallList(newBall);
+                    balls.add(newBall);
+                } else {
+                    ballTracker.newRoundStarted();
+                }
             }
 
         }
@@ -262,9 +268,12 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
                 drawScreenBorder();
 
-                //Draw the lines connecting the already linked balls and a white border surrounding
-                // the selected balls
-                List<Ball> trackedBalls = ballTracker.getBallsTracked();
+                /*
+                    This call handles the drawing of:
+                        - The lines connecting the linked balls
+                        - The temporary line from the current ball and the finger
+                        - The borders surrounding the balls and lines
+                 */
                 DrawingUtil.drawLines(canvas, ballTracker, touchX, touchY);
 
                 // Draw the balls
@@ -279,7 +288,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 canvas.drawText("Score: " + score, 30, 70, paint);
 
                 //Draw the game_overState
-                if (ballTracker.isGameOver()) {
+                if (ballTracker.isRoundFinished()) {
                     drawGameOverText(50, ballTracker.getGameState(), screenHeight / 2, paint);
                     //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
                     //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
@@ -376,7 +385,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         score += ballTracker.calculateScore();
                         balls.removeAll(ballTracker.getBallsTracked());
                         ballTracker.cleanUpBallsFields();
-                        //ballTracker.checkForShape();
 
                     } else if (!ballTracker.isGameOver()) {
                         ballTracker.resumeMovement();
@@ -388,7 +396,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         private void createBallsAndRestart(int numBalls) {
             InitialStateBallGenerator ballGenerator = new InitialStateBallGenerator(numBalls, different_type_of_balls,
-                    screenWidth, screenHeight, RANDOM_COLOR);
+                    screenWidth, screenHeight);
             balls = ballGenerator.generateBalls();
             numberOfBallsPerType = ballGenerator.getDifferentTypesOfBalls();
 

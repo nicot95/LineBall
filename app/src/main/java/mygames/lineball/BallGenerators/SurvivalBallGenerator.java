@@ -12,12 +12,15 @@ public class SurvivalBallGenerator extends BallGenerator {
     private int maxSpeed; // Will increase with each round
 
     public enum Direction { NORTH, WEST, SOUTH, EAST}
-    private int[] ballsPerDirection;
-    private Direction[] directions;
+    private int[] ballsPerDirection; // The number of balls that have been generated on each Direction
+    private Direction[] directions;  // Array holding the values of Directon Enum {NORTH, WEST...}
     private int averageBallsPerDirection;
 
-    private int desiredBallCount;
+    private int desiredBallCount; //Max number of balls that are going to populate the screen
 
+    private int round; //Current round
+    private boolean loadingNewRound; // Flag to mark that new balls are being generated for new round
+    private int newBallsAddedThisRound;
 
     public SurvivalBallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY,
                                  int desiredBallCount) {
@@ -26,9 +29,11 @@ public class SurvivalBallGenerator extends BallGenerator {
         this.desiredBallCount        = desiredBallCount;
         this.maxSpeed                = 125;
 
-        this.
         ballsPerDirection            = new int[Direction.values().length];
         directions                   = Direction.values();
+
+        this.round                   = 1;
+        this.loadingNewRound         = false;
 
     }
 
@@ -37,8 +42,8 @@ public class SurvivalBallGenerator extends BallGenerator {
         a positive experience. This method will be called when a set of balls are
      */
     public Ball generateSurvivalBall() {
-        int randomIndex = gen.nextInt(Direction.values().length);
-        int candidateDirection = ballsPerDirection[randomIndex];
+        int candidateDirectionIndex = gen.nextInt(Direction.values().length);
+        int candidateDirection = ballsPerDirection[candidateDirectionIndex];
         int difference = averageBallsPerDirection - candidateDirection;
 
         Ball newBall;
@@ -51,7 +56,7 @@ public class SurvivalBallGenerator extends BallGenerator {
          */
             int random2 = gen.nextInt(averageBallsPerDirection);
             if (random2 < difference) {
-                newBall = generateBallInDirection(directions[candidateDirection]);
+                newBall = generateBallInDirection(directions[candidateDirectionIndex]);
             } else {
                 newBall = generateSurvivalBall(); //Nico, hace cuanto que no usamos recursion??
             }
@@ -103,7 +108,7 @@ public class SurvivalBallGenerator extends BallGenerator {
         Ball newBall = generateBall();
         newBall.setVelocityAndPosition(goodX, goodY, maxSpeed, candidateDirection);
 
-        numBalls++;
+        newBallsAddedThisRound++;
         ballsPerDirection[index]++;
         return newBall;
     }
@@ -133,7 +138,25 @@ public class SurvivalBallGenerator extends BallGenerator {
         this.numBalls -= ballsCleared;
     }
 
-    public boolean notEnoughBalls() {
-        return numBalls < desiredBallCount;
+    //Called at the beginning of a new wave
+    public boolean loadNewRound() {
+        /* If condition is true, new balls will be generated, otherwise stop the ball production
+           Ball leftovers don't affect the desired cound because they are not considered when
+           adding them to the new round.
+        */
+        if (!loadingNewRound) {
+            this.loadingNewRound = true;
+            this.round++;
+            this.desiredBallCount      += round * 2; // TODO fix the logic for new balls to arrive
+            this.newBallsAddedThisRound = 0;
+            return true;
+        } else if (newBallsAddedThisRound == desiredBallCount){
+            this.loadingNewRound = false;
+            return false;
+        } else if (loadingNewRound) {
+            return true;
+        }
+        return false;
     }
+
 }
