@@ -5,16 +5,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-import mygames.lineball.Balls.Ball;
-
-/**
- * Created by Daniel on 01/09/2015.
- */
 public class RandomBall extends Ball {
 
 
     private int rotation = 0;
-    private int FRAMES_PER_COLOR = 3;
     private int ticks_left_with_current_color;
     private int current_color;
 
@@ -25,6 +19,7 @@ public class RandomBall extends Ball {
 
     @Override
     public int getColor() {
+        int FRAMES_PER_COLOR = 3;
         if (ticks_left_with_current_color == 0) {
             int ballColor = gen.nextInt(4);
             switch (ballColor) {
@@ -49,7 +44,7 @@ public class RandomBall extends Ball {
         RectF rect = new RectF(x - ballRadius, y - ballRadius, x + ballRadius, y + ballRadius);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.GREEN);
-        canvas.drawArc(rect, 0 + rotation, 90, true, paint);
+        canvas.drawArc(rect, rotation, 90, true, paint);
         paint.setColor(Color.RED);
         canvas.drawArc(rect, 90 + rotation, 90, true, paint);
         paint.setColor(Color.YELLOW);

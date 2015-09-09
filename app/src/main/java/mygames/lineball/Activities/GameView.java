@@ -13,9 +13,7 @@ import java.util.List;
 import mygames.lineball.BallGenerators.InitialStateBallGenerator;
 import mygames.lineball.Balls.Ball;
 
-/**
- * Created by nico on 05/09/15.
- */
+
 public class GameView extends SurfaceView implements Runnable{
 
     Thread gameThread = null;
@@ -51,7 +49,7 @@ public class GameView extends SurfaceView implements Runnable{
         this.color = color;
 
         InitialStateBallGenerator ballGen = new InitialStateBallGenerator(num_balls, different_type_of_balls,
-                screenWidth, screenHeight, color);
+                screenWidth, screenHeight);
         balls = ballGen.generateBalls();
         this.numberOfBallsPerType = ballGen.getDifferentTypesOfBalls();
 

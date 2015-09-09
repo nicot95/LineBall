@@ -9,9 +9,7 @@ import java.util.List;
 import mygames.lineball.BallTracker;
 import mygames.lineball.Balls.Ball;
 
-/**
- * Created by Daniel on 08/09/2015.
- */
+
 public class DrawingUtil {
     public static void drawLines(Canvas canvas, BallTracker ballTracker, float touchX, float touchY) {
         List<Ball> trackedBalls = ballTracker.getBallsTracked();

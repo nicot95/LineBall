@@ -5,9 +5,7 @@ import java.util.Random;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.Balls.RandomBall;
 
-/**
- * Created by Daniel on 08/09/2015.
- */
+
 public abstract class BallGenerator {
 
     protected int differentTypesOfBalls;

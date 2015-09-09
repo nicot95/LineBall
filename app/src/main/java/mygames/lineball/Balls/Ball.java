@@ -1,9 +1,5 @@
 package mygames.lineball.Balls;
 
-/**
- * Created by nico on 11/08/15.
- */
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -129,11 +125,6 @@ public class Ball {
         this.x -= diff;
     }
 
-    public void reset(int x, int y) {
-        this.x = x / 2;
-        this.y = y - 20;
-    }
-
     //Slows ball when it is being tracked
     public void stop() {
         isbeingTracked = true;
@@ -154,10 +145,6 @@ public class Ball {
     public float getBallRadius() {
         return ballRadius;
 
-    }
-
-    public boolean isBeingTracked() {
-        return isbeingTracked;
     }
 
     @Override

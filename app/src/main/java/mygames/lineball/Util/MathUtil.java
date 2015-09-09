@@ -9,10 +9,6 @@ import java.util.List;
 import mygames.lineball.BallTracker;
 import mygames.lineball.Balls.Ball;
 
-/**
- * Created by nico on 24/08/15.
- */
-
 
 public class MathUtil {
 

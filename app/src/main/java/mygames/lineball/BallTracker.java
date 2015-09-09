@@ -117,10 +117,6 @@ public class BallTracker {
 
 
     public void checkForShape(Ball b) {
-        /*if(ballsTracked.size() <= 1) {
-            return;
-        }
-        Ball b = ballsTracked.get(ballsTracked.size()-1);*/
         if (shapeIsComplete(b)) {
             //Shape has been completed, prepare to calculate score
             //ballsTracked.remove(ballsTracked.size()-1);
@@ -128,8 +124,6 @@ public class BallTracker {
             this.readyToCalculateScore = true;
             ballsTracked.add(b);
 
-        } else {
-          //  resumeMovement();
         }
     }
 
@@ -187,11 +181,7 @@ public class BallTracker {
     public int calculateScore() {
         int score = 0;
 
-        //This loop will handle special cases, such as balls with the same color, special shapes
-        // special number of balls... etc
-        for (Ball b: ballsTracked) {
-            score += 10;
-        }
+        score += ballsTracked.size();
         score *= shapeMultiplier;
         return score;
     }

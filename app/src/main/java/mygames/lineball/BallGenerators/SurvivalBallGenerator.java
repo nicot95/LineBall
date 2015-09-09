@@ -1,8 +1,5 @@
 package mygames.lineball.BallGenerators;
 
-import android.util.Log;
-
-import mygames.lineball.BallGenerators.BallGenerator;
 import mygames.lineball.Balls.Ball;
 
 /*
@@ -12,21 +9,26 @@ import mygames.lineball.Balls.Ball;
 public class SurvivalBallGenerator extends BallGenerator {
 
 
+    private int maxSpeed; // Will increase with each round
 
-   public enum Direction { NORTH, WEST, SOUTH, EAST}
-    int[] ballsPerDirection;
-    Direction[] directions;
-    int averageBallsPerDirection;
+    public enum Direction { NORTH, WEST, SOUTH, EAST}
+    private int[] ballsPerDirection;
+    private Direction[] directions;
+    private int averageBallsPerDirection;
 
     private int desiredBallCount;
+
 
     public SurvivalBallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY,
                                  int desiredBallCount) {
         super(numBalls, differentTypesOfBalls, screenX, screenY);
 
-        this.desiredBallCount = desiredBallCount;
-        ballsPerDirection = new int[Direction.values().length];
-        directions = Direction.values();
+        this.desiredBallCount        = desiredBallCount;
+        this.maxSpeed                = 125;
+
+        this.
+        ballsPerDirection            = new int[Direction.values().length];
+        directions                   = Direction.values();
 
     }
 
@@ -99,9 +101,8 @@ public class SurvivalBallGenerator extends BallGenerator {
                 break;
         }
         Ball newBall = generateBall();
-        do {
-            newBall.setVelocityAndPosition(goodX, goodY, 125, candidateDirection);
-        } while (!isGoingOnDirection(candidateDirection, newBall));
+        newBall.setVelocityAndPosition(goodX, goodY, maxSpeed, candidateDirection);
+
         numBalls++;
         ballsPerDirection[index]++;
         return newBall;
@@ -126,11 +127,6 @@ public class SurvivalBallGenerator extends BallGenerator {
             }
         }
         return directions[index];
-    }
-
-    private boolean isGoingOnDirection(Direction dir, Ball b) {
-        return true;
-
     }
 
     public void deduceBalls(int ballsCleared) {
