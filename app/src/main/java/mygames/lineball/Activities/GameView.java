@@ -12,6 +12,9 @@ import java.util.List;
 
 import mygames.lineball.BallGenerators.InitialStateBallGenerator;
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.BorderColourer;
+import mygames.lineball.Util.DrawingUtil;
+import mygames.lineball.Util.MathUtil;
 
 
 public class GameView extends SurfaceView implements Runnable{
@@ -38,6 +41,8 @@ public class GameView extends SurfaceView implements Runnable{
     protected int[] numberOfBallsPerType;
     protected int color = MainActivity.RANDOM_COLOR;
 
+    protected BorderColourer borderColourer;
+
 
     public GameView(Context context, int screenWidth, int screenHeight, int num_balls,
                     int different_type_of_balls, int color) {
@@ -57,7 +62,9 @@ public class GameView extends SurfaceView implements Runnable{
         ourHolder = getHolder();
         paint = new Paint();
         paint.setAntiAlias(true);
-        }
+
+        this.borderColourer = new BorderColourer();
+    }
 
 
     @Override
@@ -87,7 +94,7 @@ public class GameView extends SurfaceView implements Runnable{
     protected void update() {
 
         for(Ball b : balls) {
-            b.checkWallCollision(screenWidth, screenHeight);
+            MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);
             b.update(fps);
         }
     }

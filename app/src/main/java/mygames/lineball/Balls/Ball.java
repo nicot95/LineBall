@@ -52,34 +52,6 @@ public class Ball {
 
     }
 
-    /* Checks if ball is colliding with a wall, and if so, changes velocity appropriately
-        The speed checks on each if statement prevent balls coming from outside the board
-        from bouncing off to oblivion
-     */
-    public void checkWallCollision(int screenX, int screenY) {
-        if (y + getBallRadius() >= screenY && yVelocity > 0) {
-            reverseYVelocity();
-            clearObstacleY(2);
-        }
-        if(y - getBallRadius() <= 0 && yVelocity < 0) {
-            reverseYVelocity();
-            clearObstacleY(-2);
-        }
-
-
-        if (x + getBallRadius() >= screenX && xVelocity > 0) {
-            reverseXVelocity();
-            clearObstacleX(2);
-        }
-
-        if(x - getBallRadius() <= 0 && xVelocity < 0) {
-            reverseXVelocity();
-            clearObstacleX(-2);
-        }
-    }
-
-
-
     public int getColor() {
         int retColor = -1;
         int ballColor = this.color;

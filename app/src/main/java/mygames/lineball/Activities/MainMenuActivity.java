@@ -3,10 +3,12 @@ package mygames.lineball.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,7 @@ public class MainMenuActivity extends Activity {
     //View that will hold the menu and its logic
     private GameView menuView;
 
+    private int highscore;
     private int NUM_BALLS = 20;
     private int DIFFERENT_BALLS = 5;
 
@@ -45,6 +48,9 @@ public class MainMenuActivity extends Activity {
 
         addAllButtons(menuLayout);
         setContentView(menuLayout);
+
+        this.highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
+
 
     }
 
@@ -143,6 +149,8 @@ public class MainMenuActivity extends Activity {
                 paint.setTextSize(40);
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 canvas.drawText("LineBall", 30, 70, paint);
+                canvas.drawText("Highscore: " + highscore, 30, 120, paint);
+                canvas.drawText("last score: " + getIntent().getIntExtra("score", 0), 30, 170, paint);
                 //int score = getIntent().getIntExtra("score", 0);
                 //canvas.drawText("Score: " + score, 30, 150, paint);
 
@@ -166,8 +174,14 @@ public class MainMenuActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
         menuView.resume();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
     }
 
     // This method executes when the player quits the game

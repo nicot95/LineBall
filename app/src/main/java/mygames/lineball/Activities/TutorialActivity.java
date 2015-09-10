@@ -84,7 +84,7 @@ public class TutorialActivity extends Activity {
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
                         level.setToErrorState();
                     }
-                    b.checkWallCollision(screenWidth, screenHeight);
+                    MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);
                     b.update(fps);
                 }
             }
