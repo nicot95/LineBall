@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -32,6 +34,7 @@ import mygames.lineball.BallGenerators.InitialStateBallGenerator;
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 import mygames.lineball.BallTracker;
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.BorderColourer;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 
@@ -107,7 +110,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         if (mResolvingError) {
             // Already attempting to resolve an error.
-            return;
         } else if (result.hasResolution()) {
             try {
                 mResolvingError = true;
@@ -204,15 +206,17 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         private float touchX, touchY;
 
         // The score
-        int score = 0;
+        private int score = 0;
 
         private BallTracker ballTracker;
         private SurvivalBallGenerator survivalBallGenerator;
+        private BorderColourer borderColourer;
 
         public SurvivalView(Context context, int screenWidth, int screenHeight,
                             int numBalls, int different_type_of_balls, int color) {
             super(context, screenWidth, screenHeight, numBalls, different_type_of_balls, color);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
+            this.borderColourer = new BorderColourer();
             this.survivalBallGenerator =
                     new SurvivalBallGenerator(numBalls, different_type_of_balls, screenWidth,
                                                 screenHeight, numBalls);
@@ -231,7 +235,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         ballTracker.setGameStateToLineContact();
                         playing = false;
                     }
-                    b.checkWallCollision(screenWidth, screenHeight);
+                    MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);
                     b.update(fps);
                 }
             }
@@ -304,11 +308,22 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         private void drawScreenBorder() {
 
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(Color.WHITE);
-            canvas.drawRect(0, 0, screenWidth, screenHeight, paint);
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            paint.setStrokeWidth(7);
+            //Draw north border
+            paint.setColor(borderColourer.getNorthBorderColour());
+            canvas.drawLine(0, 0, screenWidth, 0, paint);
 
+            //Draw west border
+            paint.setColor(borderColourer.getWestBorderColour());
+            canvas.drawLine(0, 0, 0, screenHeight, paint);
+
+            //Draw south border
+            paint.setColor(borderColourer.getSouthBorderColour());
+            canvas.drawLine(0, screenHeight, screenWidth, screenHeight, paint);
+
+            //Draw east border
+            paint.setColor(borderColourer.getEastBorderColour());
+            canvas.drawLine(screenWidth, 0, screenWidth, screenHeight, paint);
         }
 
 
@@ -342,7 +357,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
                     if (!ballTracker.isGameOver()) {
-                        paused = false;
                         touchX = motionEvent.getX();
                         touchY = motionEvent.getY();
                         if (ballTracker.getBallsTracked().isEmpty()) {
@@ -363,7 +377,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 //In case we want swiping instead of just clicking
                 case MotionEvent.ACTION_MOVE:
                     if (!ballTracker.isGameOver()) {
-                        paused = false;
                         touchX = motionEvent.getX();
                         touchY = motionEvent.getY();
                         synchronized (balls) {
@@ -380,6 +393,11 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
                     if (!ballTracker.isGameOver() && ballTracker.isReadyToCalculateScore()) {
+                        /* Shaped is cleared, balls are eliminated from screen and also from list
+                           so that app can scalete as rounds go on, the score is calculated and
+                           logic is carried out to see if round is finished. Balltracker is restarted
+                           to track new set of balls.
+                         */
                         int balls_removed = ballTracker.clearShape();
                         survivalBallGenerator.deduceBalls(balls_removed);
                         score += ballTracker.calculateScore();
@@ -394,25 +412,18 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             return true;
         }
 
-        private void createBallsAndRestart(int numBalls) {
-            InitialStateBallGenerator ballGenerator = new InitialStateBallGenerator(numBalls, different_type_of_balls,
-                    screenWidth, screenHeight);
-            balls = ballGenerator.generateBalls();
-            numberOfBallsPerType = ballGenerator.getDifferentTypesOfBalls();
-
-            // The score
-            int score = 0;
-
-
-        }
-
-
+        /*
+            Return to the main menu (MainMenuActivity) and saves highscore if needed.
+         */
         private void goToMenu() {
+            SharedPreferences highscorePreference = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+            if (highscorePreference.getInt("highscore", 0) < score) {
+                highscorePreference.edit().putInt("highscore", score).commit();
+            }
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
             intent.putExtra("score", this.score);
             startActivity(intent);
         }
-        // This is the end of our BreakoutView inner class
     }
 
     // This method executes when the player starts the game
@@ -432,7 +443,4 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         // Tell the gameView pause method to execute
         survivalView.pause();
     }
-
-
-
 }

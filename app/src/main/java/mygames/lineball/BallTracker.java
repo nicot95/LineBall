@@ -68,8 +68,6 @@ public class BallTracker {
             checkForChainProperties(b);
         }
 
-
-
     }
 
     private void checkForChainProperties(Ball b) {
@@ -183,7 +181,7 @@ public class BallTracker {
     public int calculateScore() {
         int score = 0;
 
-        score += ballsTracked.size();
+        score += ballsTracked.size() * 10;
         score *= shapeMultiplier;
         return score;
     }

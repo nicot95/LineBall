@@ -13,13 +13,14 @@ import mygames.lineball.Balls.Ball;
 public class DrawingUtil {
     public static void drawLines(Canvas canvas, BallTracker ballTracker, float touchX, float touchY) {
         List<Ball> trackedBalls = ballTracker.getBallsTracked();
-        synchronized (trackedBalls) {
-            Paint paint = new Paint();
-            paint.setStrokeWidth(5); // Increase width of line
 
-            Paint borderPaint = new Paint();
-            borderPaint.setAntiAlias(true);
-            borderPaint.setStrokeWidth(10);
+        Paint paint = new Paint();
+        paint.setStrokeWidth(5); // Increase width of line
+
+        Paint borderPaint = new Paint();
+        borderPaint.setAntiAlias(true);
+        borderPaint.setStrokeWidth(10);
+        synchronized (trackedBalls) {
             for (int i = 0; i < trackedBalls.size(); i++) {
                 //if shape is complete, border line to lighht blue, if not stay in white
                 drawColoredBorder(ballTracker, borderPaint);

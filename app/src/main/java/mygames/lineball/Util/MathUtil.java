@@ -8,6 +8,7 @@ import java.util.List;
 
 import mygames.lineball.BallTracker;
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.BorderColourer;
 
 
 public class MathUtil {
@@ -204,6 +205,29 @@ public class MathUtil {
     }
 
 
+    public static void checkWallCollision(Ball b, BorderColourer borderColourer, int screenX, int screenY) {
+        if (b.getY() + b.getBallRadius() >= screenY && b.getyVelocity() > 0) {
+            b.reverseYVelocity();
+            b.clearObstacleY(2);
+            borderColourer.setSouthBorderColour(b.getColor());
+        }
+        if(b.getY() - b.getBallRadius() <= 0 && b.getyVelocity() < 0) {
+            b.reverseYVelocity();
+            b.clearObstacleY(-2);
+            borderColourer.setNorthBorderColour(b.getColor());
+        }
 
 
+        if (b.getX() + b.getBallRadius() >= screenX && b.getxVelocity() > 0) {
+            b.reverseXVelocity();
+            b.clearObstacleX(2);
+            borderColourer.setEastBorderColour(b.getColor());
+        }
+
+        if(b.getX() - b.getBallRadius() <= 0 && b.getxVelocity() < 0) {
+            b.reverseXVelocity();
+            b.clearObstacleX(-2);
+            borderColourer.setWestBorderColour(b.getColor());
+        }
+    }
 }
