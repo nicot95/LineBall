@@ -60,7 +60,6 @@ public class TutorialActivity extends Activity {
         Paint whitePaint = new Paint();
 
 
-
         public TutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
                             int different_balls, int color, Level level) {
             super(context, screenWidth, screenHeight, num_balls, different_balls, color);
@@ -71,7 +70,7 @@ public class TutorialActivity extends Activity {
             whitePaint.setTextSize(40);
 
 
-            for (Ball b: balls) {
+            for (Ball b : balls) {
                 b.setColor(0);
             }
         }
@@ -79,23 +78,29 @@ public class TutorialActivity extends Activity {
         @Override
         public void update() {
 
+            if (level.isLineContactState() || level.isNotAllBallsShapeState()) {
+                return;
+            }
+
             synchronized (balls) {
                 for (Ball b : balls) {
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
-                        level.setToErrorState();
+                        level.setToLineContactState();
+                        ballTracker.setGameStateToLineContact();
+                        //playing = false;
+
                     }
                     MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);
                     b.update(fps);
                 }
             }
 
-            if(level.isEndState()) {
-                if(!level.getClass().equals(Tutorial_Level_3.class)) {
+            if (level.isEndState()) {
+                if (!level.getClass().equals(Tutorial_Level_3.class)) {
 
-                    goToNextLevel();
-                      //tutorialView = new TutorialView(getContext(), screenWidth, screenHeight, 3, 1, 0, level);
-                }
-                else {
+                    startNextLevel();
+                    //tutorialView = new TutorialView(getContext(), screenWidth, screenHeight, 3, 1, 0, level);
+                } else {
                     Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
                     startActivity(intent);
                 }
@@ -105,6 +110,7 @@ public class TutorialActivity extends Activity {
 
         @Override
         public void draw() {
+
 
             // Make sure our drawing surface is valid or we crash
             if (ourHolder.getSurface().isValid()) {
@@ -119,7 +125,6 @@ public class TutorialActivity extends Activity {
 
                 //Draw the lines connecting the already linked balls and a white border surrounding
                 // the selected balls
-                List<Ball> trackedBalls = ballTracker.getBallsTracked();
                 DrawingUtil.drawLines(canvas, ballTracker, touchX, touchY);
 
                 // Draw the balls
@@ -131,12 +136,11 @@ public class TutorialActivity extends Activity {
 
                 //Draw the game_overState
 
-                    drawComment();
-                    //drawGameOverText(50, ballTracker.getGameState(), screenHeight / 2, paint);
-                    //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
-                    //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
-                    //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
-
+                drawComment();
+                //drawGameOverText(50, ballTracker.getGameState(), screenHeight / 2, paint);
+                //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
+                //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
+                //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
 
 
                 // Draw everything to the screen
@@ -147,14 +151,10 @@ public class TutorialActivity extends Activity {
         public void drawComment() {
             String[] comments = level.getComments();
             int separation = 50;
-            for(String c : comments) {
+            for (String c : comments) {
                 canvas.drawText(c, 10, screenHeight + separation, whitePaint);
                 separation += 60;
             }
-
-            //canvas.drawText(comment, 10, screenHeight + 50, whitePaint);
-            //canvas.drawText(comment2, 10, screenHeight + 110, whitePaint);
-            //canvas.drawText(comment3, 10, screenHeight + 170, whitePaint);
 
         }
 
@@ -165,13 +165,25 @@ public class TutorialActivity extends Activity {
 
         }
 
-        private void goToNextLevel() {
+        private void startNextLevel() {
             level = level.nextLevel();
-            if(level.getClass().equals(Tutorial_Level_2.class)) {
+            startLevel();
+
+        }
+
+        private void restartLevel() {
+            level.setInitialState();
+            startLevel();
+        }
+
+        private void startLevel() {
+            if (level.getClass().equals(Tutorial_Level_2.class)) {
+                //level 2
                 InitialStateBallGenerator ballgen = new InitialStateBallGenerator(3, 1, screenWidth, screenHeight);
                 balls = ballgen.generateBalls();
                 ballTracker = new BallTracker(ballgen.getDifferentTypesOfBalls());
             } else {
+                //level 3
                 Ball ball1 = new Ball(screenWidth, screenHeight, 1);
                 Ball ball2 = new Ball(screenWidth, screenHeight, 1);
                 RandomBall randBall = new RandomBall(screenWidth, screenHeight);
@@ -196,11 +208,17 @@ public class TutorialActivity extends Activity {
 
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
-                    if(level.isStateBeforeEndState()) {
+                    if (level.isStateBeforeEndState()) {
                         level.nextState();
+                    } else if (level.isLineContactState()) {
+                        paused = false;
+                        restartLevel();
+                    } else if (level.isNotAllBallsShapeState()) {
+                        ballTracker.resumeMovement();
+                        level.setInitialState();
                     }
                     if (!ballTracker.isGameOver()) {
-                        paused = false;
+                        //paused = false;
                         //stop = false;
                         touchX = motionEvent.getX();
                         touchY = motionEvent.getY();
@@ -223,7 +241,7 @@ public class TutorialActivity extends Activity {
                 //In case we want swiping instead of just clicking
                 case MotionEvent.ACTION_MOVE:
                     if (!ballTracker.isGameOver()) {
-                        paused = false;
+                        //paused = false;
                         touchX = motionEvent.getX();
                         touchY = motionEvent.getY();
                         synchronized (balls) {
@@ -231,7 +249,7 @@ public class TutorialActivity extends Activity {
                                 if (b.intersects(touchX, touchY)) {
                                     int start_balls = ballTracker.getBallsTracked().size();
                                     ballTracker.trackBall(b);
-                                    if(ballTracker.getBallsTracked().size() > start_balls) {
+                                    if (ballTracker.getBallsTracked().size() > start_balls) {
                                         level.nextState();
                                     }
                                     break;
@@ -243,25 +261,28 @@ public class TutorialActivity extends Activity {
 
                 // Player has removed finger from screen, score is updated
                 case MotionEvent.ACTION_UP:
-                    if (!ballTracker.isGameOver() && ballTracker.isReadyToCalculateScore()) {
-                        ballTracker.clearShape();
-                        balls.removeAll(ballTracker.getBallsTracked());
-                        ballTracker.cleanUpBallsFields();
-                        level.nextState();
-                        //ballTracker.checkForShape();
+                    if (!ballTracker.isGameOver() && ballTracker.isReadyToCalculateScore() ) {
+                        if (level.allBallsSelected()) {
+                            ballTracker.clearShape();
+                            balls.removeAll(ballTracker.getBallsTracked());
+                            ballTracker.cleanUpBallsFields();
+                            level.nextState();
+                        } else {
+                            level.setNotAllBallsState();
+                        }
 
-                    } else if (!ballTracker.isGameOver()) {
+                    } else if(!level.isLineContactState()){
                         ballTracker.resumeMovement();
                         level.setInitialState();
-
                     }
                     break;
+
             }
             return true;
+
         }
-
-
     }
+
         @Override
         protected void onResume() {
             super.onResume();
@@ -281,6 +302,5 @@ public class TutorialActivity extends Activity {
         protected void onDestroy() {
             super.onDestroy();
         }
-
-
 }
+

@@ -38,6 +38,17 @@ public class Tutorial_Level_2 extends Level {
                 comment = "The more balls, the more points you";
                 comment2 = "will be awarded. Tap to start level 3";
                 comment3 = "and learn how to use multicolor balls";
+                break;
+
+            case LINE_CONTACT:
+                comment = "Line contact! Balls must not hit";
+                comment2 = "the lines. Tap to start again";
+                break;
+
+            case NOT_ALL_BALLS_SHAPE:
+                comment = "Don't be a chicken! Try doing a triangle";
+                comment2 = "with 3 balls, not 2. This will give you";
+                comment3 = "more points. Tap to continue";
         }
 
         comments[0] = comment;
