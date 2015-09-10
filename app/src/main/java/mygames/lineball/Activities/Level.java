@@ -10,7 +10,7 @@ public abstract class Level {
 
     public Level() {
         current_state = Level_State.INITIAL;
-        end_state = Level_State.SHAPE_COMPLETE;
+        end_state = Level_State.NEXT_LEVEL2;
     }
 
     public enum Level_State {
@@ -18,7 +18,10 @@ public abstract class Level {
         FIRST_BALL,
         SECOND_BALL,
         THIRD_BALL,
-        SHAPE_COMPLETE;
+        SHAPE_COMPLETE,
+        NEXT_LEVEL,
+        NEXT_LEVEL2,
+        ERROR;
 
         public Level_State getNext() {
             return values()[(ordinal()+1) % values().length];
@@ -31,12 +34,25 @@ public abstract class Level {
         }
     }
 
+    protected Level_State getCurrent_state() {
+        return current_state;
+    }
+
     public void setInitialState() {
         current_state = Level_State.INITIAL;
     }
 
+    public void setToErrorState() {
+        current_state = Level_State.ERROR;
+    }
+
     public boolean isEndState() {
         return current_state == end_state;
+    }
+
+    public boolean isStateBeforeEndState() {
+        // returns true if current state is the state before end state
+        return current_state.equals(Level_State.values()[end_state.ordinal() - 1]);
     }
 
     abstract String[] getComments();

@@ -12,11 +12,13 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import mygames.lineball.BallGenerators.BallGenerator;
 import mygames.lineball.BallGenerators.InitialStateBallGenerator;
 import mygames.lineball.BallTracker;
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.Balls.RandomBall;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 
@@ -80,8 +82,7 @@ public class TutorialActivity extends Activity {
             synchronized (balls) {
                 for (Ball b : balls) {
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
-                        ballTracker.setGameStateToLineContact();
-                        playing = false;
+                        level.setToErrorState();
                     }
                     b.checkWallCollision(screenWidth, screenHeight);
                     b.update(fps);
@@ -89,7 +90,7 @@ public class TutorialActivity extends Activity {
             }
 
             if(level.isEndState()) {
-                if(!level.getClass().equals(Tutorial_Level_2.class)) {
+                if(!level.getClass().equals(Tutorial_Level_3.class)) {
 
                     goToNextLevel();
                       //tutorialView = new TutorialView(getContext(), screenWidth, screenHeight, 3, 1, 0, level);
@@ -165,13 +166,25 @@ public class TutorialActivity extends Activity {
         }
 
         private void goToNextLevel() {
-
             level = level.nextLevel();
-            InitialStateBallGenerator ballgen = new InitialStateBallGenerator(3, 1, screenWidth, screenHeight);
-            balls = ballgen.generateBalls();
-            ballTracker = new BallTracker(ballgen.getDifferentTypesOfBalls());
+            if(level.getClass().equals(Tutorial_Level_2.class)) {
+                InitialStateBallGenerator ballgen = new InitialStateBallGenerator(3, 1, screenWidth, screenHeight);
+                balls = ballgen.generateBalls();
+                ballTracker = new BallTracker(ballgen.getDifferentTypesOfBalls());
+            } else {
+                Ball ball1 = new Ball(screenWidth, screenHeight, 1);
+                Ball ball2 = new Ball(screenWidth, screenHeight, 1);
+                RandomBall randBall = new RandomBall(screenWidth, screenHeight);
+                balls.clear();
+                balls.add(ball1);
+                balls.add(ball2);
+                balls.add(randBall);
 
-
+                int[] differentTypesOfBalls = new int[5];
+                differentTypesOfBalls[1] = 2;
+                differentTypesOfBalls[4] = 1;
+                ballTracker = new BallTracker(differentTypesOfBalls);
+            }
         }
 
         // The SurfaceView class implements onTouchListener
@@ -183,6 +196,9 @@ public class TutorialActivity extends Activity {
 
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
+                    if(level.isStateBeforeEndState()) {
+                        level.nextState();
+                    }
                     if (!ballTracker.isGameOver()) {
                         paused = false;
                         //stop = false;

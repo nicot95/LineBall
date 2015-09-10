@@ -17,24 +17,27 @@ public class Tutorial_Level_2 extends Level {
                 comment2 = "touch and hold any ball!";
                 break;
             case FIRST_BALL:
-                comment =  "Very well, now hold the finger and select";
-                comment2 = "another ball of the same color. Be careful with";
-                comment3 = "with the third ball. It must not cross the line!";
+                comment =  "Very well, again keep holding and select";
+                comment2 = "another ball. Keep an eye on the third";
+                comment3 = "ball, as it must not hit the line!";
                 break;
             case SECOND_BALL:
                 comment = "Well done! Now, keep holding the finger";
-                comment2 = "and select the last moving ball";
+                comment2 = "and select the last moving ball.";
 
                 break;
             case THIRD_BALL:
                 comment = "Perfect, now just select the first ball";
-                comment2 = "to finish the triangle. This shape will";
-                comment3 = "give you more points than the 2 ball line!";
+                comment2 = "to finish the triangle.";
                 break;
             case SHAPE_COMPLETE:
-                comment = "Shape is complete! The three balls vanish";
-                comment2 = "and you will get more points than in the";
-                comment3 = "previous exercise. The more balls the merrier!";
+                comment = "Shape completed! Release the finger";
+                comment2 = "and the three balls will vanish.";
+                break;
+            case NEXT_LEVEL:
+                comment = "The more balls, the more points you";
+                comment2 = "will be awarded. Tap to start level 3";
+                comment3 = "and learn how to use multicolor balls";
         }
 
         comments[0] = comment;
@@ -45,6 +48,6 @@ public class Tutorial_Level_2 extends Level {
     }
 
     public Level nextLevel() {
-        return this;
+        return new Tutorial_Level_3();
     }
 }
