@@ -6,7 +6,7 @@ import android.graphics.Paint;
 
 import java.util.List;
 
-import mygames.lineball.BallTracker;
+import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
 
 

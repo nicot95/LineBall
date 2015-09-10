@@ -10,13 +10,10 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import mygames.lineball.BallGenerators.BallGenerator;
 import mygames.lineball.BallGenerators.InitialStateBallGenerator;
-import mygames.lineball.BallTracker;
+import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.Balls.RandomBall;
 import mygames.lineball.Util.DrawingUtil;

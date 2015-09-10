@@ -1,4 +1,4 @@
-package mygames.lineball;
+package mygames.lineball.GameLogic;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,11 +35,16 @@ public class BallTracker {
         numBallsPerType[newBall.getColorSimple()]++;
     }
 
+    public void timeOut() {
+        game_state = Game_State.TIME_OUT;
+    }
+
     public enum Game_State {
         NOT_OVER,
         LINE_CONTACT,
         NO_POSSIBLE_MOVE,
-        BOARD_CLEARED
+        BOARD_CLEARED,
+        TIME_OUT;
     }
 
     public BallTracker(int[] numBallsPerType) {

@@ -1,4 +1,4 @@
-package mygames.lineball;
+package mygames.lineball.GameLogic;
 
 import android.graphics.Color;
 

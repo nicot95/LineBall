@@ -159,4 +159,9 @@ public class SurvivalBallGenerator extends BallGenerator {
         return false;
     }
 
+    public int getRound() {
+        return round;
+    }
+
+
 }

@@ -12,8 +12,7 @@ import java.util.List;
 
 import mygames.lineball.BallGenerators.InitialStateBallGenerator;
 import mygames.lineball.Balls.Ball;
-import mygames.lineball.BorderColourer;
-import mygames.lineball.Util.DrawingUtil;
+import mygames.lineball.GameLogic.BorderColourer;
 import mygames.lineball.Util.MathUtil;
 
 

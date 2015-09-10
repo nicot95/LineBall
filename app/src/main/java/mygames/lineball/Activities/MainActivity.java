@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.view.Display;
@@ -28,13 +29,12 @@ import com.google.android.gms.drive.Drive;
 import android.support.v4.app.FragmentActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import mygames.lineball.BallGenerators.InitialStateBallGenerator;
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
-import mygames.lineball.BallTracker;
+import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
-import mygames.lineball.BorderColourer;
+import mygames.lineball.GameLogic.BorderColourer;
+import mygames.lineball.GameLogic.RoundTimer;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 
@@ -205,12 +205,15 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         */
         private float touchX, touchY;
 
+        private SurvivalBallGenerator survivalBallGenerator;
         // The score
         private int score = 0;
 
         private BallTracker ballTracker;
-        private SurvivalBallGenerator survivalBallGenerator;
         private BorderColourer borderColourer;
+        private RoundTimer roundTImer;
+
+        int initialRoundTIme = 20000;
 
         public SurvivalView(Context context, int screenWidth, int screenHeight,
                             int numBalls, int different_type_of_balls, int color) {
@@ -221,6 +224,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     new SurvivalBallGenerator(numBalls, different_type_of_balls, screenWidth,
                                                 screenHeight, numBalls);
 
+            this.roundTImer = new RoundTimer(ballTracker, initialRoundTIme * 100);
         }
 
 
@@ -242,7 +246,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
             /*
                 increases the score and removes used balles from ArrayList
-                for performance issues.
+                for performance issues. Also, increase score if all balls were cleared
              */
             if (ballTracker.isRoundFinished()) {
                 if (survivalBallGenerator.loadNewRound()) {
@@ -250,7 +254,12 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     ballTracker.addToBallList(newBall);
                     balls.add(newBall);
                 } else {
+                    int round = survivalBallGenerator.getRound();
+                    if (ballTracker.getGameState() == BallTracker.Game_State.BOARD_CLEARED) {
+                        score += 100 + 50 * round;
+                    }
                     ballTracker.newRoundStarted();
+                    //roundTImer.setTimer(initialRoundTIme + 5 * round);
                 }
             }
 
@@ -287,9 +296,10 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     }
                 }
 
-                // TODO draw the Score
+                //Draw the Score and time left
                 paint.setTextSize(40);
                 canvas.drawText("Score: " + score, 30, 70, paint);
+                canvas.drawText(roundTImer.getTimeLeft(), screenWidth - 100, 70, paint);
 
                 //Draw the game_overState
                 if (ballTracker.isRoundFinished()) {
@@ -332,7 +342,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             String gameOverText = "";
             switch (text) {
                 case BOARD_CLEARED:
-                    gameOverText = "All balls cleared";
+                    int extraScore = 100 + 50 * survivalBallGenerator.getRound();
+                    gameOverText = "All balls cleared\n+" + extraScore + " Bonus";
                     break;
                 case NO_POSSIBLE_MOVE:
                     gameOverText = "No more moves";
@@ -340,6 +351,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 case LINE_CONTACT:
                     gameOverText = "Line contact";
                     break;
+                case TIME_OUT:
+                    gameOverText = "Time out";
                 default:
                     break;
             }
