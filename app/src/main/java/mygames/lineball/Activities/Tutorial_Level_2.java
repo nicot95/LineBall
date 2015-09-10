@@ -5,9 +5,6 @@ package mygames.lineball.Activities;
  */
 public class Tutorial_Level_2 extends Level {
 
-
-
-
     public String[] getComments() {
         String comment = "";
         String comment2 = "";
@@ -20,19 +17,24 @@ public class Tutorial_Level_2 extends Level {
                 comment2 = "touch and hold any ball!";
                 break;
             case FIRST_BALL:
-                comment =  "Very well, now hold the finger and try selecting";
-                comment2 = "another ball of the same color. But careful with";
-                comment3 = "the third ball. It must not cross the line!";
+                comment =  "Very well, now hold the finger and select";
+                comment2 = "another ball of the same color. Be careful with";
+                comment3 = "with the third ball. It must not cross the line!";
                 break;
             case SECOND_BALL:
                 comment = "Well done! Now, keep holding the finger";
-                comment2 = "and select the last ball ";
-                comment3 = "the shape.";
+                comment2 = "and select the last moving ball";
+
+                break;
+            case THIRD_BALL:
+                comment = "Perfect, now just select the first ball";
+                comment2 = "to finish the triangle. This shape will";
+                comment3 = "give you more points than the 2 ball line!";
                 break;
             case SHAPE_COMPLETE:
-                comment = "Shape is complete! Both balls vanish";
-                comment2 = "and the first step of tutorial is";
-                comment3 = "complete!";
+                comment = "Shape is complete! The three balls vanish";
+                comment2 = "and you will get more points than in the";
+                comment3 = "previous exercise. The more balls the merrier!";
         }
 
         comments[0] = comment;

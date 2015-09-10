@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import mygames.lineball.BallGenerators.BallGenerator;
+import mygames.lineball.BallGenerators.InitialStateBallGenerator;
 import mygames.lineball.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.Util.DrawingUtil;
@@ -26,7 +28,7 @@ public class TutorialActivity extends Activity {
     GameView tutorialView;
 
     private int NUM_BALLS = 2;
-    private int DIFFERENT_BALLS = 5;
+    private int DIFFERENT_BALLS = 1;
     private int RED = 0;
     public static int TEXTBOX_SIZE = 200;
 
@@ -41,28 +43,31 @@ public class TutorialActivity extends Activity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-        tutorialView = new tutorialView(this, size.x, size.y - TEXTBOX_SIZE, NUM_BALLS, DIFFERENT_BALLS, RED);
+        tutorialView = new TutorialView(this, size.x, size.y - TEXTBOX_SIZE, NUM_BALLS, DIFFERENT_BALLS,
+                 1, new Tutorial_Level_1());
         setContentView(tutorialView);
 
     }
 
-    class tutorialView extends GameView {
+    class TutorialView extends GameView {
 
         private BallTracker ballTracker;
         private float touchX, touchY;
-        private Level level = new Tutorial_Level_1();
+        private Level level;
 
         Paint whitePaint = new Paint();
 
 
 
-        public tutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
-                            int different_balls, int color) {
+        public TutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
+                            int different_balls, int color, Level level) {
             super(context, screenWidth, screenHeight, num_balls, different_balls, color);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
+            this.level = level;
             whitePaint.setAntiAlias(true);
             whitePaint.setColor(Color.WHITE);
             whitePaint.setTextSize(40);
+
 
             for (Ball b: balls) {
                 b.setColor(0);
@@ -84,8 +89,10 @@ public class TutorialActivity extends Activity {
             }
 
             if(level.isEndState()) {
-                if(level.getClass().equals(Tutorial_Level_2.class)) {
-                      level = level.nextLevel();
+                if(!level.getClass().equals(Tutorial_Level_2.class)) {
+
+                    goToNextLevel();
+                      //tutorialView = new TutorialView(getContext(), screenWidth, screenHeight, 3, 1, 0, level);
                 }
                 else {
                     Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
@@ -154,6 +161,16 @@ public class TutorialActivity extends Activity {
             whitePaint.setStyle(Paint.Style.STROKE);
             canvas.drawRect(0, screenHeight, screenWidth, screenHeight + TEXTBOX_SIZE, whitePaint);
             whitePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        }
+
+        private void goToNextLevel() {
+
+            level = level.nextLevel();
+            InitialStateBallGenerator ballgen = new InitialStateBallGenerator(3, 1, screenWidth, screenHeight);
+            balls = ballgen.generateBalls();
+            ballTracker = new BallTracker(ballgen.getDifferentTypesOfBalls());
+
 
         }
 
