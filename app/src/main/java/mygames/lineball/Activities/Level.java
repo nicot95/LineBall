@@ -13,6 +13,8 @@ public abstract class Level {
         end_state = Level_State.NEXT_LEVEL2;
     }
 
+
+
     public enum Level_State {
         INITIAL,
         FIRST_BALL,
@@ -21,7 +23,8 @@ public abstract class Level {
         SHAPE_COMPLETE,
         NEXT_LEVEL,
         NEXT_LEVEL2,
-        ERROR;
+        NOT_ALL_BALLS_SHAPE,
+        LINE_CONTACT;
 
         public Level_State getNext() {
             return values()[(ordinal()+1) % values().length];
@@ -42,8 +45,12 @@ public abstract class Level {
         current_state = Level_State.INITIAL;
     }
 
-    public void setToErrorState() {
-        current_state = Level_State.ERROR;
+    public void setToLineContactState() {
+        current_state = Level_State.LINE_CONTACT;
+    }
+
+    public void setNotAllBallsState() {
+        current_state = Level_State.NOT_ALL_BALLS_SHAPE;
     }
 
     public boolean isEndState() {
@@ -53,6 +60,18 @@ public abstract class Level {
     public boolean isStateBeforeEndState() {
         // returns true if current state is the state before end state
         return current_state.equals(Level_State.values()[end_state.ordinal() - 1]);
+    }
+
+    public boolean isLineContactState() {
+        return current_state.equals(Level_State.LINE_CONTACT);
+    }
+
+    public boolean allBallsSelected() {
+        return current_state.equals(Level_State.values()[end_state.ordinal() - 2]);
+    }
+
+    public boolean isNotAllBallsShapeState() {
+        return current_state.equals(Level_State.NOT_ALL_BALLS_SHAPE);
     }
 
     abstract String[] getComments();

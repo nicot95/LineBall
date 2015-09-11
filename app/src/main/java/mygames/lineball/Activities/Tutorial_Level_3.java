@@ -21,27 +21,38 @@ public class Tutorial_Level_3 extends Level{
                 comment3 = "Touch and hold any ball";
                 break;
             case FIRST_BALL:
-                comment =  "Very well, now hold the finger and select";
+                comment =  "Very well, hold the finger and select";
                 comment2 = "another ball. Again remember: other";
                 comment3 = "balls must not hit the line!";
                 break;
             case SECOND_BALL:
-                comment = "Well done! Now, keep holding the finger";
-                comment2 = "and select the last moving ball.";
+                comment = "Now, keep holding the finger and select";
+                comment2 = "the last moving ball.";
                 break;
             case THIRD_BALL:
                 comment = "Perfect, now just select the first ball";
-                comment2 = "again to finish the triangle";
+                comment2 = "again to finish the triangle.";
                 break;
             case SHAPE_COMPLETE:
-                comment = "Shape completed! Release the finger.";
-                comment2 = "As you can see, multicolor balls are very";
-                comment3 = "useful, so use them wisely";
+                comment = "Figure completed! Release the finger.";
+                comment2 = "As you can see, multicolor balls are";
+                comment3 = "very useful, so use them wisely.";
                 break;
             case NEXT_LEVEL:
                 comment = "Use multicolor balls wisely as they";
                 comment2 = "will be scarce during the game.";
                 comment3 = "Tap to go to menu and start playing :)";
+                break;
+
+            case LINE_CONTACT:
+                comment = "Line contact! Balls must not hit";
+                comment2 = "the lines. Tap to restart.";
+                break;
+
+            case NOT_ALL_BALLS_SHAPE:
+                comment = "Don't be a chicken! Try doing a triangle";
+                comment2 = "with 3 balls, not 2. This will give you";
+                comment3 = "more points. Tap to resume.";
 
         }
 

@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import mygames.lineball.GameLogic.BallTracker;
+import mygames.lineball.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BorderColourer;
 
@@ -97,7 +97,7 @@ public class MathUtil {
         List<Ball> ballsTracked = ballTracker.getBallsTracked();
         float x = b.getX(); float y = b.getY(); float ballRadius = b.getBallRadius();
         Point thisPoint = new Point((int) x, (int) y);
-
+       
         for(int i = 1; i < ballsTracked.size(); i++) {
             Ball ball1 = ballsTracked.get(i-1);
             Ball ball2 = ballsTracked.get(i);
@@ -209,25 +209,34 @@ public class MathUtil {
         if (b.getY() + b.getBallRadius() >= screenY && b.getyVelocity() > 0) {
             b.reverseYVelocity();
             b.clearObstacleY(2);
-            borderColourer.setSouthBorderColour(b.getColor());
+            if(!b.getClass().equals(RandomBall.class)) {
+                borderColourer.setSouthBorderColour(b.getColor());
+            }
+
         }
         if(b.getY() - b.getBallRadius() <= 0 && b.getyVelocity() < 0) {
             b.reverseYVelocity();
             b.clearObstacleY(-2);
-            borderColourer.setNorthBorderColour(b.getColor());
+            if(!b.getClass().equals(RandomBall.class)) {
+                borderColourer.setNorthBorderColour(b.getColor());
+            }
         }
 
 
         if (b.getX() + b.getBallRadius() >= screenX && b.getxVelocity() > 0) {
             b.reverseXVelocity();
             b.clearObstacleX(2);
-            borderColourer.setEastBorderColour(b.getColor());
+            if(!b.getClass().equals(RandomBall.class)) {
+                borderColourer.setEastBorderColour(b.getColor());
+            }
         }
 
         if(b.getX() - b.getBallRadius() <= 0 && b.getxVelocity() < 0) {
             b.reverseXVelocity();
             b.clearObstacleX(-2);
-            borderColourer.setWestBorderColour(b.getColor());
+            if(!b.getClass().equals(RandomBall.class)) {
+                borderColourer.setWestBorderColour(b.getColor());
+            }
         }
     }
 }
