@@ -32,7 +32,7 @@ public class TutorialActivity extends Activity {
     private int NUM_BALLS = 2;
     private int DIFFERENT_BALLS = 1;
     private int RED = 0;
-    public static int TEXTBOX_SIZE = 200;
+    private double game_screen_area = 0.83;
 
 
 
@@ -45,7 +45,7 @@ public class TutorialActivity extends Activity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-        tutorialView = new TutorialView(this, size.x, size.y - TEXTBOX_SIZE, NUM_BALLS, DIFFERENT_BALLS,
+        tutorialView = new TutorialView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS,
                  1, new Tutorial_Level_1());
         setContentView(tutorialView);
 
@@ -55,6 +55,7 @@ public class TutorialActivity extends Activity {
 
         private BallTracker ballTracker;
         private float touchX, touchY;
+        private double commentBoxHeight;
         private Level level;
 
         Paint whitePaint = new Paint();
@@ -62,9 +63,10 @@ public class TutorialActivity extends Activity {
 
         public TutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
                             int different_balls, int color, Level level) {
-            super(context, screenWidth, screenHeight, num_balls, different_balls, color);
+            super(context, screenWidth, (int) Math.round(game_screen_area*screenHeight), num_balls, different_balls, color);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
             this.level = level;
+            this.commentBoxHeight = (1-game_screen_area)*screenHeight;
             whitePaint.setAntiAlias(true);
             whitePaint.setColor(Color.WHITE);
             whitePaint.setTextSize(40);
@@ -150,17 +152,18 @@ public class TutorialActivity extends Activity {
 
         public void drawComment() {
             String[] comments = level.getComments();
-            int separation = 50;
+            int separation = screenHeight/20;
+            int offset = screenHeight/16;
             for (String c : comments) {
-                canvas.drawText(c, 10, screenHeight + separation, whitePaint);
-                separation += 60;
+                canvas.drawText(c, screenHeight/100, screenHeight + separation, whitePaint);
+                separation += offset;
             }
 
         }
 
         public void drawCommentsBox() {
             whitePaint.setStyle(Paint.Style.STROKE);
-            canvas.drawRect(0, screenHeight, screenWidth, screenHeight + TEXTBOX_SIZE, whitePaint);
+            canvas.drawRect(0, screenHeight, screenWidth, (int) Math.round(screenHeight+ commentBoxHeight), whitePaint);
             whitePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         }

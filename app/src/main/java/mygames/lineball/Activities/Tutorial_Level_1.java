@@ -26,19 +26,17 @@ public class Tutorial_Level_1 extends Level{
                     comment3 = "another ball of the same color.";
                     break;
                 case SECOND_BALL   :
-                    comment = "Well done! Now, keep holding the finger";
-                    comment2 = "and touch the initial ball to finish";
-                    comment3 = "the shape.";
+                    comment = "Now, keep holding the finger and touch";
+                    comment2 = "the initial ball to close the figure.";
                     break;
                 case THIRD_BALL:
-                    comment = "Shape completed! Now release the finger";
-                    comment2 = "and both balls will vanish. This is";
-                    comment3 = "the simplest shape you can make.";
+                    comment = "Figure completed! Now release the";
+                    comment2 = "finger and both balls will vanish.";
                     break;
                 case SHAPE_COMPLETE:
-                    comment = "Tap to start level 2 of the tutorial,";
-                    comment2 = "where you will make a more challenging";
-                    comment3 = "shape: a triangle";
+                    comment = "In the next level, you will face with";
+                    comment2 = "a more challenging figure: a triangle.";
+                    comment3 = "Tap to continue.";
             }
 
         comments[0] = comment;

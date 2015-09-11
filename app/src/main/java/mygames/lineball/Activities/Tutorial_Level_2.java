@@ -22,33 +22,32 @@ public class Tutorial_Level_2 extends Level {
                 comment3 = "ball, as it must not hit the line!";
                 break;
             case SECOND_BALL:
-                comment = "Well done! Now, keep holding the finger";
-                comment2 = "and select the last moving ball.";
-
+                comment = "Now, keep holding the finger and select";
+                comment2 = "the last moving ball.";
                 break;
             case THIRD_BALL:
                 comment = "Perfect, now just select the first ball";
                 comment2 = "to finish the triangle.";
                 break;
             case SHAPE_COMPLETE:
-                comment = "Shape completed! Release the finger";
+                comment = "Figure completed! Release the finger";
                 comment2 = "and the three balls will vanish.";
                 break;
             case NEXT_LEVEL:
                 comment = "The more balls, the more points you";
                 comment2 = "will be awarded. Tap to start level 3";
-                comment3 = "and learn how to use multicolor balls";
+                comment3 = "and learn how to use multicolor balls.";
                 break;
 
             case LINE_CONTACT:
                 comment = "Line contact! Balls must not hit";
-                comment2 = "the lines. Tap to start again";
+                comment2 = "the lines. Tap to restart.";
                 break;
 
             case NOT_ALL_BALLS_SHAPE:
                 comment = "Don't be a chicken! Try doing a triangle";
                 comment2 = "with 3 balls, not 2. This will give you";
-                comment3 = "more points. Tap to continue";
+                comment3 = "more points. Tap to resume.";
         }
 
         comments[0] = comment;

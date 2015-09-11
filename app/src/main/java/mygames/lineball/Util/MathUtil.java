@@ -8,6 +8,7 @@ import java.util.List;
 
 import mygames.lineball.BallTracker;
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.Balls.RandomBall;
 import mygames.lineball.BorderColourer;
 
 
@@ -97,29 +98,30 @@ public class MathUtil {
         List<Ball> ballsTracked = ballTracker.getBallsTracked();
         float x = b.getX(); float y = b.getY(); float ballRadius = b.getBallRadius();
         Point thisPoint = new Point((int) x, (int) y);
+        synchronized (ballsTracked) {
+            for (int i = 1; i < ballsTracked.size(); i++) {
+                Ball ball1 = ballsTracked.get(i - 1);
+                Ball ball2 = ballsTracked.get(i);
+                Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
+                Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
 
-        for(int i = 1; i < ballsTracked.size(); i++) {
-            Ball ball1 = ballsTracked.get(i-1);
-            Ball ball2 = ballsTracked.get(i);
-            Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
-            Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
+                List<Point> intersectPoints1 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point1, ballRadius);
+                List<Point> intersectPoints2 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
 
-            List<Point> intersectPoints1 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point1, ballRadius);
-            List<Point> intersectPoints2 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
+                Point point1A = intersectPoints1.get(0);
+                Point point1B = intersectPoints1.get(1);
+                Point point2A = intersectPoints2.get(0);
+                Point point2B = intersectPoints2.get(1);
 
-            Point point1A = intersectPoints1.get(0);
-            Point point1B = intersectPoints1.get(1);
-            Point point2A = intersectPoints2.get(0);
-            Point point2B = intersectPoints2.get(1);
+                Point intersectPoint1 = getDistance(point1A, point2A) < getDistance(point1B, point2A) ?
+                        point1A : point1B;
+                Point intersectPoint2 = getDistance(point2A, point1A) < getDistance(point2B, point1A) ?
+                        point2A : point2B;
+                if (!ball1.equals(b) && !ball2.equals(b)
+                        && MathUtil.getDistanceToSegment(intersectPoint1, intersectPoint2, thisPoint) <= ballRadius + LINEWIDTH)
 
-            Point intersectPoint1 = getDistance(point1A, point2A) < getDistance(point1B, point2A) ?
-                                         point1A : point1B;
-            Point intersectPoint2 = getDistance(point2A, point1A) < getDistance(point2B, point1A) ?
-                                         point2A : point2B;
-            if(!ball1.equals(b) && !ball2.equals(b)
-                    && MathUtil.getDistanceToSegment(intersectPoint1, intersectPoint2, thisPoint) <= ballRadius + LINEWIDTH)
-
-                return true;
+                    return true;
+            }
         }
         return false;
 
@@ -209,25 +211,34 @@ public class MathUtil {
         if (b.getY() + b.getBallRadius() >= screenY && b.getyVelocity() > 0) {
             b.reverseYVelocity();
             b.clearObstacleY(2);
-            borderColourer.setSouthBorderColour(b.getColor());
+            if(!b.getClass().equals(RandomBall.class)) {
+                borderColourer.setSouthBorderColour(b.getColor());
+            }
+
         }
         if(b.getY() - b.getBallRadius() <= 0 && b.getyVelocity() < 0) {
             b.reverseYVelocity();
             b.clearObstacleY(-2);
-            borderColourer.setNorthBorderColour(b.getColor());
+            if(!b.getClass().equals(RandomBall.class)) {
+                borderColourer.setNorthBorderColour(b.getColor());
+            }
         }
 
 
         if (b.getX() + b.getBallRadius() >= screenX && b.getxVelocity() > 0) {
             b.reverseXVelocity();
             b.clearObstacleX(2);
-            borderColourer.setEastBorderColour(b.getColor());
+            if(!b.getClass().equals(RandomBall.class)) {
+                borderColourer.setEastBorderColour(b.getColor());
+            }
         }
 
         if(b.getX() - b.getBallRadius() <= 0 && b.getxVelocity() < 0) {
             b.reverseXVelocity();
             b.clearObstacleX(-2);
-            borderColourer.setWestBorderColour(b.getColor());
+            if(!b.getClass().equals(RandomBall.class)) {
+                borderColourer.setWestBorderColour(b.getColor());
+            }
         }
     }
 }
