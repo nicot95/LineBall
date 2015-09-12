@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BorderColourer;
+import mygames.lineball.R;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 
@@ -64,10 +66,15 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     int NUM_BALLS = 15;
     int DIFFERENT_TYPE_OF_BALLS = 5;
 
+    private MediaPlayer mediaPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.pamgea);
+        mediaPlayer.start();
 
         // Create a GoogleApiClient instance
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -165,19 +172,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!mResolvingError) {
-            //mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -473,7 +467,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     @Override
     protected void onResume() {
         super.onResume();
-
+        mediaPlayer.start();
         // Tell the gameView resume method to execute
         survivalView.resume();
     }
@@ -482,8 +476,29 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     @Override
     protected void onPause() {
         super.onPause();
-
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
         // Tell the gameView pause method to execute
         survivalView.pause();
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!mResolvingError) {
+            //mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+    }
+
 }
