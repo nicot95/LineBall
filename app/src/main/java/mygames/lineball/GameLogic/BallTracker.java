@@ -63,6 +63,9 @@ public class BallTracker {
 
     public void trackBall(Ball b) {
 
+        if(b.equals(currentTrackedBall)) {
+            return;
+        }
 
         //Generates the colour of the chain that is gonna link all balls
         getChainColor(b);
@@ -133,8 +136,7 @@ public class BallTracker {
     }
 
     private boolean shapeIsComplete(Ball b) {
-        return !(b.equals(currentTrackedBall) ||
-                (b.equals(lastTrackedBall) && ballsTracked.size() > 2));
+        return ballsTracked.size() > 1 && b.equals(ballsTracked.get(0));
     }
 
     public int clearShape() {

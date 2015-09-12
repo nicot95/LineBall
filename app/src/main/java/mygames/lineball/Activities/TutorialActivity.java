@@ -29,7 +29,7 @@ public class TutorialActivity extends Activity {
     private int NUM_BALLS = 2;
     private int DIFFERENT_BALLS = 1;
     private int RED = 0;
-    private double game_screen_area = 0.83;
+    private double game_screen_factor = 0.83;
 
 
 
@@ -54,16 +54,18 @@ public class TutorialActivity extends Activity {
         private float touchX, touchY;
         private double commentBoxHeight;
         private Level level;
+        private int fullscreenHeight;
 
         Paint whitePaint = new Paint();
 
 
         public TutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
                             int different_balls, int color, Level level) {
-            super(context, screenWidth, (int) Math.round(game_screen_area*screenHeight), num_balls, different_balls, color);
+            super(context, screenWidth, (int) Math.round(game_screen_factor*screenHeight), num_balls, different_balls, color);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
+            this.fullscreenHeight = screenHeight;
             this.level = level;
-            this.commentBoxHeight = (1-game_screen_area)*screenHeight;
+            this.commentBoxHeight = (1-game_screen_factor)*screenHeight;
             whitePaint.setAntiAlias(true);
             whitePaint.setColor(Color.WHITE);
             whitePaint.setTextSize(40);
