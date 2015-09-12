@@ -6,7 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import mygames.lineball.BallTracker;
+import mygames.lineball.Balls.RandomBall;
+import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BorderColourer;
 

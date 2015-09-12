@@ -13,6 +13,8 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.view.Display;
@@ -34,7 +36,6 @@ import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BorderColourer;
-import mygames.lineball.GameLogic.RoundTimer;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 
@@ -211,9 +212,10 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         private BallTracker ballTracker;
         private BorderColourer borderColourer;
-        private RoundTimer roundTImer;
+        private String timeLeft = "";
+        private CountDownTimer timer;
 
-        int initialRoundTIme = 20000;
+        int initialRoundTIme = 30000;
 
         public SurvivalView(Context context, int screenWidth, int screenHeight,
                             int numBalls, int different_type_of_balls, int color) {
@@ -224,7 +226,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     new SurvivalBallGenerator(numBalls, different_type_of_balls, screenWidth,
                                                 screenHeight, numBalls);
 
-            this.roundTImer = new RoundTimer(ballTracker, initialRoundTIme * 100);
+            createNewTimer(survivalBallGenerator.getRound());
         }
 
 
@@ -249,20 +251,47 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 for performance issues. Also, increase score if all balls were cleared
              */
             if (ballTracker.isRoundFinished()) {
+                timer.cancel();
                 if (survivalBallGenerator.loadNewRound()) {
                     Ball newBall = survivalBallGenerator.generateSurvivalBall();
                     ballTracker.addToBallList(newBall);
                     balls.add(newBall);
                 } else {
-                    int round = survivalBallGenerator.getRound();
+                    final int round = survivalBallGenerator.getRound();
                     if (ballTracker.getGameState() == BallTracker.Game_State.BOARD_CLEARED) {
                         score += 100 + 50 * round;
                     }
                     ballTracker.newRoundStarted();
-                    //roundTImer.setTimer(initialRoundTIme + 5 * round);
+
+
+                    createNewTimer(round);
                 }
             }
 
+        }
+
+        /*
+            Creates the new Timer that will depend on the round number
+         */
+        private void createNewTimer(final int round) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() { // The 1000 represents one second
+                        timer =  new CountDownTimer(initialRoundTIme + (round * 5) * 1000, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
+                            timeLeft = String.valueOf(remainingTime);
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            timeLeft = "0";
+                            ballTracker.timeOut();
+                        }
+                    }.start();
+                }
+            });
         }
 
         @Override
@@ -299,7 +328,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 //Draw the Score and time left
                 paint.setTextSize(40);
                 canvas.drawText("Score: " + score, 30, 70, paint);
-                canvas.drawText(roundTImer.getTimeLeft(), screenWidth - 100, 70, paint);
+                canvas.drawText(timeLeft, screenWidth - 100, 70, paint);
 
                 //Draw the game_overState
                 if (ballTracker.isRoundFinished()) {
@@ -437,6 +466,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             intent.putExtra("score", this.score);
             startActivity(intent);
         }
+
     }
 
     // This method executes when the player starts the game
