@@ -10,13 +10,10 @@ import mygames.lineball.R;
 public class MusicHandler {
 
 
-    private static MediaPlayer backgroundSong;
+    private MediaPlayer backgroundSong;
 
     private MediaPlayer shape1;
     private MediaPlayer shape2;
-    private MediaPlayer shape3;
-    private MediaPlayer shape4;
-    private MediaPlayer shape5;
 
     private Random gen;
 
@@ -26,9 +23,7 @@ public class MusicHandler {
 
         this.shape1         = MediaPlayer.create(context, R.raw.shape1short);
         this.shape2         = MediaPlayer.create(context, R.raw.shape2short);
-        this.shape3         = MediaPlayer.create(context, R.raw.shape3);
-        this.shape4         = MediaPlayer.create(context, R.raw.shape4);
-        this.shape5         = MediaPlayer.create(context, R.raw.shape5);
+
 
         this.gen            = new Random();
     }
@@ -48,8 +43,8 @@ public class MusicHandler {
             return;
         }
 
-        int random = gen.nextInt(2);
-        if (random == 0) {
+        boolean random = gen.nextBoolean();
+        if (random) {
             shape1.start();
         } else {
             shape2.start();
@@ -61,6 +56,5 @@ public class MusicHandler {
             backgroundSong.stop();
         }
     }
-
 
 }

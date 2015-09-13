@@ -238,8 +238,10 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
                         ballTracker.setGameStateToLineContact();
                         playing = false;
+                        break;      // We break because the game is already over (performance++)
                     } else if (ballTracker.isGameOver()) { //TimeOut!
                         playing = false;
+                        break;
                     }
                     MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);
                     b.update(fps);
@@ -262,8 +264,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                         score += 100 + 50 * round;
                     }
                     ballTracker.newRoundStarted();
-
-
                     createNewTimer(round);
                 }
             }
@@ -297,7 +297,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         @Override
         // Draw the newly updated scene
         public void draw() {
-
 
             // Make sure our drawing surface is valid or we crash
             if (ourHolder.getSurface().isValid()) {

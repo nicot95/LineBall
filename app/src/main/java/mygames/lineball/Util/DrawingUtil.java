@@ -20,10 +20,12 @@ public class DrawingUtil {
         Paint borderPaint = new Paint();
         borderPaint.setAntiAlias(true);
         borderPaint.setStrokeWidth(10);
+        boolean first = true;
         synchronized (trackedBalls) {
             for (int i = 0; i < trackedBalls.size(); i++) {
                 //if shape is complete, border line to lighht blue, if not stay in white
-                drawColoredBorder(ballTracker, borderPaint);
+                drawColoredBorder(first, ballTracker, borderPaint);
+                first = false;
 
                 //draw ball border
                 Ball ball2 = trackedBalls.get(i);
@@ -38,10 +40,12 @@ public class DrawingUtil {
         }
     }
 
-    private static void drawColoredBorder(BallTracker ballTracker, Paint borderPaint) {
-        if (ballTracker.isGameOver()) {
+    private static void drawColoredBorder(boolean first, BallTracker ballTracker, Paint borderPaint) {
+        if (first) {
+            borderPaint.setColor(Color.MAGENTA);
+        } else if (ballTracker.isGameOver()) {
             borderPaint.setColor(Color.RED);
-        }else if(ballTracker.isReadyToCalculateScore()) {
+        } else if(ballTracker.isReadyToCalculateScore()) {
             borderPaint.setColor(Color.CYAN);
         } else {
             borderPaint.setColor(Color.WHITE);
