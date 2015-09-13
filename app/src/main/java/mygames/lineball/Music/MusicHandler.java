@@ -38,6 +38,16 @@ public class MusicHandler {
     }
 
     public void playShapeCompleted() {
+        //Stops mediaplayers so no overlap occurs.
+        if (shape1.isPlaying()) {
+            shape2.start();
+            return;
+        }
+        if (shape2.isPlaying()){
+            shape1.start();
+            return;
+        }
+
         int random = gen.nextInt(2);
         if (random == 0) {
             shape1.start();
