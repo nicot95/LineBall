@@ -17,6 +17,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -30,6 +31,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.drive.Drive;
 
 import android.support.v4.app.FragmentActivity;
+import android.widget.MediaController;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,7 @@ import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BorderColourer;
+import mygames.lineball.Music.MusicHandler;
 import mygames.lineball.R;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
@@ -66,15 +69,16 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     int NUM_BALLS = 15;
     int DIFFERENT_TYPE_OF_BALLS = 5;
 
-    private MediaPlayer mediaPlayer;
+    private MusicHandler musicHandler;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.pamgea);
-        mediaPlayer.start();
+
+        this.musicHandler = new MusicHandler(MainActivity.this);
+        musicHandler.playBackgroundMusic();
 
         // Create a GoogleApiClient instance
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -435,6 +439,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                            to track new set of balls.
                          */
                         int balls_removed = ballTracker.clearShape();
+                        musicHandler.playShapeCompleted();
                         survivalBallGenerator.deduceBalls(balls_removed);
                         score += ballTracker.calculateScore();
                         balls.removeAll(ballTracker.getBallsTracked());
@@ -452,13 +457,23 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             Return to the main menu (MainMenuActivity) and saves highscore if needed.
          */
         private void goToMenu() {
+            Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
+            updateHighScoreAndChain(intent);
+            startActivity(intent);
+        }
+
+        private void updateHighScoreAndChain(Intent intent) {
             SharedPreferences highscorePreference = PreferenceManager.getDefaultSharedPreferences(this.getContext());
             if (highscorePreference.getInt("highscore", 0) < score) {
-                highscorePreference.edit().putInt("highscore", score).commit();
+                highscorePreference.edit().putInt("highscore", 0).commit();
             }
-            Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
+            int longestChain = ballTracker.getLongestChain();
+            if (highscorePreference.getInt("LongestChain", 0) < longestChain) {
+                highscorePreference.edit().putInt("LongestChain", longestChain).commit();
+            }
+
             intent.putExtra("score", this.score);
-            startActivity(intent);
+            intent.putExtra("Longestchain", longestChain);
         }
 
     }
@@ -467,7 +482,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     @Override
     protected void onResume() {
         super.onResume();
-        mediaPlayer.start();
+        musicHandler.playBackgroundMusic();
         // Tell the gameView resume method to execute
         survivalView.resume();
     }
@@ -476,9 +491,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     @Override
     protected void onPause() {
         super.onPause();
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-        }
+        musicHandler.stopMusic();
         // Tell the gameView pause method to execute
         survivalView.pause();
     }
@@ -496,9 +509,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
+        musicHandler.stopMusic();
     }
 
 }

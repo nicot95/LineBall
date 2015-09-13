@@ -31,12 +31,10 @@ public class BallTracker {
     private int colorComparison;
     private Game_State game_state;
 
+    private int longestChain;
+
     public void addToBallList(Ball newBall) {
         numBallsPerType[newBall.getColorSimple()]++;
-    }
-
-    public void timeOut() {
-        game_state = Game_State.TIME_OUT;
     }
 
     public enum Game_State {
@@ -58,6 +56,7 @@ public class BallTracker {
         currentTrackedBall = null;
 
         this.numBallsPerType = numBallsPerType;
+        this.longestChain    = 0;
 
     }
 
@@ -146,6 +145,9 @@ public class BallTracker {
         for (Ball ball: ballsTracked) {
                 numBallsPerType[ball.getColorSimple()]--;
         }
+        if (longestChain < balls_cleared) {
+            longestChain = balls_cleared;
+        }
         gameOverCheck();
         return balls_cleared;
     }
@@ -218,7 +220,15 @@ public class BallTracker {
     }
 
     public boolean isGameOver() {
-        return game_state == Game_State.LINE_CONTACT;
+        return game_state == Game_State.LINE_CONTACT || game_state == Game_State.TIME_OUT;
+    }
+
+    public void timeOut() {
+        game_state = Game_State.TIME_OUT;
+    }
+
+    public int getLongestChain() {
+        return longestChain;
     }
 
     public boolean isRoundFinished() { return game_state != Game_State.NOT_OVER; }
@@ -226,4 +236,6 @@ public class BallTracker {
     public Game_State getGameState() { return game_state; }
 
     public void newRoundStarted() { this.game_state = Game_State.NOT_OVER; }
+
+
 }
