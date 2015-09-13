@@ -24,8 +24,8 @@ public class MusicHandler {
         this.backgroundSong = MediaPlayer.create(context, R.raw.pamgea);
         backgroundSong.setLooping(true);
 
-        this.shape1         = MediaPlayer.create(context, R.raw.shape1);
-        this.shape2         = MediaPlayer.create(context, R.raw.shape2);
+        this.shape1         = MediaPlayer.create(context, R.raw.shape1short);
+        this.shape2         = MediaPlayer.create(context, R.raw.shape2short);
         this.shape3         = MediaPlayer.create(context, R.raw.shape3);
         this.shape4         = MediaPlayer.create(context, R.raw.shape4);
         this.shape5         = MediaPlayer.create(context, R.raw.shape5);
