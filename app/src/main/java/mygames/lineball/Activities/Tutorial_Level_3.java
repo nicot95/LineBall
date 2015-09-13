@@ -21,9 +21,8 @@ public class Tutorial_Level_3 extends Level{
                 comment3 = "Touch and hold any ball";
                 break;
             case FIRST_BALL:
-                comment =  "Very well, hold the finger and select";
-                comment2 = "another ball. Again remember: other";
-                comment3 = "balls must not hit the line!";
+                comment =  "Swipe through another ball of the same";
+                comment2 = "color.";
                 break;
             case SECOND_BALL:
                 comment = "Now, keep holding the finger and select";
@@ -34,16 +33,13 @@ public class Tutorial_Level_3 extends Level{
                 comment2 = "again to finish the triangle.";
                 break;
             case SHAPE_COMPLETE:
-                comment = "Figure completed! Release the finger.";
-                comment2 = "As you can see, multicolor balls are";
-                comment3 = "very useful, so use them wisely.";
+                comment = "Figure completed! Release the finger";
+                comment2 = "and the three balls will vanish.";
                 break;
             case NEXT_LEVEL:
-                comment = "Use multicolor balls wisely as they";
-                comment2 = "will be scarce during the game.";
-                comment3 = "Tap to go to menu and start playing :)";
+                comment = "Figure completed! Release the finger";
+                comment2 = "and the three balls will vanish.";
                 break;
-
             case LINE_CONTACT:
                 comment = "Line contact! Balls must not hit";
                 comment2 = "the lines. Tap to restart.";

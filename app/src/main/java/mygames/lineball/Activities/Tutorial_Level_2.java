@@ -17,9 +17,9 @@ public class Tutorial_Level_2 extends Level {
                 comment2 = "touch and hold any ball!";
                 break;
             case FIRST_BALL:
-                comment =  "Very well, again keep holding and select";
-                comment2 = "another ball. Keep an eye on the third";
-                comment3 = "ball, as it must not hit the line!";
+                comment =  "Swipe through another ball of the same";
+                comment2 = "color, but be careful with the third";
+                comment3 = "ball, it must not hit the line!";
                 break;
             case SECOND_BALL:
                 comment = "Now, keep holding the finger and select";
@@ -34,10 +34,10 @@ public class Tutorial_Level_2 extends Level {
                 comment2 = "and the three balls will vanish.";
                 break;
             case NEXT_LEVEL:
-                comment = "The more balls, the more points you";
+                /*comment = "The more balls, the more points you";
                 comment2 = "will be awarded. Tap to start level 3";
                 comment3 = "and learn how to use multicolor balls.";
-                break;
+                break;*/
 
             case LINE_CONTACT:
                 comment = "Line contact! Balls must not hit";

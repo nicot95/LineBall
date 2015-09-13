@@ -16,6 +16,7 @@ import mygames.lineball.BallGenerators.InitialStateBallGenerator;
 import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.Balls.RandomBall;
+import mygames.lineball.R;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 
@@ -30,6 +31,10 @@ public class TutorialActivity extends Activity {
     private int DIFFERENT_BALLS = 1;
     private int RED = 0;
     private double game_screen_factor = 0.83;
+    private final double MY_ASPECT_RATIO = 1.65;
+    private final int FONT_WIDTH_RATIO = 18;
+    private final int FONT_HEIGHT_RATIO = 30;
+
 
 
 
@@ -68,12 +73,9 @@ public class TutorialActivity extends Activity {
             this.commentBoxHeight = (1-game_screen_factor)*screenHeight;
             whitePaint.setAntiAlias(true);
             whitePaint.setColor(Color.WHITE);
-            whitePaint.setTextSize(40);
+            setFontSize();
 
 
-            for (Ball b : balls) {
-                b.setColor(0);
-            }
         }
 
         @Override
@@ -149,12 +151,23 @@ public class TutorialActivity extends Activity {
             }
         }
 
+        private void setFontSize() {
+            float fontSize;
+            if(fullscreenHeight/screenWidth < MY_ASPECT_RATIO) {
+                fontSize = fullscreenHeight/FONT_HEIGHT_RATIO;
+            } else {
+                fontSize = screenWidth/FONT_WIDTH_RATIO;
+            }
+            whitePaint.setTextSize(fontSize);
+        }
+
         public void drawComment() {
             String[] comments = level.getComments();
             int separation = screenHeight/20;
             int offset = screenHeight/16;
+            //float fontSize = paint.getTextSize();
             for (String c : comments) {
-                canvas.drawText(c, screenHeight/100, screenHeight + separation, whitePaint);
+                canvas.drawText(c, fullscreenHeight/120, screenHeight + separation, whitePaint);
                 separation += offset;
             }
 
@@ -210,9 +223,9 @@ public class TutorialActivity extends Activity {
 
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
-                    if (level.isStateBeforeEndState()) {
-                        level.nextState();
-                    } else if (level.isLineContactState()) {
+                    //if (level.isStateBeforeEndState()) {
+                    //    level.nextState();
+                    if (level.isLineContactState()) {
                         paused = false;
                         restartLevel();
                     } else if (level.isNotAllBallsShapeState()) {

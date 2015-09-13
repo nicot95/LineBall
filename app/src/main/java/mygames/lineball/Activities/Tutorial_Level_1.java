@@ -6,7 +6,7 @@ package mygames.lineball.Activities;
 public class Tutorial_Level_1 extends Level{
 
     public Tutorial_Level_1() {
-        end_state = Level_State.NEXT_LEVEL;
+        end_state = Level_State.SHAPE_COMPLETE;
     }
 
     @Override
@@ -20,23 +20,22 @@ public class Tutorial_Level_1 extends Level{
                 case INITIAL:
                     comment = "Touch and hold any ball!";
                     break;
-                case FIRST_BALL    :
-                    comment = "Very well, now that the ball is selected,";
-                    comment2 = "hold the finger and try selecting";
-                    comment3 = "another ball of the same color.";
+                case FIRST_BALL:
+                    comment = "Hold the finger and swipe through";
+                    comment2 = "another ball of the same color.";
                     break;
-                case SECOND_BALL   :
-                    comment = "Now, keep holding the finger and touch";
-                    comment2 = "the initial ball to close the figure.";
+                case SECOND_BALL:
+                    comment = "Keep holding the finger and swipe";
+                    comment2 = "through the initial ball.";
                     break;
                 case THIRD_BALL:
-                    comment = "Figure completed! Now release the";
-                    comment2 = "finger and both balls will vanish.";
+                    comment = "Figure completed! Release the finger";
+                    comment2 = "and both balls will vanish.";
                     break;
-                case SHAPE_COMPLETE:
+                /*case SHAPE_COMPLETE:
                     comment = "In the next level, you will face with";
                     comment2 = "a more challenging figure: a triangle.";
-                    comment3 = "Tap to continue.";
+                    comment3 = "Tap to continue.";*/
             }
 
         comments[0] = comment;

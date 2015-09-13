@@ -10,7 +10,7 @@ public abstract class Level {
 
     public Level() {
         current_state = Level_State.INITIAL;
-        end_state = Level_State.NEXT_LEVEL2;
+        end_state = Level_State.NEXT_LEVEL;
     }
 
 
@@ -22,7 +22,7 @@ public abstract class Level {
         THIRD_BALL,
         SHAPE_COMPLETE,
         NEXT_LEVEL,
-        NEXT_LEVEL2,
+        //NEXT_LEVEL2,
         NOT_ALL_BALLS_SHAPE,
         LINE_CONTACT;
 
@@ -67,7 +67,7 @@ public abstract class Level {
     }
 
     public boolean allBallsSelected() {
-        return current_state.equals(Level_State.values()[end_state.ordinal() - 2]);
+        return current_state.equals(Level_State.values()[end_state.ordinal() - 1]);
     }
 
     public boolean isNotAllBallsShapeState() {
