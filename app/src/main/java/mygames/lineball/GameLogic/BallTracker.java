@@ -225,7 +225,6 @@ public class BallTracker {
 
     public void timeOut() {
         game_state = Game_State.TIME_OUT;
-
     }
 
     public int getLongestChain() {
