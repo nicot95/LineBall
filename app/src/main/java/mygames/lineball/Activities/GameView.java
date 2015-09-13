@@ -147,6 +147,5 @@ public class GameView extends SurfaceView implements Runnable{
         gameThread.start();
     }
 
-
 }
 

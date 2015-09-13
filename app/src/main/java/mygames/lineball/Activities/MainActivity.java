@@ -514,4 +514,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         musicHandler.stopMusic();
     }
 
+    @Override
+    public void onBackPressed() { }
+
 }

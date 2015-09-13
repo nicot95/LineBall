@@ -204,4 +204,7 @@ public class MainMenuActivity extends Activity {
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() { }
+
 }
