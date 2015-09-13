@@ -40,9 +40,9 @@ public class MusicHandler {
     public void playShapeCompleted() {
         int random = gen.nextInt(2);
         if (random == 0) {
-            shape4.start();
+            shape1.start();
         } else {
-            shape5.start();
+            shape2.start();
         }
     }
 

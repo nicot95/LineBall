@@ -238,6 +238,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
                         ballTracker.setGameStateToLineContact();
                         playing = false;
+                    } else if (ballTracker.isGameOver()) { //TimeOut!
+                        playing = false;
                     }
                     MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);
                     b.update(fps);
@@ -464,12 +466,13 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         private void updateHighScoreAndChain(Intent intent) {
             SharedPreferences highscorePreference = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+            SharedPreferences.Editor editor = highscorePreference.edit();
             if (highscorePreference.getInt("highscore", 0) < score) {
-                highscorePreference.edit().putInt("highscore", 0).commit();
+                editor.putInt("highscore", score).commit();
             }
             int longestChain = ballTracker.getLongestChain();
             if (highscorePreference.getInt("LongestChain", 0) < longestChain) {
-                highscorePreference.edit().putInt("LongestChain", longestChain).commit();
+                editor.putInt("LongestChain", longestChain).commit();
             }
 
             intent.putExtra("score", this.score);
