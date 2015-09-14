@@ -3,7 +3,6 @@ package mygames.lineball.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RectF;
@@ -17,6 +16,7 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.R;
 
 public class MainMenuActivity extends Activity {
 
@@ -58,40 +58,44 @@ public class MainMenuActivity extends Activity {
 
     private void addAllButtons(RelativeLayout menuLayout) {
 
+        //Button survivalButt = (Button) findViewById(R.id.button1);
         Button survivalButt = new Button(this);
-        setButton(survivalButt, "      Survival      ");
+        setButton(survivalButt, "Play");
+        survivalButt.setBackgroundResource(R.drawable.redroundbutton);
         survivalButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startGame();
+                startGame(view);
             }
         });
 
         Button howToPlayButt = new Button(this);
-        setButton(howToPlayButt, "    How to play    ");
+        setButton(howToPlayButt, "How to play");
         howToPlayButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startTutorial();
             }
         });
+        howToPlayButt.setBackgroundResource(R.drawable.blueroundbutton);
 
         /*Button levelsButt = new Button(this);
         setButton(levelsButt, "       Levels       ");
         */
 
-        Button achievButt = new Button(this);
-        setButton(achievButt, "Achievements");
+        //Button achievButt = new Button(this);
+        //setButton(achievButt, "Achievements");
 
         Button aboutUsButt = new Button(this);
-        setButton(aboutUsButt, "      About us      ");
+        setButton(aboutUsButt, "About us");
+        aboutUsButt.setBackgroundResource(R.drawable.greenroundbutton);
 
-        Button[] buttons = new Button[4];
+        Button[] buttons = new Button[3];
         buttons[0] = survivalButt;
         //buttons[1] = levelsButt;
-        buttons[1] = achievButt;
-        buttons[2] = howToPlayButt;
-        buttons[3] = aboutUsButt;
+        //buttons[1] = achievButt;
+        buttons[1] = howToPlayButt;
+        buttons[2] = aboutUsButt;
 
         displayButtons(buttons, menuLayout);
 
@@ -106,7 +110,7 @@ public class MainMenuActivity extends Activity {
 
     private void displayButtons(Button[] buttons, RelativeLayout layout ) {
 
-        int separation = 150;
+        int separation = 180;
 
         RelativeLayout.LayoutParams buttonParams =
                 new RelativeLayout.LayoutParams(
@@ -116,8 +120,10 @@ public class MainMenuActivity extends Activity {
         buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
         for(int i = 0; i< buttons.length; i++) {
-
-            buttons[i].setY((menuView.screenHeight/2) + i * separation);
+            buttons[i].setWidth(menuView.screenHeight / 9);
+            buttons[i].setHeight(menuView.screenHeight / 9);
+            buttons[i].setTextColor(Color.WHITE);
+            buttons[i].setY((menuView.screenHeight / 2) + i * separation);
             // buttonParams.addRule(RelativeLayout.BELOW, buttons[i-1].getId());
             layout.addView(buttons[i], buttonParams);
         }
@@ -166,7 +172,7 @@ public class MainMenuActivity extends Activity {
     }
 
     //Starts the game
-    private void startGame() {
+    public void startGame(View v) {
         Intent intent = new Intent(menuView.getContext(), MainActivity.class);
         startActivity(intent);
     }
