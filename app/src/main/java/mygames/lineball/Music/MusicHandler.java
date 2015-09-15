@@ -23,6 +23,8 @@ public class MusicHandler {
 
         this.shape1         = MediaPlayer.create(context, R.raw.shape1short);
         this.shape2         = MediaPlayer.create(context, R.raw.shape2short);
+        shape1.setVolume((float)0.5,(float) 0.5);
+        shape2.setVolume((float)0.5,(float) 0.5);
 
 
         this.gen            = new Random();

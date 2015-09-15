@@ -66,7 +66,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     final String LEADERBOARD_ID = "leaderboard";
     final int REQUEST_LEADERBOARD = 1;
 
-    int NUM_BALLS = 15;
+    int NUM_BALLS = 10;
     int DIFFERENT_TYPE_OF_BALLS = 5;
 
     private MusicHandler musicHandler;

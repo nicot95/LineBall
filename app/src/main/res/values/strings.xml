@@ -3,4 +3,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main_menu">MainMenuActivity</string>
+    <string name="music_license">"Pamgaea" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 3.0</string>
 </resources>
