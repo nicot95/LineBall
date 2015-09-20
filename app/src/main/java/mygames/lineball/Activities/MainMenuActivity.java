@@ -9,8 +9,11 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -27,6 +30,8 @@ public class MainMenuActivity extends Activity {
     private int longestChain;
     private int NUM_BALLS = 20;
     private int DIFFERENT_BALLS = 5;
+    private RelativeLayout menuLayout;
+    private RelativeLayout.LayoutParams buttonParams;
 
     //View that will hold the add
    // private AdView addView;
@@ -44,10 +49,11 @@ public class MainMenuActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
         menuView = new MenuView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS, MainActivity.RANDOM_COLOR);
-        final RelativeLayout menuLayout = new RelativeLayout(this);
+        menuLayout = new RelativeLayout(this);
         menuLayout.addView(menuView);
 
-        addAllButtons(menuLayout);
+
+        addAllButtons();
         setContentView(menuLayout);
 
         this.highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
@@ -56,13 +62,15 @@ public class MainMenuActivity extends Activity {
     }
 
 
-    private void addAllButtons(RelativeLayout menuLayout) {
+    private void addAllButtons() {
 
-        //Button survivalButt = (Button) findViewById(R.id.button1);
-        Button survivalButt = new Button(this);
-        setButton(survivalButt, "Play");
-        survivalButt.setBackgroundResource(R.drawable.redroundbutton);
-        survivalButt.setOnClickListener(new View.OnClickListener() {
+        setButtonParams();
+
+        //Button playButton = (Button) findViewById(R.id.button1);
+        Button playButton = new Button(this);
+        setButton(playButton, "Play");
+        playButton.setBackgroundResource(R.drawable.redroundbutton);
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startGame(view);
@@ -90,42 +98,63 @@ public class MainMenuActivity extends Activity {
         setButton(aboutUsButt, "About us");
         aboutUsButt.setBackgroundResource(R.drawable.greenroundbutton);
 
-        Button[] buttons = new Button[3];
-        buttons[0] = survivalButt;
+        Button[] buttons = new Button[2];
+        //buttons[0] = playButton;
         //buttons[1] = levelsButt;
         //buttons[1] = achievButt;
-        buttons[1] = howToPlayButt;
-        buttons[2] = aboutUsButt;
+        buttons[0] = howToPlayButt;
+        buttons[1] = aboutUsButt;
 
-        displayButtons(buttons, menuLayout);
+        displayPlayButton(playButton);
+        displayRestButtons(buttons);
 
      }
 
+    private void setButtonParams() {
 
-
-    private void setButton(Button button, String name) {
-        button.setText(name);
-        button.setBackgroundColor(Color.WHITE);
-    }
-
-    private void displayButtons(Button[] buttons, RelativeLayout layout ) {
-
-        int separation = 180;
-
-        RelativeLayout.LayoutParams buttonParams =
-                new RelativeLayout.LayoutParams(
+        buttonParams =  new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
+
+    }
+
+    private void setButton(Button button, String name) {
+        button.setText(name);
+        button.setTextColor(Color.WHITE);
+        //button.setTextSize(15);
+    }
+
+    private void displayPlayButton(Button butt) {
+        //RelativeLayout.LayoutParams playButtParams = (RelativeLayout.LayoutParams) butt.getLayoutParams();
+       // playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        int diameter = menuView.screenHeight/6;
+        RelativeLayout.LayoutParams playButtParams =
+                new RelativeLayout.LayoutParams(diameter, diameter);
+        playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        playButtParams.addRule(RelativeLayout.CENTER_VERTICAL);
+
+
+        //butt.setX(menuView.screenWidth/2);
+        butt.setTextSize(27);
+        menuLayout.addView(butt, playButtParams);
+
+    }
+
+    private void displayRestButtons(Button[] buttons) {
+
+        int separation = 180;
+        int diameter = menuView.screenHeight/9;
+
         for(int i = 0; i< buttons.length; i++) {
-            buttons[i].setWidth(menuView.screenHeight / 9);
-            buttons[i].setHeight(menuView.screenHeight / 9);
-            buttons[i].setTextColor(Color.WHITE);
-            buttons[i].setY((menuView.screenHeight / 2) + i * separation);
+            buttons[i].setY((menuView.screenHeight / 2 + menuView.screenHeight/12 +
+                    menuView.screenHeight/18) + i * separation);
+            buttons[i].setWidth(diameter);
+            buttons[i].setHeight(diameter);
             // buttonParams.addRule(RelativeLayout.BELOW, buttons[i-1].getId());
-            layout.addView(buttons[i], buttonParams);
+            menuLayout.addView(buttons[i], buttonParams);
         }
     }
 
