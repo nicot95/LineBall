@@ -66,7 +66,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     final String LEADERBOARD_ID = "leaderboard";
     final int REQUEST_LEADERBOARD = 1;
 
-    int NUM_BALLS = 15;
+    int NUM_BALLS = 8;
     int DIFFERENT_TYPE_OF_BALLS = 5;
 
     private MusicHandler musicHandler;
@@ -210,10 +210,10 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         private BallTracker ballTracker;
         private BorderColourer borderColourer;
-        private String timeLeft = "";
+        private String timeLeft = "0";
         private CountDownTimer timer;
 
-        int initialRoundTIme = 30000;
+        int initialRoundTIme = 0;
 
         public SurvivalView(Context context, int screenWidth, int screenHeight,
                             int numBalls, int different_type_of_balls, int color) {
@@ -277,7 +277,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() { // The 1000 represents one second
-                        timer =  new CountDownTimer(initialRoundTIme + (round * 5) * 1000, 1000) {
+                        timer =  new CountDownTimer((Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5/round) * 1000, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
