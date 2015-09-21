@@ -10,6 +10,7 @@ public class SurvivalBallGenerator extends BallGenerator {
 
 
     private int maxSpeed; // Will increase with each round
+    private int MAX_BALLS = 30;
 
     public enum Direction { NORTH, WEST, SOUTH, EAST}
     private int[] ballsPerDirection; // The number of balls that have been generated on each Direction
@@ -147,7 +148,9 @@ public class SurvivalBallGenerator extends BallGenerator {
         if (!loadingNewRound) {
             this.loadingNewRound = true;
             this.round++;
-            this.desiredBallCount      += round * 2; // TODO fix the logic for new balls to arrive
+            if (round %2 == 0 && desiredBallCount < MAX_BALLS){
+                this.desiredBallCount      += round; // TODO fix the logic for new balls to arrive
+            }
             this.newBallsAddedThisRound = 0;
             return true;
         } else if (newBallsAddedThisRound == desiredBallCount){
@@ -161,6 +164,10 @@ public class SurvivalBallGenerator extends BallGenerator {
 
     public int getRound() {
         return round;
+    }
+
+    public int getBallsInRound() {
+        return this.desiredBallCount;
     }
 
 
