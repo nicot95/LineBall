@@ -43,6 +43,7 @@ import mygames.lineball.Music.MusicHandler;
 import mygames.lineball.R;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
+import mygames.lineball.Util.RoundFinishedTextDrawer;
 
 public class MainActivity extends FragmentActivity implements ConnectionCallbacks,
         OnConnectionFailedListener {
@@ -212,8 +213,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         private BorderColourer borderColourer;
         private String timeLeft = "0";
         private CountDownTimer timer;
-
-        int initialRoundTIme = 0;
+        private RoundFinishedTextDrawer roundFinishedTextDrawer;
 
         public SurvivalView(Context context, int screenWidth, int screenHeight,
                             int numBalls, int different_type_of_balls, int color) {
@@ -254,6 +254,14 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
              */
             if (ballTracker.isRoundFinished()) {
                 timer.cancel();
+                // Creates a new Round Finished Drawar to draw the text on the screen as long as we want.
+                if (roundFinishedTextDrawer == null) {
+                    roundFinishedTextDrawer =
+                            new RoundFinishedTextDrawer(survivalBallGenerator.getRound()
+                                    , canvas, paint, screenWidth, screenHeight,
+                                    ballTracker.getGameState());
+
+                }
                 if (survivalBallGenerator.loadNewRound()) {
                     Ball newBall = survivalBallGenerator.generateSurvivalBall();
                     ballTracker.addToBallList(newBall);
@@ -268,6 +276,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 }
             }
 
+            if (roundFinishedTextDrawer != null && !roundFinishedTextDrawer.hasToDraw()) {
+                roundFinishedTextDrawer = null; //Destroys the text drawer for this round.
+            }
         }
 
         /*
@@ -329,13 +340,14 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 canvas.drawText("Score: " + score, 30, 70, paint);
                 canvas.drawText(timeLeft, screenWidth - 100, 70, paint);
 
-                //Draw the game_overState
-                if (ballTracker.isRoundFinished()) {
-                    drawGameOverText(50, ballTracker.getGameState(), screenHeight / 2, paint);
-                    //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
-                    //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
-                    //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
 
+                //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
+                //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
+                //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
+
+                //Draw the game_overState
+                if (roundFinishedTextDrawer != null && roundFinishedTextDrawer.hasToDraw()) {
+                    roundFinishedTextDrawer.drawRoundOverText();
                 }
 
                 // Draw everything to the screen
@@ -362,30 +374,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             //Draw east border
             paint.setColor(borderColourer.getEastBorderColour());
             canvas.drawLine(screenWidth, 0, screenWidth, screenHeight, paint);
-        }
-
-
-        private void drawGameOverText(int textSize, BallTracker.Game_State text, int y, Paint paint) {
-            paint.setTextSize(textSize);
-            String gameOverText = "";
-            switch (text) {
-                case BOARD_CLEARED:
-                    int extraScore = 100 + 50 * survivalBallGenerator.getRound();
-                    gameOverText = "All balls cleared\n+" + extraScore + " Bonus";
-                    break;
-                case NO_POSSIBLE_MOVE:
-                    gameOverText = "No more moves";
-                    break;
-                case LINE_CONTACT:
-                    gameOverText = "Line contact";
-                    break;
-                case TIME_OUT:
-                    gameOverText = "Time out";
-                default:
-                    break;
-            }
-            canvas.drawText(gameOverText, (float) 30, y, paint);
-
         }
 
         // The SurfaceView class implements onTouchListener
@@ -467,11 +455,11 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             SharedPreferences highscorePreference = PreferenceManager.getDefaultSharedPreferences(this.getContext());
             SharedPreferences.Editor editor = highscorePreference.edit();
             if (highscorePreference.getInt("highscore", 0) < score) {
-                editor.putInt("highscore", score).commit();
+                editor.putInt("highscore", score).apply();
             }
             int longestChain = ballTracker.getLongestChain();
             if (highscorePreference.getInt("LongestChain", 0) < longestChain) {
-                editor.putInt("LongestChain", longestChain).commit();
+                editor.putInt("LongestChain", longestChain).apply();
             }
 
             intent.putExtra("score", this.score);

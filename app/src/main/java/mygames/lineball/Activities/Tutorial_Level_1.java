@@ -18,15 +18,15 @@ public class Tutorial_Level_1 extends Level{
 
             switch (current_state) {
                 case INITIAL:
-                    comment = "Touch and hold any ball!";
+                    comment = "TOUCH and HOLD any ball!";
                     break;
                 case FIRST_BALL:
-                    comment = "Hold the finger and swipe through";
-                    comment2 = "another ball of the same color.";
+                    comment = "HOLD the finger and SWIPE through";
+                    comment2 = "another ball of the SAME color.";
                     break;
                 case SECOND_BALL:
                     comment = "Keep holding the finger and swipe";
-                    comment2 = "through the initial ball.";
+                    comment2 = "through the INITIAL ball.";
                     break;
                 case THIRD_BALL:
                     comment = "Figure completed! Release the finger";
