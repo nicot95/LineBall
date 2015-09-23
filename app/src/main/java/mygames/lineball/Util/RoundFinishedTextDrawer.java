@@ -5,6 +5,11 @@ import android.graphics.Paint;
 
 import mygames.lineball.GameLogic.BallTracker;
 
+/*
+    This class manages the printing of the text that will appear at the end of each round
+    and also when line contact happens. The important bit is within drawGameOverText, which has
+    a variable that manages the amount of time a the text will appear on screen.
+ */
 public class RoundFinishedTextDrawer {
 
     private int round;
@@ -18,7 +23,8 @@ public class RoundFinishedTextDrawer {
 
     public RoundFinishedTextDrawer(int round,Canvas canvas, Paint paint, int screenWidth,
                                    int screenHeight, BallTracker.Game_State text) {
-        this.round = round + 1;
+        //If there has been a line contact, print the actuall round, not the next one
+        this.round = (text == BallTracker.Game_State.LINE_CONTACT) ? round : round + 1;
         this.canvas = canvas;
         this.paint = paint;
         this.screenWidth = screenWidth;
@@ -28,7 +34,10 @@ public class RoundFinishedTextDrawer {
     }
 
     public void drawRoundOverText() {
+        float textSize = paint.getTextSize();
+        paint.setTextSize(60);
         canvas.drawText("Round " + round, screenWidth / 2 - 100, 300, paint);
+        paint.setTextSize(textSize);
         String gameOverText = "";
         int extraScore = 0;
         switch (text) {

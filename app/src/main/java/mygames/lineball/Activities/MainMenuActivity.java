@@ -8,10 +8,9 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,6 +19,12 @@ import java.util.ArrayList;
 
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.R;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+
+
 
 public class MainMenuActivity extends Activity {
 
@@ -34,7 +39,8 @@ public class MainMenuActivity extends Activity {
     private RelativeLayout.LayoutParams buttonParams;
 
     //View that will hold the add
-   // private AdView addView;
+    private AdView addView;
+
 
     private static final String AD_UNIT_ID = "PLACE ID HERE";
 
@@ -54,11 +60,32 @@ public class MainMenuActivity extends Activity {
 
 
         addAllButtons();
+        addAdView(menuLayout);
+
         setContentView(menuLayout);
 
         this.highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
         this.longestChain =
                 PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
+    }
+
+    private void addAdView(RelativeLayout menuLayout) {
+        addView = new AdView(this);
+        addView.setAdSize(AdSize.SMART_BANNER);
+        addView.setAdUnitId("ca-app-pub-1685157087617386/5583998552");
+
+        // Create an ad request.
+        AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
+
+        // Optionally populate the ad request builder.
+        AdRequest adRequest = adRequestBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("CD02B0FFDDC8BD4A04EFD592E7C83808").build();
+
+        // Add the AdView to the view hierarchy.
+        menuLayout.addView(addView);
+
+        // Start loading the ad.
+        addView.loadAd(adRequest);
     }
 
 
@@ -73,7 +100,7 @@ public class MainMenuActivity extends Activity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startGame(view);
+                startGame();
             }
         });
 
@@ -97,6 +124,12 @@ public class MainMenuActivity extends Activity {
         Button aboutUsButt = new Button(this);
         setButton(aboutUsButt, "About us");
         aboutUsButt.setBackgroundResource(R.drawable.greenroundbutton);
+        aboutUsButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAboutUs();
+            }
+        });
 
         Button[] buttons = new Button[2];
         //buttons[0] = playButton;
@@ -201,13 +234,18 @@ public class MainMenuActivity extends Activity {
     }
 
     //Starts the game
-    public void startGame(View v) {
+    public void startGame() {
         Intent intent = new Intent(menuView.getContext(), MainActivity.class);
         startActivity(intent);
     }
 
     private void startTutorial() {
         Intent intent = new Intent(menuView.getContext(), TutorialActivity.class);
+        startActivity(intent);
+    }
+
+    private void startAboutUs() {
+        Intent intent = new Intent(menuView.getContext(), AboutUsActivity.class);
         startActivity(intent);
     }
 

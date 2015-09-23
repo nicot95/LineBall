@@ -19,6 +19,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 
@@ -266,6 +267,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     Ball newBall = survivalBallGenerator.generateSurvivalBall();
                     ballTracker.addToBallList(newBall);
                     balls.add(newBall);
+                    Log.i("ballAdded", "ball!");
                 } else {
                     final int round = survivalBallGenerator.getRound();
                     if (ballTracker.getGameState() == BallTracker.Game_State.BOARD_CLEARED) {

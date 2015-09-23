@@ -5,4 +5,6 @@
     <string name="title_activity_main_menu">MainMenuActivity</string>
     <string name="music_license">"Pamgaea" Kevin MacLeod (incompetech.com)
 Licensed under Creative Commons: By Attribution 3.0</string>
+    <string name="banner_ad_unit_id">ca-app-pub-1685157087617386/5583998552</string>
+    <string name="intesitial_ad_unit_id">ca-app-pub-1685157087617386/7060731754</string>
 </resources>
