@@ -419,8 +419,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                             }
                         }
                     } else {
-                        Log.i("isLoaded", adHandler.getInterstitialAd().isLoaded() + "");
-                        Log.i("isLoadeding", adHandler.getInterstitialAd().isLoading() + "");
                         InterstitialAd intersitialAd = adHandler.getInterstitialAd();
                         if (intersitialAd.isLoaded() || intersitialAd.isLoading()) {
                             adHandler.openPossibleIntersitialAd();

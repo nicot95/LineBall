@@ -42,10 +42,6 @@ public class MainMenuActivity extends Activity {
     private AdView addView;
 
 
-    private static final String AD_UNIT_ID = "PLACE ID HERE";
-
-    private ArrayList<RectF> lines = new ArrayList<RectF>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +56,7 @@ public class MainMenuActivity extends Activity {
 
 
         addAllButtons();
+        addAdView(menuLayout);
 
         setContentView(menuLayout);
 
@@ -73,8 +70,6 @@ public class MainMenuActivity extends Activity {
         addView.setAdSize(AdSize.SMART_BANNER);
         addView.setAdUnitId("ca-app-pub-1685157087617386/5583998552");
 
-       // buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-
         // Create an ad request.
         AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
 
@@ -83,7 +78,7 @@ public class MainMenuActivity extends Activity {
                 .addTestDevice("CD02B0FFDDC8BD4A04EFD592E7C83808").build();
 
         // Add the AdView to the view hierarchy.
-        menuLayout.addView(addView, buttonParams);
+        menuLayout.addView(addView);
 
         // Start loading the ad.
         addView.loadAd(adRequest);
@@ -93,7 +88,6 @@ public class MainMenuActivity extends Activity {
     private void addAllButtons() {
 
         setButtonParams();
-        addAdView(menuLayout);
 
         //Button playButton = (Button) findViewById(R.id.button1);
         Button playButton = new Button(this);
@@ -143,13 +137,13 @@ public class MainMenuActivity extends Activity {
         displayPlayButton(playButton);
         displayRestButtons(buttons);
 
-     }
+    }
 
     private void setButtonParams() {
 
         buttonParams =  new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
@@ -164,10 +158,11 @@ public class MainMenuActivity extends Activity {
 
     private void displayPlayButton(Button butt) {
         //RelativeLayout.LayoutParams playButtParams = (RelativeLayout.LayoutParams) butt.getLayoutParams();
-       // playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        // playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         int diameter = menuView.screenHeight/6;
         RelativeLayout.LayoutParams playButtParams =
                 new RelativeLayout.LayoutParams(diameter, diameter);
+        playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         playButtParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
 
@@ -183,7 +178,7 @@ public class MainMenuActivity extends Activity {
         int diameter = menuView.screenHeight/9;
 
         for(int i = 0; i< buttons.length; i++) {
-            buttons[i].setY( + (menuView.screenHeight / 2 + menuView.screenHeight/12 +
+            buttons[i].setY((menuView.screenHeight / 2 + menuView.screenHeight/12 +
                     menuView.screenHeight/18) + i * separation);
             buttons[i].setWidth(diameter);
             buttons[i].setHeight(diameter);
@@ -219,12 +214,12 @@ public class MainMenuActivity extends Activity {
 
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 paint.setTextSize(60);
-                canvas.drawText("LineBall", screenWidth / 2 - 100, 70, paint);
-                paint.setTextSize(40);
-                canvas.drawText("Highscore: " + highscore, 30, 140, paint);
-                canvas.drawText("last score: " + getIntent().getIntExtra("score", 0), 30, 190, paint);
-                canvas.drawText("Longest Chain: " + longestChain, 30, 240, paint);
-                canvas.drawText("Last Longest Chain: " + getIntent().getIntExtra("Longestchain", 0), 30, 290, paint);
+                canvas.drawText("LineBall", screenWidth / 2 - 100, 130, paint);
+                paint.setTextSize(30);
+                canvas.drawText("Highscore: " + highscore, 30, 210, paint);
+                canvas.drawText("last score: " + getIntent().getIntExtra("score", 0), 30, 260, paint);
+                canvas.drawText("Longest Chain: " + longestChain, 30, 310, paint);
+                canvas.drawText("Last Longest Chain: " + getIntent().getIntExtra("Longestchain", 0), 30, 360, paint);
                 //int score = getIntent().getIntExtra("score", 0);
                 //canvas.drawText("Score: " + score, 30, 150, paint);
 

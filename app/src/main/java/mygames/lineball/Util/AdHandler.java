@@ -1,13 +1,10 @@
 package mygames.lineball.Util;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-
-import mygames.lineball.R;
 
 /*
     Manages the initialization of the intersitial ad in the main activity.
