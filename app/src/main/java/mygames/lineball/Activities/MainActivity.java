@@ -1,25 +1,21 @@
 package mygames.lineball.Activities;
 
 import android.app.Dialog;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.MotionEvent;
 
@@ -32,17 +28,13 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.drive.Drive;
 
-import android.support.v4.app.FragmentActivity;
-import android.widget.MediaController;
-
 import java.util.ArrayList;
 
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
-import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.GameLogic.BorderColourer;
 import mygames.lineball.Music.MusicHandler;
-import mygames.lineball.R;
 import mygames.lineball.Util.AdHandler;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
@@ -201,7 +193,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
-        return false;
+        return resultCode==0;
     }
 
     class SurvivalView extends GameView {
@@ -516,8 +508,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     protected void onStart() {
         super.onStart();
         if (!mResolvingError) {
-            //mGoogleApiClient.connect();
+            mGoogleApiClient.connect();
         }
+        //boolean works = checkPlayServices();
     }
 
     @Override

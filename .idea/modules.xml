@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LineBall.iml" filepath="$PROJECT_DIR$/LineBall.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/LineBall.iml" filepath="$PROJECT_DIR$/.idea/LineBall.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LineBall2.iml" filepath="$PROJECT_DIR$/LineBall2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
