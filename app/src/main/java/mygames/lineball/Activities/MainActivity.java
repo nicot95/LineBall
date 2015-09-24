@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -42,6 +43,7 @@ import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BorderColourer;
 import mygames.lineball.Music.MusicHandler;
 import mygames.lineball.R;
+import mygames.lineball.Util.AdHandler;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 import mygames.lineball.Util.RoundFinishedTextDrawer;
@@ -72,6 +74,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     int DIFFERENT_TYPE_OF_BALLS = 5;
 
     private MusicHandler musicHandler;
+    private AdHandler adHandler;
 
 
     @Override
@@ -81,6 +84,8 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         this.musicHandler = new MusicHandler(MainActivity.this);
         musicHandler.playBackgroundMusic();
+
+        this.adHandler = new AdHandler(this);
 
         // Create a GoogleApiClient instance
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -233,7 +238,26 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         // Everything that needs to be updated goes in here
         // Movement, collision detection etc.
         public void update() {
+            updateBalls();
+            /*
+                increases the score and removes used balles from ArrayList
+                for performance issues. Also, increase score if all balls were cleared
+             */
+            checkStartNewRound();
 
+            deleteRoundFinishedDrawerIfNecessary();
+            if (!adHandler.isAdOpen() && ballTracker.isGameOver()) {
+                goToMenu();
+            }
+        }
+
+        private void deleteRoundFinishedDrawerIfNecessary() {
+            if (roundFinishedTextDrawer != null && !roundFinishedTextDrawer.hasToDraw()) {
+                roundFinishedTextDrawer = null; //Destroys the text drawer for this round.
+            }
+        }
+
+        private void updateBalls() {
             synchronized (balls) {
                 for (Ball b : balls) {
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
@@ -248,11 +272,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     b.update(fps);
                 }
             }
+        }
 
-            /*
-                increases the score and removes used balles from ArrayList
-                for performance issues. Also, increase score if all balls were cleared
-             */
+        private void checkStartNewRound() {
             if (ballTracker.isRoundFinished()) {
                 timer.cancel();
                 // Creates a new Round Finished Drawar to draw the text on the screen as long as we want.
@@ -267,7 +289,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     Ball newBall = survivalBallGenerator.generateSurvivalBall();
                     ballTracker.addToBallList(newBall);
                     balls.add(newBall);
-                    Log.i("ballAdded", "ball!");
                 } else {
                     final int round = survivalBallGenerator.getRound();
                     if (ballTracker.getGameState() == BallTracker.Game_State.BOARD_CLEARED) {
@@ -276,10 +297,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     ballTracker.newRoundStarted();
                     createNewTimer(round);
                 }
-            }
-
-            if (roundFinishedTextDrawer != null && !roundFinishedTextDrawer.hasToDraw()) {
-                roundFinishedTextDrawer = null; //Destroys the text drawer for this round.
             }
         }
 
@@ -290,7 +307,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() { // The 1000 represents one second
-                        timer =  new CountDownTimer((Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5/round) * 1000, 1000) {
+                    timer = new CountDownTimer((Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
@@ -305,6 +322,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                     }.start();
                 }
             });
+
         }
 
         @Override
@@ -401,7 +419,14 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                             }
                         }
                     } else {
-                        goToMenu();
+                        Log.i("isLoaded", adHandler.getInterstitialAd().isLoaded() + "");
+                        Log.i("isLoadeding", adHandler.getInterstitialAd().isLoading() + "");
+                        InterstitialAd intersitialAd = adHandler.getInterstitialAd();
+                        if (intersitialAd.isLoaded() || intersitialAd.isLoading()) {
+                            adHandler.openPossibleIntersitialAd();
+                        } else {
+                            goToMenu();
+                        }
                     }
                     break;
 
@@ -447,7 +472,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         /*
             Return to the main menu (MainMenuActivity) and saves highscore if needed.
          */
-        private void goToMenu() {
+        public void goToMenu() {
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
             updateHighScoreAndChain(intent);
             startActivity(intent);

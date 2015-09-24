@@ -60,7 +60,6 @@ public class MainMenuActivity extends Activity {
 
 
         addAllButtons();
-        addAdView(menuLayout);
 
         setContentView(menuLayout);
 
@@ -74,6 +73,8 @@ public class MainMenuActivity extends Activity {
         addView.setAdSize(AdSize.SMART_BANNER);
         addView.setAdUnitId("ca-app-pub-1685157087617386/5583998552");
 
+       // buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
         // Create an ad request.
         AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
 
@@ -82,7 +83,7 @@ public class MainMenuActivity extends Activity {
                 .addTestDevice("CD02B0FFDDC8BD4A04EFD592E7C83808").build();
 
         // Add the AdView to the view hierarchy.
-        menuLayout.addView(addView);
+        menuLayout.addView(addView, buttonParams);
 
         // Start loading the ad.
         addView.loadAd(adRequest);
@@ -92,6 +93,7 @@ public class MainMenuActivity extends Activity {
     private void addAllButtons() {
 
         setButtonParams();
+        addAdView(menuLayout);
 
         //Button playButton = (Button) findViewById(R.id.button1);
         Button playButton = new Button(this);
@@ -166,7 +168,6 @@ public class MainMenuActivity extends Activity {
         int diameter = menuView.screenHeight/6;
         RelativeLayout.LayoutParams playButtParams =
                 new RelativeLayout.LayoutParams(diameter, diameter);
-        playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         playButtParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
 
@@ -182,7 +183,7 @@ public class MainMenuActivity extends Activity {
         int diameter = menuView.screenHeight/9;
 
         for(int i = 0; i< buttons.length; i++) {
-            buttons[i].setY((menuView.screenHeight / 2 + menuView.screenHeight/12 +
+            buttons[i].setY( + (menuView.screenHeight / 2 + menuView.screenHeight/12 +
                     menuView.screenHeight/18) + i * separation);
             buttons[i].setWidth(diameter);
             buttons[i].setHeight(diameter);
