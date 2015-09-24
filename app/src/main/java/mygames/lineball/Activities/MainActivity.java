@@ -1,10 +1,8 @@
 package mygames.lineball.Activities;
 
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -14,19 +12,10 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.MotionEvent;
 
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
@@ -41,8 +30,7 @@ import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 import mygames.lineball.Util.RoundFinishedTextDrawer;
 
-public class MainActivity extends FragmentActivity implements ConnectionCallbacks,
-        OnConnectionFailedListener {
+public class MainActivity extends Activity {
 
     // gameView will be the view of the game
     // It will also hold the logic of the game
@@ -52,15 +40,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     public static int RANDOM_COLOR = -1;
 
     private ArrayList<RectF> lines = new ArrayList<RectF>();
-    private GoogleApiClient mGoogleApiClient;
-    // Request code to use when launching the resolution activity
-    private static final int REQUEST_RESOLVE_ERROR = 1001;
-    // Unique tag for the error dialog fragment
-    private static final String DIALOG_ERROR = "dialog_error";
-    // Bool to track whether the app is already resolving an error
-    private boolean mResolvingError = false;
-    private static final String STATE_RESOLVING_ERROR = "resolving_error";
-    final String LEADERBOARD_ID = "CgkIpt6w6v8GEAIQAQ";
+      final String LEADERBOARD_ID = "CgkIpt6w6v8GEAIQAQ";
     final int REQUEST_LEADERBOARD = 1;
 
     int NUM_BALLS = 8;
@@ -80,17 +60,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         this.adHandler = new AdHandler(this);
 
-        // Create a GoogleApiClient instance
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Games.API)
-                .addScope(Drive.SCOPE_FILE)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
-        mResolvingError = savedInstanceState != null
-                && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
-
         Display display = getWindowManager().getDefaultDisplay();
         // Load the resolution into a Point object
         Point size = new Point();
@@ -101,101 +70,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     }
 
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-
-        if (mResolvingError) {
-            // Already attempting to resolve an error.
-        } else if (result.hasResolution()) {
-            try {
-                mResolvingError = true;
-                result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
-            } catch (IntentSender.SendIntentException e) {
-                // There was an error with the resolution intent. Try again.
-                mGoogleApiClient.connect();
-            }
-        } else {
-            // Show dialog using GoogleApiAvailability.getErrorDialog()
-            showErrorDialog(result.getErrorCode());
-            mResolvingError = true;
-
-        }
-    }
-
-    // The rest of this code is all about building the error dialog
-
-    /* Creates a dialog for an error message */
-    private void showErrorDialog(int errorCode) {
-        // Create a fragment for the error dialog
-        ErrorDialogFragment dialogFragment = new ErrorDialogFragment();
-        // Pass the error that should be displayed
-        Bundle args = new Bundle();
-        args.putInt(DIALOG_ERROR, errorCode);
-        dialogFragment.setArguments(args);
-        dialogFragment.show(getSupportFragmentManager(), "errordialog");
-    }
-
-    /* Called from ErrorDialogFragment when the dialog is dismissed. */
-    public void onDialogDismissed() {
-        mResolvingError = false;
-    }
-
-    /* A fragment to display an error dialog */
-    public static class ErrorDialogFragment extends DialogFragment {
-        public ErrorDialogFragment() {
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Get the error code and retrieve the appropriate dialog
-            int errorCode = this.getArguments().getInt(DIALOG_ERROR);
-            return GoogleApiAvailability.getInstance().getErrorDialog(
-                    this.getActivity(), errorCode, REQUEST_RESOLVE_ERROR);
-        }
-
-        @Override
-        public void onDismiss(DialogInterface dialog) {
-            ((MainActivity) getActivity()).onDialogDismissed();
-        }
-    }
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_RESOLVE_ERROR) {
-            mResolvingError = false;
-            if (resultCode == RESULT_OK) {
-                // Make sure the app is not already connected or attempting to connect
-                if (!mGoogleApiClient.isConnecting() &&
-                        !mGoogleApiClient.isConnected()) {
-                    mGoogleApiClient.connect();
-                }
-            }
-        }
-    }
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-
-        return resultCode==0;
-    }
 
     class SurvivalView extends GameView {
 
@@ -240,7 +114,10 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
             deleteRoundFinishedDrawerIfNecessary();
             if (!adHandler.isAdOpen() && ballTracker.isGameOver()) {
-                Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
+                //MainMenuActivity.mGoogleApiClient.connect();
+
+                Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, LEADERBOARD_ID, score);
+
                 goToMenu();
             }
         }
@@ -467,7 +344,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
             updateHighScoreAndChain(intent);
             startActivity(intent);
-            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
+            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(MainMenuActivity.mGoogleApiClient,
                     LEADERBOARD_ID), REQUEST_LEADERBOARD);
 
         }
@@ -507,22 +384,6 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
         survivalView.pause();
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!mResolvingError) {
-            mGoogleApiClient.connect();
-        }
-        //boolean works = checkPlayServices();
-    }
-
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-        musicHandler.stopMusic();
-    }
 
     @Override
     public void onBackPressed() { }
