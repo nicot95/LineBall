@@ -27,6 +27,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 
@@ -59,7 +60,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
-    final String LEADERBOARD_ID = "leaderboard";
+    final String LEADERBOARD_ID = "CgkIpt6w6v8GEAIQAQ";
     final int REQUEST_LEADERBOARD = 1;
 
     int NUM_BALLS = 8;
@@ -81,7 +82,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
         // Create a GoogleApiClient instance
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Drive.API)
+                .addApi(Games.API)
                 .addScope(Drive.SCOPE_FILE)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -239,6 +240,7 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
 
             deleteRoundFinishedDrawerIfNecessary();
             if (!adHandler.isAdOpen() && ballTracker.isGameOver()) {
+                Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
                 goToMenu();
             }
         }
@@ -353,13 +355,12 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
                 canvas.drawText(timeLeft, screenWidth - 100, 70, paint);
 
 
-                //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
-                //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
-                //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
+
 
                 //Draw the game_overState
                 if (roundFinishedTextDrawer != null && roundFinishedTextDrawer.hasToDraw()) {
                     roundFinishedTextDrawer.drawRoundOverText();
+
                 }
 
                 // Draw everything to the screen
@@ -466,6 +467,9 @@ public class MainActivity extends FragmentActivity implements ConnectionCallback
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
             updateHighScoreAndChain(intent);
             startActivity(intent);
+            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
+                    LEADERBOARD_ID), REQUEST_LEADERBOARD);
+
         }
 
         private void updateHighScoreAndChain(Intent intent) {

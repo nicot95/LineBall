@@ -55,6 +55,8 @@
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
+        <meta-data android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/app_id" />
 
         <!-- Google AdMob activity -->
         <!--Include the AdActivity configChanges and theme. -->
