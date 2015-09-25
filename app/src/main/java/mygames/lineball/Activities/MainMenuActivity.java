@@ -137,13 +137,6 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         });
         howToPlayButt.setBackgroundResource(R.drawable.blueroundbutton);
 
-        /*Button levelsButt = new Button(this);
-        setButton(levelsButt, "       Levels       ");
-        */
-
-        //Button achievButt = new Button(this);
-        //setButton(achievButt, "Achievements");
-
         Button aboutUsButt = new Button(this);
         setButton(aboutUsButt, "About us");
         aboutUsButt.setBackgroundResource(R.drawable.greenroundbutton);
@@ -155,17 +148,42 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         });
 
         Button[] buttons = new Button[3];
-        //buttons[0] = playButton;
-        //buttons[1] = levelsButt;
-        //buttons[1] = achievButt;
         buttons[0] = playButton;
         buttons[1] = howToPlayButt;
         buttons[2] = aboutUsButt;
 
+        displayButtons(buttons);
 
-        //displayPlayButton(playButton);
-        displayRestButtons(buttons);
+        setAndDisplayHighscoreButt();
 
+    }
+
+    public void setAndDisplayHighscoreButt() {
+        buttonParams =  new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        Button highscoresButt = new Button(this);
+        setButton(highscoresButt, "Ranking");
+        highscoresButt.setBackgroundResource(R.drawable.highscorebutton);
+        highscoresButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(mGoogleApiClient), REQUEST_LEADERBOARD);
+            }
+        });
+
+        int diameter = menuView.screenHeight/15;
+        highscoresButt.setWidth(diameter);
+        highscoresButt.setHeight(diameter);
+        highscoresButt.setX(diameter);
+        highscoresButt.setY(menuView.screenHeight - diameter - diameter);
+
+        RelativeLayout.LayoutParams highscoreParams =  new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        menuLayout.addView(highscoresButt, highscoreParams);
     }
 
     private void setButtonParams() {
@@ -185,7 +203,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         //button.setTextSize(15);
     }
 
-    private void displayRestButtons(Button[] buttons) {
+    private void displayButtons(Button[] buttons) {
 
         int separation = menuView.screenHeight/25;
         int playDiameter = menuView.screenHeight/6;
@@ -210,9 +228,10 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
                 menuLayout.addView(buttons[i], buttonParams);
             }
         }
+
     }
 
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -320,7 +339,6 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
 
     @Override
     protected void onStop() {
-        //mGoogleApiClient.disconnect();
         super.onStop();
     }
 

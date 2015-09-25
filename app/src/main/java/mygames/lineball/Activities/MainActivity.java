@@ -118,8 +118,8 @@ public class MainActivity extends Activity {
 
                 goToMenu();
 
-                startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(MainMenuActivity.mGoogleApiClient),
-                        REQUEST_LEADERBOARD);
+                //startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(MainMenuActivity.mGoogleApiClient),
+                //        REQUEST_LEADERBOARD);
             }
         }
 
