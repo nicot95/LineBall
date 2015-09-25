@@ -3,17 +3,19 @@ package mygames.lineball.Balls;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.Random;
 
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
+import mygames.lineball.Util.MathUtil;
 
 public class Ball {
     //commit test iml shitty bug
     private float xVelocity;
     private float yVelocity;
 
-    protected float ballRadius = 30;
+    protected float ballRadius;
     protected float x;
     protected float y;
     protected int color;
@@ -27,10 +29,14 @@ public class Ball {
 
     public Ball(int screenX, int screenY, int color) {
 
+        if (ballRadius == 0) {
+            Log.i("radius Screen Y", screenY + "");
+            ballRadius = MathUtil.calculateBallRadius(screenY);
+        }
+
         // Start the ball moving at a random speed and direction
         this.xVelocity = gen.nextInt(250) - 125;
         this.yVelocity = gen.nextInt(250) - 125;
-
 
         // Place the ball in a random position within the screen. All the ball
         // must be inside the screen to avoid wallCollision bugs

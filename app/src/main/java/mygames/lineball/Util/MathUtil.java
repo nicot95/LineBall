@@ -1,6 +1,8 @@
 package mygames.lineball.Util;
 
 import android.graphics.Point;
+import android.os.Debug;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +30,13 @@ public class MathUtil {
     public static double getDistanceToSegment(Point ss, Point se, Point p)
     {
         return getDistanceToSegment(ss.x, ss.y, se.x, se.y, p.x, p.y);
+    }
+
+    private static final double CONST_BALL_RADIUS = 0.03125 ;
+
+    public static float calculateBallRadius(double screenY) {
+        Log.i("radius", (CONST_BALL_RADIUS * screenY) + "");
+        return (float) (0.03125  * screenY);
     }
 
     /**
