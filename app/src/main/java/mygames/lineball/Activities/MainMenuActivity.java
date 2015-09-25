@@ -154,14 +154,16 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
             }
         });
 
-        Button[] buttons = new Button[2];
+        Button[] buttons = new Button[3];
         //buttons[0] = playButton;
         //buttons[1] = levelsButt;
         //buttons[1] = achievButt;
-        buttons[0] = howToPlayButt;
-        buttons[1] = aboutUsButt;
+        buttons[0] = playButton;
+        buttons[1] = howToPlayButt;
+        buttons[2] = aboutUsButt;
 
-        displayPlayButton(playButton);
+
+        //displayPlayButton(playButton);
         displayRestButtons(buttons);
 
     }
@@ -183,37 +185,34 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         //button.setTextSize(15);
     }
 
-    private void displayPlayButton(Button butt) {
-        //RelativeLayout.LayoutParams playButtParams = (RelativeLayout.LayoutParams) butt.getLayoutParams();
-        // playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        int diameter = menuView.screenHeight/6;
+    private void displayRestButtons(Button[] buttons) {
+
+        int separation = menuView.screenHeight/25;
+        int playDiameter = menuView.screenHeight/6;
+        int playPos = menuView.screenHeight/2;
+        int diameter = menuView.screenHeight/9;
+        int initial_off = playPos + playDiameter/2 - diameter;
+
         RelativeLayout.LayoutParams playButtParams =
-                new RelativeLayout.LayoutParams(diameter, diameter);
+                new RelativeLayout.LayoutParams(playDiameter, playDiameter);
         playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         playButtParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
 
-        //butt.setX(menuView.screenWidth/2);
-        butt.setTextSize(27);
-        menuLayout.addView(butt, playButtParams);
-
-    }
-
-    private void displayRestButtons(Button[] buttons) {
-
-        int separation = 180;
-        int diameter = menuView.screenHeight/9;
-
         for(int i = 0; i< buttons.length; i++) {
-            buttons[i].setY((menuView.screenHeight / 2 + menuView.screenHeight/12 +
-                    menuView.screenHeight/18) + i * separation);
-            buttons[i].setWidth(diameter);
-            buttons[i].setHeight(diameter);
-            // buttonParams.addRule(RelativeLayout.BELOW, buttons[i-1].getId());
-            menuLayout.addView(buttons[i], buttonParams);
+            if(i == 0) {
+                buttons[i].setTextSize(27);
+                menuLayout.addView(buttons[i], playButtParams);
+            } else {
+                buttons[i].setWidth(diameter);
+                buttons[i].setHeight(diameter);
+                buttons[i].setY(initial_off + (separation + diameter) * i ); //;
+                menuLayout.addView(buttons[i], buttonParams);
+            }
         }
     }
 
+    
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -352,7 +351,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
 
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 paint.setTextSize(60);
-                canvas.drawText("LineBall", screenWidth / 2 - 100, 130, paint);
+                canvas.drawText("LineBall", screenWidth / 2 - 100, screenHeight/5, paint);
                 paint.setTextSize(30);
                 //canvas.drawText("Highscore: " + highscore, 30, 210, paint);
                // canvas.drawText("last score: " + getIntent().getIntExtra("score", 0), 30, 260, paint);
