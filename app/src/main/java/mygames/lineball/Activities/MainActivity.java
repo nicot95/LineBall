@@ -3,7 +3,6 @@ package mygames.lineball.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RectF;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.view.Display;
 import android.view.MotionEvent;
 
@@ -40,7 +38,8 @@ public class MainActivity extends Activity {
     public static int RANDOM_COLOR = -1;
 
     private ArrayList<RectF> lines = new ArrayList<RectF>();
-      final String LEADERBOARD_ID = "CgkIpt6w6v8GEAIQAQ";
+    final String LEADERBOARD_HIGHSCORE_ID = "CgkIpt6w6v8GEAIQAQ";
+    final String LEADERBOARD_LONGEST_CHAIN_ID = "CgkIpt6w6v8GEAIQCA";
     final int REQUEST_LEADERBOARD = 1;
 
     int NUM_BALLS = 8;
@@ -114,11 +113,13 @@ public class MainActivity extends Activity {
 
             deleteRoundFinishedDrawerIfNecessary();
             if (!adHandler.isAdOpen() && ballTracker.isGameOver()) {
-                //MainMenuActivity.mGoogleApiClient.connect();
 
-                Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, LEADERBOARD_ID, score);
+
 
                 goToMenu();
+
+                startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(MainMenuActivity.mGoogleApiClient),
+                        REQUEST_LEADERBOARD);
             }
         }
 
@@ -344,24 +345,64 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
             updateHighScoreAndChain(intent);
             startActivity(intent);
-            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(MainMenuActivity.mGoogleApiClient,
-                    LEADERBOARD_ID), REQUEST_LEADERBOARD);
+            //startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(MainMenuActivity.mGoogleApiClient),
+            //        REQUEST_LEADERBOARD);
 
         }
 
         private void updateHighScoreAndChain(Intent intent) {
-            SharedPreferences highscorePreference = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+            /*SharedPreferences highscorePreference = PreferenceManager.getDefaultSharedPreferences(this.getContext());
             SharedPreferences.Editor editor = highscorePreference.edit();
             if (highscorePreference.getInt("highscore", 0) < score) {
                 editor.putInt("highscore", score).apply();
-            }
+
+            }*/
             int longestChain = ballTracker.getLongestChain();
+
+
+/*
             if (highscorePreference.getInt("LongestChain", 0) < longestChain) {
                 editor.putInt("LongestChain", longestChain).apply();
             }
 
             intent.putExtra("score", this.score);
-            intent.putExtra("Longestchain", longestChain);
+            intent.putExtra("Longestchain", longestChain);*/
+            /*Games.Leaderboards.loadCurrentPlayerLeaderboardScore(MainMenuActivity.mGoogleApiClient,
+                    LEADERBOARD_HIGHSCORE_ID,
+                    LeaderboardVariant.TIME_SPAN_ALL_TIME,
+                    LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(
+                    new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+
+                        @Override
+                        public void onResult(Leaderboards.LoadPlayerScoreResult arg0) {
+                            LeaderboardScore c = arg0.getScore();
+                            long score2 = c.getRawScore();
+                        }
+                    });
+
+
+
+            PendingResult<Leaderboards.LoadPlayerScoreResult> score_highscore =
+                    Games.Leaderboards.loadCurrentPlayerLeaderboardScore(MainMenuActivity.mGoogleApiClient,
+                    LEADERBOARD_HIGHSCORE_ID, LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC);
+
+            PendingResult<Leaderboards.LoadPlayerScoreResult> chain_highscore =
+                    Games.Leaderboards.loadCurrentPlayerLeaderboardScore(MainMenuActivity.mGoogleApiClient,
+                            LEADERBOARD_LONGEST_CHAIN_ID, LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC);
+
+            LeaderboardScore score_leaderboard = score_highscore.await().getScore();
+            LeaderboardScore chain_leaderboard = chain_highscore.await().getScore();
+
+            int score_highscore_int = score_leaderboard == null ? 0 : (int) score_leaderboard.getRawScore();
+            int chain_highscore_int = chain_leaderboard == null ? 0 : (int) chain_leaderboard.getRawScore();
+
+            if(score > score_highscore_int || longestChain > chain_highscore_int){
+                startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(MainMenuActivity.mGoogleApiClient),
+                        REQUEST_LEADERBOARD);
+            }*/
+
+            Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, LEADERBOARD_LONGEST_CHAIN_ID, longestChain);
+            Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, LEADERBOARD_HIGHSCORE_ID, score);
         }
 
     }

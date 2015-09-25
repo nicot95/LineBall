@@ -8,7 +8,6 @@ import android.content.IntentSender;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Display;
@@ -36,8 +35,8 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     //View that will hold the menu and its logic
     private GameView menuView;
 
-    private int highscore;
-    private int longestChain;
+   // private int highscore;
+    //private int longestChain;
     private int NUM_BALLS = 20;
     private int DIFFERENT_BALLS = 5;
     private RelativeLayout menuLayout;
@@ -88,9 +87,9 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
 
         setContentView(menuLayout);
 
-        this.highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
-        this.longestChain =
-                PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
+       // this.highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
+       // this.longestChain =
+      //          PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
     }
 
     private void addAdView(RelativeLayout menuLayout) {
@@ -355,10 +354,10 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
                 paint.setTextSize(60);
                 canvas.drawText("LineBall", screenWidth / 2 - 100, 130, paint);
                 paint.setTextSize(30);
-                canvas.drawText("Highscore: " + highscore, 30, 210, paint);
-                canvas.drawText("last score: " + getIntent().getIntExtra("score", 0), 30, 260, paint);
-                canvas.drawText("Longest Chain: " + longestChain, 30, 310, paint);
-                canvas.drawText("Last Longest Chain: " + getIntent().getIntExtra("Longestchain", 0), 30, 360, paint);
+                //canvas.drawText("Highscore: " + highscore, 30, 210, paint);
+               // canvas.drawText("last score: " + getIntent().getIntExtra("score", 0), 30, 260, paint);
+                //canvas.drawText("Longest Chain: " + longestChain, 30, 310, paint);
+                //canvas.drawText("Last Longest Chain: " + getIntent().getIntExtra("Longestchain", 0), 30, 360, paint);
                 //int score = getIntent().getIntExtra("score", 0);
                 //canvas.drawText("Score: " + score, 30, 150, paint);
 
@@ -387,16 +386,16 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     protected void onResume() {
         super.onResume();
-        highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
-        longestChain = PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
+        //highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
+        //longestChain = PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
         menuView.resume();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
-        longestChain = PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
+       // highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
+        //longestChain = PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
     }
 
     // This method executes when the player quits the game
