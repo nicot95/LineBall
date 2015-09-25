@@ -234,6 +234,7 @@ public class MainActivity extends Activity {
                 //Draw the Score and time left
                 paint.setTextSize(40);
                 canvas.drawText("Score: " + score, 30, 70, paint);
+                paint.setColor(Color.WHITE);
                 canvas.drawText(timeLeft, screenWidth - 100, 70, paint);
 
 

@@ -169,7 +169,9 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         highscoresButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(mGoogleApiClient), REQUEST_LEADERBOARD);
+                if(mGoogleApiClient.isConnected()) {
+                    startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(mGoogleApiClient), REQUEST_LEADERBOARD);
+                }
             }
         });
 
