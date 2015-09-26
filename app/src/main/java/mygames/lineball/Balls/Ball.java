@@ -8,7 +8,6 @@ import android.util.Log;
 import java.util.Random;
 
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
-import mygames.lineball.Util.MathUtil;
 
 public class Ball {
     //commit test iml shitty bug
@@ -18,6 +17,7 @@ public class Ball {
     protected float ballRadius;
     protected float x;
     protected float y;
+    private final int screenArea_ballRadius_factor = 28416;
     protected int color;
 
     public final static int RANDOM_COLOR = 4;
@@ -31,7 +31,7 @@ public class Ball {
 
         if (ballRadius == 0) {
             Log.i("radius Screen Y", screenY + "");
-            ballRadius = MathUtil.calculateBallRadius(screenY);
+            ballRadius = (float) (30 * Math.sqrt(screenX * screenY / (1184 * 720)));
         }
 
         // Start the ball moving at a random speed and direction

@@ -24,6 +24,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesActivityResultCodes;
 
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.R;
@@ -171,6 +172,11 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
             public void onClick(View v) {
                 if(mGoogleApiClient.isConnected()) {
                     startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(mGoogleApiClient), REQUEST_LEADERBOARD);
+                } else {
+                    mGoogleApiClient.reconnect();
+                    /*if(mGoogleApiClient.isConnected()) {
+                        startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(mGoogleApiClient), REQUEST_LEADERBOARD);
+                    }*/
                 }
             }
         });
@@ -322,7 +328,14 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
                 }
             }
         }
+        // check for "inconsistent state"
+        if ( resultCode == GamesActivityResultCodes.RESULT_RECONNECT_REQUIRED && requestCode == 1 )  {
+            // force a disconnect to sync up state, ensuring that mClient reports "not connected"
+            mGoogleApiClient.disconnect();
+        }
     }
+
+
 
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);

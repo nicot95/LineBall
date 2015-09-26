@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     private ArrayList<RectF> lines = new ArrayList<RectF>();
     final String LEADERBOARD_HIGHSCORE_ID = "CgkIpt6w6v8GEAIQAQ";
     final String LEADERBOARD_LONGEST_CHAIN_ID = "CgkIpt6w6v8GEAIQCA";
+    final String LEADERBOARD_ROUND_ID = "CgkIpt6w6v8GEAIQBw";
     final int REQUEST_LEADERBOARD = 1;
 
     int NUM_BALLS = 8;
@@ -350,8 +351,6 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
             updateHighScoreAndChain(intent);
             startActivity(intent);
-            //startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(MainMenuActivity.mGoogleApiClient),
-            //        REQUEST_LEADERBOARD);
 
         }
 
@@ -359,8 +358,9 @@ public class MainActivity extends Activity {
 
             int longestChain = ballTracker.getLongestChain();
 
-            popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
             popUpLeaderboardIfHighscore(LEADERBOARD_LONGEST_CHAIN_ID, longestChain);
+            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() -1);
+            popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
 
         }
 
