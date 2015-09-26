@@ -1,13 +1,22 @@
 package mygames.lineball.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import mygames.lineball.Balls.Ball;
 import mygames.lineball.R;
 
 public class AboutUsActivity extends Activity{
@@ -17,8 +26,14 @@ public class AboutUsActivity extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.about_us);
-      //  view = findViewById(R.id.content);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        // Load the resolution into a Point object
+        Point size = new Point();
+        display.getSize(size);
+
+        AboutUsView view = new AboutUsView(this, size.x, size.y);
+        setContentView(view);
     }
 
     private void addBackButton() {
@@ -42,4 +57,59 @@ public class AboutUsActivity extends Activity{
 
     }
 
+    class AboutUsView extends SurfaceView implements Runnable {
+
+
+        private final int screenWidth;
+        private final int screenHeight;
+        private Canvas canvas;
+        SurfaceHolder ourHolder;
+        private Paint paint;
+
+
+        public AboutUsView(Context context, int screenWidth, int screenHeight) {
+            super(context);
+            this.screenWidth = screenWidth;
+            this.screenHeight = screenHeight;
+            ourHolder = getHolder();
+            this.canvas = new Canvas();
+            this.paint = new Paint();
+        }
+
+
+
+        // Draw the newly updated scene
+        public void draw() {
+            Log.i("draw", "drawn!1");
+            if (ourHolder.getSurface().isValid()) {
+                Log.i("draw", "drawn!2");
+
+                canvas = ourHolder.lockCanvas();
+
+                // Draw the background color
+                canvas.drawColor(Color.BLACK);
+
+               /* // Draw the balls
+                synchronized (balls) {
+                    for (Ball b: balls) {
+                        b.draw(paint, canvas);
+                    }
+                }*/
+
+
+                paint.setColor(Color.WHITE);
+                paint.setTextSize(60);
+                canvas.drawText("ABOUT US BIIIIIITCH", screenWidth / 2 - 100, screenHeight / 5, paint);
+                paint.setTextSize(30);
+
+                ourHolder.unlockCanvasAndPost(canvas);
+            }
+
+        }
+
+        @Override
+        public void run() {
+            draw();
+        }
+    }
 }

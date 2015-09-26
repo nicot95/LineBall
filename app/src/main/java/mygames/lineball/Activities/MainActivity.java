@@ -379,6 +379,9 @@ public class MainActivity extends Activity {
 
             @Override
             public void onResult(Leaderboards.LoadPlayerScoreResult loadPlayerScoreResult) {
+                if (!MainMenuActivity.mGoogleApiClient.isConnected()) { // return if not connected
+                    return;
+                }
                 Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, leaderboardId, score);
                 LeaderboardScore leaderboard = loadPlayerScoreResult.getScore();
                 if(leaderboard != null) {
