@@ -31,7 +31,7 @@ public class Ball {
 
         if (ballRadius == 0) {
             Log.i("radius Screen Y", screenY + "");
-            ballRadius = (float) (30 * Math.sqrt(screenX * screenY / (1184 * 720)));
+            ballRadius =  (float) (30 *  (Math.sqrt((float) (screenX * screenY) / (1500 * 720))));
         }
 
         // Start the ball moving at a random speed and direction
