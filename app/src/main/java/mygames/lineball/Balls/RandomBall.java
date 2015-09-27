@@ -1,7 +1,6 @@
 package mygames.lineball.Balls;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
@@ -23,13 +22,13 @@ public class RandomBall extends Ball {
         if (ticks_left_with_current_color == 0) {
             int ballColor = gen.nextInt(4);
             switch (ballColor) {
-                case 0: current_color = Color.RED;
+                case 0: current_color = ColorBall.getRed();
                     break;
-                case 1: current_color = Color.YELLOW;
+                case 1: current_color = ColorBall.getBlue();
                     break;
-                case 2: current_color = Color.GREEN;
+                case 2: current_color = ColorBall.getYellow();
                     break;
-                case 3: current_color = Color.BLUE;
+                case 3: current_color = ColorBall.getGreen();
                     break;
             }
             ticks_left_with_current_color = FRAMES_PER_COLOR;
@@ -43,13 +42,13 @@ public class RandomBall extends Ball {
     public void draw(Paint paint, Canvas canvas) {
         RectF rect = new RectF(x - ballRadius, y - ballRadius, x + ballRadius, y + ballRadius);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.GREEN);
+        paint.setColor(ColorBall.getGreen());
         canvas.drawArc(rect, rotation, 90, true, paint);
-        paint.setColor(Color.RED);
+        paint.setColor(ColorBall.getRed());
         canvas.drawArc(rect, 90 + rotation, 90, true, paint);
-        paint.setColor(Color.YELLOW);
+        paint.setColor(ColorBall.getYellow());
         canvas.drawArc(rect, 180 + rotation, 90, true, paint);
-        paint.setColor(Color.BLUE);
+        paint.setColor(ColorBall.getBlue());
         canvas.drawArc(rect, 270 + rotation, 90, true, paint);
 
         rotation += 3;

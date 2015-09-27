@@ -1,7 +1,6 @@
 package mygames.lineball.Balls;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 import java.util.Random;
@@ -63,13 +62,13 @@ public class Ball {
         int retColor = -1;
         int ballColor = this.color;
         switch (ballColor) {
-            case 0: retColor = Color.RED;
+            case 0: retColor = ColorBall.getRed();
                 break;
-            case 1: retColor = Color.YELLOW;
+            case 1: retColor = ColorBall.getBlue();
                 break;
-            case 2: retColor = Color.GREEN;
+            case 2: retColor = ColorBall.getYellow();
                 break;
-            case 3: retColor = Color.BLUE;
+            case 3: retColor = ColorBall.getGreen();
                 break;
         }
 
