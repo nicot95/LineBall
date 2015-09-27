@@ -12,6 +12,8 @@ public class MusicHandler {
 
     private MediaPlayer gameBackgroundSong;
     private MediaPlayer menuBackgroundSong;
+    private MediaPlayer gameOver;
+    private MediaPlayer fiveSecsLeft;
 
     private MediaPlayer shape1;
     private MediaPlayer shape2;
@@ -21,8 +23,11 @@ public class MusicHandler {
     public MusicHandler (Context context) {
         this.gameBackgroundSong = MediaPlayer.create(context, R.raw.pamgea);
         this.menuBackgroundSong = MediaPlayer.create(context, R.raw.builder);
+        this.gameOver = MediaPlayer.create(context, R.raw.game_over);
+        this.fiveSecsLeft = MediaPlayer.create(context, R.raw.timer);
         menuBackgroundSong.setVolume(0.1f,0.1f);
         gameBackgroundSong.setVolume(0.5f, 0.5f);
+        fiveSecsLeft.setVolume(0.7f, 0.7f);
         menuBackgroundSong.setLooping(true);
         gameBackgroundSong.setLooping(true);
 
@@ -41,6 +46,13 @@ public class MusicHandler {
     }
 
     public void playMenuBackgroundMusic() {menuBackgroundSong.start();}
+
+    public void playGameOverMusic() {gameOver.start();}
+
+    public void playFiveSecsLeftMusic() {
+        fiveSecsLeft.start();}
+
+
 
     public void playShapeCompleted() {
         //Stops mediaplayers so no overlap occurs.
@@ -70,6 +82,12 @@ public class MusicHandler {
     public void stopMenuMusic() {
         if (menuBackgroundSong.isPlaying()) {
             menuBackgroundSong.stop();
+        }
+    }
+
+    public void stopTimer() {
+        if(fiveSecsLeft.isPlaying()) {
+            fiveSecsLeft.stop();
         }
     }
 

@@ -91,6 +91,7 @@ public class MainActivity extends Activity {
         private BorderColourer borderColourer;
         private String timeLeft = "0";
         private CountDownTimer timer;
+        private CountDownTimer fiveSecsLessTimer;
         private RoundFinishedTextDrawer roundFinishedTextDrawer;
 
         public SurvivalView(Context context, int numBalls, int different_type_of_balls, int color) {
@@ -139,9 +140,15 @@ public class MainActivity extends Activity {
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
                         ballTracker.setGameStateToLineContact();
                         playing = false;
+                        musicHandler.stopMusic();
+                        musicHandler.stopTimer();
+                        musicHandler.playGameOverMusic();
                         break;      // We break because the game is already over (performance++)
                     } else if (ballTracker.isGameOver()) { //TimeOut!
                         playing = false;
+                        musicHandler.stopMusic();
+                        musicHandler.stopTimer();
+                        musicHandler.playGameOverMusic();
                         break;
                     }
                     MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);
@@ -152,7 +159,9 @@ public class MainActivity extends Activity {
 
         private void checkStartNewRound() {
             if (ballTracker.isRoundFinished()) {
+                musicHandler.stopTimer();
                 timer.cancel();
+                fiveSecsLessTimer.cancel();
                 // Creates a new Round Finished Drawar to draw the text on the screen as long as we want.
                 if (roundFinishedTextDrawer == null) {
                     roundFinishedTextDrawer =
@@ -183,7 +192,11 @@ public class MainActivity extends Activity {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() { // The 1000 represents one second
-                    timer = new CountDownTimer((Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000, 1000) {
+                    int time = (Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                    timer = new CountDownTimer(time, 1000) {
+
+
+
                         @Override
                         public void onTick(long millisUntilFinished) {
                             int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
@@ -194,6 +207,17 @@ public class MainActivity extends Activity {
                         public void onFinish() {
                             timeLeft = "0";
                             ballTracker.timeOut();
+                        }
+                    }.start();
+                    fiveSecsLessTimer = new CountDownTimer((Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000- 5000, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            musicHandler.playFiveSecsLeftMusic();
                         }
                     }.start();
                 }
