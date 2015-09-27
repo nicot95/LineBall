@@ -48,7 +48,6 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
-    final String LEADERBOARD_ID = "CgkIpt6w6v8GEAIQAQ";
     final int REQUEST_LEADERBOARD = 1;
 
 

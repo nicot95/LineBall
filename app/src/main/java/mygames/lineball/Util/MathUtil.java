@@ -260,8 +260,8 @@ public class MathUtil {
     }
 
 
-    public static float getScreenSizeFactorForBallDiameter() {
-        return (float) Math.sqrt( (((float)  screenX/ xDpi) * ((float)  screenY/yDpi)) / (float) (720/345 * 1184/346));
+    public static float getScreenSizeFactor() {
+        return (float) Math.sqrt( (((float)  screenX/ xDpi) * ((float)  screenY/yDpi)) / (float) (720/345.06 * 1184/345.87));
     }
 
     public static int getScreenWidth() {

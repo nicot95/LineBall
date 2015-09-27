@@ -31,12 +31,13 @@ public class Ball {
 
     public Ball(int screenX, int screenY, int color) {
 
-        ballRadius =  (float) (30 * MathUtil.getScreenSizeFactorForBallDiameter());
+        ballRadius =  (float) (30 * MathUtil.getScreenSizeFactor());
 
 
         // Start the ball moving at a random speed and direction
-        this.xVelocity = gen.nextInt(250) - 125;
-        this.yVelocity = gen.nextInt(250) - 125;
+        this.xVelocity = gen.nextInt((int) (Math.round(250 * MathUtil.getScreenSizeFactor()) - MathUtil.getScreenSizeFactor() * 125));
+        this.yVelocity = gen.nextInt((int) (Math.round(250 * MathUtil.getScreenSizeFactor())
+                - MathUtil.getScreenSizeFactor() * 125));
 
         // Place the ball in a random position within the screen. All the ball
         // must be inside the screen to avoid wallCollision bugs
