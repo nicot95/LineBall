@@ -295,8 +295,7 @@ public class MainActivity extends Activity {
                             }
                         }
                     } else {
-                        InterstitialAd intersitialAd = adHandler.getInterstitialAd();
-                        if (intersitialAd.isLoaded() || intersitialAd.isLoading()) {
+                        if (adHandler.isLoaded()) {
                             adHandler.openPossibleIntersitialAd();
                         } else {
                             goToMenu();

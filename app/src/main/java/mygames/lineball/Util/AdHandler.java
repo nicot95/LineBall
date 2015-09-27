@@ -11,19 +11,15 @@ import com.google.android.gms.ads.InterstitialAd;
  */
 public class AdHandler {
 
-    private static final int MOD = 1;
+    private static final int MOD = 2;
     private static int adCounter; // EveryMultiple of MOD will render an intersitial ad
-
-    public InterstitialAd getInterstitialAd() {
-        return mInterstitialAd;
-    }
 
     private InterstitialAd mInterstitialAd;
     private boolean isAdOpen;
 
     public AdHandler(Context context) {
         this.isAdOpen = true;
-        adCounter = 0;
+        adCounter = 1;
 
         mInterstitialAd = new InterstitialAd(context);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // Test
@@ -42,9 +38,11 @@ public class AdHandler {
     }
 
     public void openPossibleIntersitialAd() {
+
         if (adCounter == 0) {
             isAdOpen = true;
             mInterstitialAd.show();
+            adCounter++;
         } else {
             adCounter = (adCounter + 1) % MOD;
         }
@@ -61,5 +59,9 @@ public class AdHandler {
 
     public boolean isAdOpen() {
         return isAdOpen;
+    }
+
+    public boolean isLoaded() {
+        return mInterstitialAd.isLoaded();
     }
 }

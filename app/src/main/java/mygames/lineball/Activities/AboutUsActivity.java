@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import mygames.lineball.R;
 import mygames.lineball.Util.MathUtil;
 
 public class AboutUsActivity extends Activity{
@@ -27,7 +28,7 @@ public class AboutUsActivity extends Activity{
         super.onCreate(savedInstanceState);
 
         view = new AboutUsView(this, MathUtil.getScreenWidth(), MathUtil.getScreenHeight());
-        setContentView(view);
+        setContentView(R.layout.about_us);
     }
 
     private void addBackButton() {
@@ -105,8 +106,22 @@ public class AboutUsActivity extends Activity{
 
                 paint.setColor(Color.WHITE);
                 paint.setTextSize(60);
-                canvas.drawText("ABOUT US BIIIIIITCH", screenWidth / 2 - 100, screenHeight / 5, paint);
+                String text1 = "Designed and programmed by";
+                String name1 = "Daniel Hernandez";
+                String name2 = "Nicolas Trama";
+                String imperialLove = "Students at Imperial College London";
+
+                int initialHeight = screenHeight / 6;
+                canvas.drawText(text1, 100, initialHeight, paint);
+                int nameYseparation = screenHeight / 7; // Separation from text1 and names Y axis
+                int nameSeparation = screenWidth / 10; //Horizontal separation between names
                 paint.setTextSize(30);
+                canvas.drawText(name1, 20, initialHeight + nameYseparation, paint);
+                canvas.drawText(name2, 20 + nameSeparation, initialHeight + nameYseparation, paint);
+                int imperialLoveY = initialHeight + nameSeparation + (screenHeight / 5);
+                canvas.drawText(imperialLove, 100, imperialLoveY, paint);
+
+
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }

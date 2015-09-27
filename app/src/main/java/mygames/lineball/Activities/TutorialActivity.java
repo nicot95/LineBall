@@ -15,9 +15,7 @@ import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 
-/**
- * Created by nico on 07/09/15.
- */
+
 public class TutorialActivity extends Activity {
 
     GameView tutorialView;
@@ -29,9 +27,6 @@ public class TutorialActivity extends Activity {
     private final double MY_ASPECT_RATIO = 1.65;
     private final int FONT_WIDTH_RATIO = 18;
     private final int FONT_HEIGHT_RATIO = 30;
-
-
-
 
 
     @Override
@@ -66,8 +61,6 @@ public class TutorialActivity extends Activity {
             whitePaint.setAntiAlias(true);
             whitePaint.setColor(Color.WHITE);
             setFontSize();
-
-
         }
 
         @Override
@@ -105,7 +98,6 @@ public class TutorialActivity extends Activity {
 
         @Override
         public void draw() {
-
 
             // Make sure our drawing surface is valid or we crash
             if (ourHolder.getSurface().isValid()) {
@@ -310,4 +302,3 @@ public class TutorialActivity extends Activity {
             super.onDestroy();
         }
 }
-
