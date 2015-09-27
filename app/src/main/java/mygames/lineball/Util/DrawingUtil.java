@@ -6,8 +6,17 @@ import android.graphics.Paint;
 
 import java.util.List;
 
-import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.GameLogic.BallTracker;
+
+import static mygames.lineball.Balls.ColorBall.getBlue;
+import static mygames.lineball.Balls.ColorBall.getGreen;
+import static mygames.lineball.Balls.ColorBall.getLightBlue;
+import static mygames.lineball.Balls.ColorBall.getLightGreen;
+import static mygames.lineball.Balls.ColorBall.getLightRed;
+import static mygames.lineball.Balls.ColorBall.getLightYellow;
+import static mygames.lineball.Balls.ColorBall.getRed;
+import static mygames.lineball.Balls.ColorBall.getYellow;
 
 
 public class DrawingUtil {
@@ -41,15 +50,38 @@ public class DrawingUtil {
     }
 
     private static void drawColoredBorder(boolean first, BallTracker ballTracker, Paint borderPaint) {
-        if (first) {
-            borderPaint.setColor(Color.MAGENTA);
+        if (first || ballTracker.isReadyToCalculateScore()) {
+            borderPaint.setColor(Color.argb(255,0,204,204));
         } else if (ballTracker.isGameOver()) {
             borderPaint.setColor(Color.RED);
-        } else if(ballTracker.isReadyToCalculateScore()) {
-            borderPaint.setColor(Color.CYAN);
-        } else {
+        } /*else if(ballTracker.isReadyToCalculateScore()) {
+            /*List<Ball> balls = ballTracker.getBallsTracked();
+            int chainColor = ballTracker.getColorChain();
+            for(Ball b: balls) {
+                if(!b.getClass().equals(RandomBall.class)) {
+                    setBallSelectedColor(b, chainColor);
+                }
+            }
+            borderPaint.setColor(Color.CYAN);*/
+          else {
             borderPaint.setColor(Color.WHITE);
         }
+    }
+
+    private static void setBallSelectedColor(Ball b, int chainColor) {
+        int newCol = -1;
+        if(chainColor == getRed()) {
+            newCol = getLightRed();
+        } else if(chainColor == getBlue()) {
+            newCol = getLightBlue();
+        } else if(chainColor == getGreen()) {
+            newCol = getLightGreen();
+        } else if(chainColor == getYellow()) {
+            newCol = getLightYellow();
+        }
+
+        b.setColor(newCol);
+
     }
 
     private static void drawLinkedLines(Canvas canvas, BallTracker ballTracker, List<Ball> trackedBalls, Paint paint, Paint borderPaint, int i, Ball ball2) {

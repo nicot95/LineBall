@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.view.MotionEvent;
 
 import com.google.android.gms.ads.InterstitialAd;
@@ -18,6 +21,9 @@ import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
@@ -352,9 +358,10 @@ public class MainActivity extends Activity {
             int longestChain = ballTracker.getLongestChain();
 
             popUpLeaderboardIfHighscore(LEADERBOARD_LONGEST_CHAIN_ID, longestChain);
-            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() -1);
-            popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
 
+            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() -1);
+
+            popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
         }
 
 }
@@ -362,6 +369,7 @@ public class MainActivity extends Activity {
     private boolean popUpLeaderboardIfHighscore(final String leaderboardId, final int score) {
 
         final boolean[] ret = {false};
+        final Context context = this;
 
         Games.Leaderboards.loadCurrentPlayerLeaderboardScore(MainMenuActivity.mGoogleApiClient,
                 leaderboardId,
@@ -372,10 +380,18 @@ public class MainActivity extends Activity {
 
             @Override
             public void onResult(Leaderboards.LoadPlayerScoreResult loadPlayerScoreResult) {
-                if (!MainMenuActivity.mGoogleApiClient.isConnected()) { // return if not connected
+                if (!MainMenuActivity.mGoogleApiClient.isConnected() ) { // return if not connected
                     return;
                 }
                 Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, leaderboardId, score);
+
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+                StrictMode.setThreadPolicy(policy);
+
+                if(!hasActiveInternetConnection(context)) {
+                    return;
+                }
                 LeaderboardScore leaderboard = loadPlayerScoreResult.getScore();
                 if(leaderboard != null) {
                     highscore = leaderboard.getRawScore();
@@ -390,6 +406,31 @@ public class MainActivity extends Activity {
         });
         return ret[0];
 
+    }
+
+    private boolean hasActiveInternetConnection(Context context) {
+        if (isNetworkAvailable(context)) {
+            try {
+                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                urlc.setRequestProperty("User-Agent", "Test");
+                urlc.setRequestProperty("Connection", "close");
+                urlc.setConnectTimeout(1500);
+                urlc.connect();
+                return (urlc.getResponseCode() == 200);
+            } catch (IOException e) {
+                //Log.e(LOG_TAG, "Error checking internet connection", e);
+            }
+        } else {
+           // Log.d(LOG_TAG, "No network available!");
+        }
+        return false;
+    }
+
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 
     // This method executes when the player starts the game
