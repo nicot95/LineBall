@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.Display;
 import android.view.MotionEvent;
 
 import com.google.android.gms.ads.InterstitialAd;
@@ -65,12 +63,8 @@ public class MainActivity extends Activity {
 
         this.adHandler = new AdHandler(this);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        // Load the resolution into a Point object
-        Point size = new Point();
-        display.getSize(size);
         // Initialize gameView and set it as the view
-        survivalView = new SurvivalView(this, size.x, size.y, NUM_BALLS, DIFFERENT_TYPE_OF_BALLS, RANDOM_COLOR);
+        survivalView = new SurvivalView(this, NUM_BALLS, DIFFERENT_TYPE_OF_BALLS, RANDOM_COLOR);
         setContentView(survivalView);
     }
 
@@ -93,14 +87,12 @@ public class MainActivity extends Activity {
         private CountDownTimer timer;
         private RoundFinishedTextDrawer roundFinishedTextDrawer;
 
-        public SurvivalView(Context context, int screenWidth, int screenHeight,
-                            int numBalls, int different_type_of_balls, int color) {
-            super(context, screenWidth, screenHeight, numBalls, different_type_of_balls, color);
+        public SurvivalView(Context context, int numBalls, int different_type_of_balls, int color) {
+            super(context,  numBalls, different_type_of_balls, color);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
             this.borderColourer = new BorderColourer();
             this.survivalBallGenerator =
-                    new SurvivalBallGenerator(numBalls, different_type_of_balls, screenWidth,
-                                                screenHeight, numBalls);
+                    new SurvivalBallGenerator(numBalls, different_type_of_balls, numBalls);
 
             createNewTimer(survivalBallGenerator.getRound());
         }

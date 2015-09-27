@@ -22,9 +22,9 @@ public class SurvivalBallGenerator extends BallGenerator {
     private boolean loadingNewRound; // Flag to mark that new balls are being generated for new round
     private int newBallsAddedThisRound;
 
-    public SurvivalBallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY,
+    public SurvivalBallGenerator(int numBalls, int differentTypesOfBalls,
                                  int desiredBallCount) {
-        super(numBalls, differentTypesOfBalls, screenX, screenY);
+        super(numBalls, differentTypesOfBalls);
 
         this.desiredBallCount        = desiredBallCount;
         this.maxSpeed                = 125;

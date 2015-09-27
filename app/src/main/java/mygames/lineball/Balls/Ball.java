@@ -1,14 +1,13 @@
 package mygames.lineball.Balls;
 
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.DisplayMetrics;
 
 import java.util.Random;
 
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
+import mygames.lineball.Util.MathUtil;
 
 public class Ball {
     //commit test iml shitty bug
@@ -20,8 +19,7 @@ public class Ball {
     protected float y;
     private final int screenArea_ballRadius_factor = 28416;
     protected int color;
-    public static float xDpi;
-    public static float yDpi;
+
 
 
     public final static int RANDOM_COLOR = 4;
@@ -33,11 +31,7 @@ public class Ball {
 
     public Ball(int screenX, int screenY, int color) {
 
-        DisplayMetrics dm =  Resources.getSystem().getDisplayMetrics();
-        xDpi = dm.xdpi;
-        yDpi = dm.ydpi;
-
-        ballRadius =  (float) (30 *  (Math.sqrt( (((float)  screenX/ xDpi) * ((float)  screenY/yDpi)) / (float) (1184/345 * 720/346))));
+        ballRadius =  (float) (30 * MathUtil.getScreenSizeFactorForBallDiameter());
 
 
         // Start the ball moving at a random speed and direction

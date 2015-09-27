@@ -12,8 +12,8 @@ public class InitialStateBallGenerator extends BallGenerator {
     private List<Ball> balls;
     private int[] differentTypesOfBalls;
 
-    public InitialStateBallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY) {
-        super(numBalls, differentTypesOfBalls, screenX, screenY);
+    public InitialStateBallGenerator(int numBalls, int differentTypesOfBalls) {
+        super(numBalls, differentTypesOfBalls);
         this.numBalls = numBalls;
         this.balls = Collections.synchronizedList(new ArrayList<Ball>());
         this.differentTypesOfBalls = new int[differentTypesOfBalls];

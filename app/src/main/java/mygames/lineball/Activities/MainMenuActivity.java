@@ -6,11 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -74,13 +72,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 
-
-        // Get a Display object to access screen details
-        Display display = getWindowManager().getDefaultDisplay();
-        // Load the resolution into a Point object
-        Point size = new Point();
-        display.getSize(size);
-        menuView = new MenuView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS, MainActivity.RANDOM_COLOR);
+        menuView = new MenuView(this,  NUM_BALLS, DIFFERENT_BALLS, MainActivity.RANDOM_COLOR);
         menuLayout = new RelativeLayout(this);
         menuLayout.addView(menuView);
 
@@ -363,9 +355,9 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     }
 
     class MenuView extends GameView{
-        public MenuView(Context context, int screenWidth, int screenHeight, int num_balls,
+        public MenuView(Context context, int num_balls,
                         int different_type_of_balls, int color) {
-            super(context, screenWidth, screenHeight, num_balls, different_type_of_balls, color);
+            super(context, num_balls, different_type_of_balls, color);
         }
 
         @Override

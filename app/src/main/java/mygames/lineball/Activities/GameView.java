@@ -43,17 +43,16 @@ public class GameView extends SurfaceView implements Runnable{
     protected BorderColourer borderColourer;
 
 
-    public GameView(Context context, int screenWidth, int screenHeight, int num_balls,
+    public GameView(Context context, int num_balls,
                     int different_type_of_balls, int color) {
         super(context);
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+        this.screenWidth = MathUtil.getScreenWidth();
+        this.screenHeight = MathUtil.getScreenHeight();
         this.num_balls = num_balls;
         this.different_type_of_balls = different_type_of_balls;
         this.color = color;
 
-        InitialStateBallGenerator ballGen = new InitialStateBallGenerator(num_balls, different_type_of_balls,
-                screenWidth, screenHeight);
+        InitialStateBallGenerator ballGen = new InitialStateBallGenerator(num_balls, different_type_of_balls);
         balls = ballGen.generateBalls();
         this.numberOfBallsPerType = ballGen.getDifferentTypesOfBalls();
 

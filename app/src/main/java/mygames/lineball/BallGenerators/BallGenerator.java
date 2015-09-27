@@ -4,6 +4,7 @@ import java.util.Random;
 
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.Balls.RandomBall;
+import mygames.lineball.Util.MathUtil;
 
 
 public abstract class BallGenerator {
@@ -16,12 +17,12 @@ public abstract class BallGenerator {
 
     protected Random gen;
 
-    public BallGenerator(int numBalls, int differentTypesOfBalls, int screenX, int screenY) {
+    public BallGenerator(int numBalls, int differentTypesOfBalls) {
         this.numBalls = numBalls;
 
         this.differentTypesOfBalls = differentTypesOfBalls;
-        this.screenX = screenX;
-        this.screenY = screenY;
+        this.screenX = MathUtil.getScreenWidth();
+        this.screenY = MathUtil.getScreenHeight();
 
         this.gen = new Random();
     }

@@ -1,20 +1,29 @@
 package mygames.lineball.Util;
 
+import android.content.res.Resources;
 import android.graphics.Point;
-import android.os.Debug;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import mygames.lineball.Balls.Ball;
 import mygames.lineball.Balls.RandomBall;
 import mygames.lineball.GameLogic.BallTracker;
-import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BorderColourer;
 
 
 public class MathUtil {
+
+
+
+    private static DisplayMetrics dm =  Resources.getSystem().getDisplayMetrics();
+    private static float xDpi = dm.xdpi;
+    private static float yDpi = dm.ydpi;
+    private static int screenX = dm.widthPixels;
+    private static int screenY = dm.heightPixels;
 
     /**
      * Returns distance to segment
@@ -248,5 +257,18 @@ public class MathUtil {
                 borderColourer.setWestBorderColour(b.getColor());
             }
         }
+    }
+
+
+    public static float getScreenSizeFactorForBallDiameter() {
+        return (float) Math.sqrt( (((float)  screenX/ xDpi) * ((float)  screenY/yDpi)) / (float) (720/345 * 1184/346));
+    }
+
+    public static int getScreenWidth() {
+        return screenX;
+    }
+
+    public static int getScreenHeight() {
+        return screenY;
     }
 }

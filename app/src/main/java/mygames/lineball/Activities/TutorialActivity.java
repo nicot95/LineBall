@@ -5,18 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.MotionEvent;
 
-import java.util.List;
-
 import mygames.lineball.BallGenerators.InitialStateBallGenerator;
-import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.Balls.RandomBall;
-import mygames.lineball.R;
+import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
 
@@ -42,12 +37,8 @@ public class TutorialActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Get a Display object to access screen details
-        Display display = getWindowManager().getDefaultDisplay();
-        // Load the resolution into a Point object
-        Point size = new Point();
-        display.getSize(size);
-        tutorialView = new TutorialView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS,
+
+        tutorialView = new TutorialView(this, NUM_BALLS, DIFFERENT_BALLS,
                  1, new Tutorial_Level_1());
         setContentView(tutorialView);
 
@@ -64,9 +55,10 @@ public class TutorialActivity extends Activity {
         Paint whitePaint = new Paint();
 
 
-        public TutorialView(Context context, int screenWidth, int screenHeight, int num_balls,
+        public TutorialView(Context context, int num_balls,
                             int different_balls, int color, Level level) {
-            super(context, screenWidth, (int) Math.round(game_screen_factor*screenHeight), num_balls, different_balls, color);
+            super(context, num_balls, different_balls, color);
+            this.screenHeight = (int) Math.round(game_screen_factor*MathUtil.getScreenHeight());
             this.ballTracker = new BallTracker(numberOfBallsPerType);
             this.fullscreenHeight = screenHeight;
             this.level = level;
@@ -194,7 +186,7 @@ public class TutorialActivity extends Activity {
         private void startLevel() {
             if (level.getClass().equals(Tutorial_Level_2.class)) {
                 //level 2
-                InitialStateBallGenerator ballgen = new InitialStateBallGenerator(3, 1, screenWidth, screenHeight);
+                InitialStateBallGenerator ballgen = new InitialStateBallGenerator(3, 1);
                 balls = ballgen.generateBalls();
                 ballTracker = new BallTracker(ballgen.getDifferentTypesOfBalls());
             } else {
