@@ -161,6 +161,7 @@ public class MainActivity extends Activity {
             if (ballTracker.isRoundFinished()) {
                 musicHandler.stopTimer();
                 timer.cancel();
+                fiveSecsLessTimer.cancel();
                 // Creates a new Round Finished Drawar to draw the text on the screen as long as we want.
                 if (roundFinishedTextDrawer == null) {
                     roundFinishedTextDrawer =
@@ -208,7 +209,7 @@ public class MainActivity extends Activity {
                             ballTracker.timeOut();
                         }
                     }.start();
-                    fiveSecsLessTimer = new CountDownTimer(time - 5000, 1000) {
+                    fiveSecsLessTimer = new CountDownTimer((Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000- 5000, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
 
