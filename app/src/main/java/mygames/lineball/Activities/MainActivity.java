@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
 
 
         this.musicHandler = new MusicHandler(MainActivity.this);
-        musicHandler.playBackgroundMusic();
+        musicHandler.playGameBackgroundMusic();
 
         this.adHandler = new AdHandler(this);
 
@@ -437,7 +437,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        musicHandler.playBackgroundMusic();
+        musicHandler.playGameBackgroundMusic();
         // Tell the gameView resume method to execute
         survivalView.resume();
     }

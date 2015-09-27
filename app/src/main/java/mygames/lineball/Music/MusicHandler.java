@@ -10,7 +10,8 @@ import mygames.lineball.R;
 public class MusicHandler {
 
 
-    private MediaPlayer backgroundSong;
+    private MediaPlayer gameBackgroundSong;
+    private MediaPlayer menuBackgroundSong;
 
     private MediaPlayer shape1;
     private MediaPlayer shape2;
@@ -18,8 +19,13 @@ public class MusicHandler {
     private Random gen;
 
     public MusicHandler (Context context) {
-        this.backgroundSong = MediaPlayer.create(context, R.raw.pamgea);
-        backgroundSong.setLooping(true);
+        this.gameBackgroundSong = MediaPlayer.create(context, R.raw.pamgea);
+        this.menuBackgroundSong = MediaPlayer.create(context, R.raw.builder);
+        menuBackgroundSong.setVolume(0.1f,0.1f);
+        gameBackgroundSong.setVolume(0.5f, 0.5f);
+        menuBackgroundSong.setLooping(true);
+        gameBackgroundSong.setLooping(true);
+
 
         this.shape1         = MediaPlayer.create(context, R.raw.shape1short);
         this.shape2         = MediaPlayer.create(context, R.raw.shape2short);
@@ -30,9 +36,11 @@ public class MusicHandler {
         this.gen            = new Random();
     }
 
-    public void playBackgroundMusic() {
-        backgroundSong.start();
+    public void playGameBackgroundMusic() {
+        gameBackgroundSong.start();
     }
+
+    public void playMenuBackgroundMusic() {menuBackgroundSong.start();}
 
     public void playShapeCompleted() {
         //Stops mediaplayers so no overlap occurs.
@@ -54,8 +62,14 @@ public class MusicHandler {
     }
 
     public void stopMusic() {
-        if (backgroundSong.isPlaying()) {
-            backgroundSong.stop();
+        if (gameBackgroundSong.isPlaying()) {
+            gameBackgroundSong.stop();
+        }
+    }
+
+    public void stopMenuMusic() {
+        if (menuBackgroundSong.isPlaying()) {
+            menuBackgroundSong.stop();
         }
     }
 

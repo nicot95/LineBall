@@ -25,6 +25,7 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesActivityResultCodes;
 
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.Music.MusicHandler;
 import mygames.lineball.R;
 
 
@@ -50,7 +51,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
     final int REQUEST_LEADERBOARD = 1;
 
-
+    private MusicHandler musicHandler;
 
     //View that will hold the add
     private AdView addView;
@@ -59,6 +60,9 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.musicHandler = new MusicHandler(MainMenuActivity.this);
+        musicHandler.playMenuBackgroundMusic();
 
         // Create a GoogleApiClient instance
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -414,6 +418,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     protected void onResume() {
         super.onResume();
+        musicHandler.playMenuBackgroundMusic();
         //highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
         //longestChain = PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
         menuView.resume();
@@ -430,7 +435,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     protected void onPause() {
         super.onPause();
-
+        musicHandler.stopMenuMusic();
         menuView.pause();
     }
 
