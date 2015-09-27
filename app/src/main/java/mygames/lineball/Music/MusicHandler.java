@@ -27,6 +27,7 @@ public class MusicHandler {
         this.fiveSecsLeft = MediaPlayer.create(context, R.raw.timer);
         menuBackgroundSong.setVolume(0.1f,0.1f);
         gameBackgroundSong.setVolume(0.5f, 0.5f);
+        fiveSecsLeft.setVolume(0.7f, 0.7f);
         menuBackgroundSong.setLooping(true);
         gameBackgroundSong.setLooping(true);
 
@@ -48,7 +49,8 @@ public class MusicHandler {
 
     public void playGameOverMusic() {gameOver.start();}
 
-    public void playFiveSecsLeftMusic() {fiveSecsLeft.start();}
+    public void playFiveSecsLeftMusic() {
+        fiveSecsLeft.start();}
 
 
 
