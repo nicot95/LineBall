@@ -31,27 +31,11 @@ public class AboutUsActivity extends Activity{
         setContentView(R.layout.about_us);
     }
 
-    private void addBackButton() {
-        Button backButton = new Button(this);
-        backButton.setText("Back");
-        backButton.setTextColor(Color.WHITE);
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        int diameter = 60;
-        RelativeLayout.LayoutParams backButtonParams =
-                new RelativeLayout.LayoutParams(diameter, diameter);
-        backButtonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        backButtonParams.addRule(RelativeLayout.CENTER_VERTICAL);
+    public void goToMenu(View view) {
+        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+        startActivity(intent);
 
     }
-
     @Override
     public void onPause() {
         super.onPause();

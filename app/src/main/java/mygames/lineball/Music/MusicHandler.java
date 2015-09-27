@@ -37,7 +37,6 @@ public class MusicHandler {
         this.shape1.setVolume(0.5f, 0.5f);
         this.shape2.setVolume(0.5f, 0.5f);
 
-
         this.gen            = new Random();
     }
 
@@ -45,12 +44,13 @@ public class MusicHandler {
         gameBackgroundSong.start();
     }
 
-    public void playMenuBackgroundMusic() {menuBackgroundSong.start();}
+    public void playMenuBackgroundMusic() { menuBackgroundSong.start();}
 
-    public void playGameOverMusic() {gameOver.start();}
+    public void playGameOverMusic() { gameOver.start();}
 
     public void playFiveSecsLeftMusic() {
-        fiveSecsLeft.start();}
+        fiveSecsLeft.start();
+    }
 
 
 
