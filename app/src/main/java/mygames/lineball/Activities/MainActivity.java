@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
 
     public static int RANDOM_COLOR = -1;
 
+
     private ArrayList<RectF> lines = new ArrayList<RectF>();
     final String LEADERBOARD_HIGHSCORE_ID = "CgkIpt6w6v8GEAIQAQ";
     final String LEADERBOARD_LONGEST_CHAIN_ID = "CgkIpt6w6v8GEAIQCA";

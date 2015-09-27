@@ -16,12 +16,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import mygames.lineball.Balls.Ball;
-import mygames.lineball.R;
-
 public class AboutUsActivity extends Activity{
 
-    private View view;
+    private AboutUsView view;
+    Thread gameThread = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +31,7 @@ public class AboutUsActivity extends Activity{
         Point size = new Point();
         display.getSize(size);
 
-        AboutUsView view = new AboutUsView(this, size.x, size.y);
+        view = new AboutUsView(this, size.x, size.y);
         setContentView(view);
     }
 
@@ -57,9 +56,30 @@ public class AboutUsActivity extends Activity{
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        view.pause();
+
+    }
+
+    // If SimpleGameEngine Activity is started then
+    // start our thread.
+    @Override
+    public void onResume() {
+        super.onResume();
+        view.resume();
+        //gameThread.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     class AboutUsView extends SurfaceView implements Runnable {
 
-
+        private boolean running = true;
         private final int screenWidth;
         private final int screenHeight;
         private Canvas canvas;
@@ -69,6 +89,7 @@ public class AboutUsActivity extends Activity{
 
         public AboutUsView(Context context, int screenWidth, int screenHeight) {
             super(context);
+            this.setBackgroundColor(0X0ff00000);
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             ourHolder = getHolder();
@@ -80,22 +101,12 @@ public class AboutUsActivity extends Activity{
 
         // Draw the newly updated scene
         public void draw() {
-            Log.i("draw", "drawn!1");
             if (ourHolder.getSurface().isValid()) {
-                Log.i("draw", "drawn!2");
 
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.BLACK);
-
-               /* // Draw the balls
-                synchronized (balls) {
-                    for (Ball b: balls) {
-                        b.draw(paint, canvas);
-                    }
-                }*/
-
+                //canvas.drawColor(Color.BLACK);
 
                 paint.setColor(Color.WHITE);
                 paint.setTextSize(60);
@@ -109,7 +120,33 @@ public class AboutUsActivity extends Activity{
 
         @Override
         public void run() {
-            draw();
+            while(running) {
+                draw();
+            }
         }
+
+        public void pause() {
+            running = false;
+            try {
+                gameThread.join();
+            } catch (InterruptedException e) {
+                Log.e("Error:", "joining thread");
+            }
+
+        }
+
+        // If SimpleGameEngine Activity is started then
+        // start our thread.
+        public void resume() {
+            running = true;
+            gameThread = new Thread(this);
+            gameThread.start();
+        }
+
+
+
     }
+
+
+
 }

@@ -53,6 +53,8 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     final String LEADERBOARD_ID = "CgkIpt6w6v8GEAIQAQ";
     final int REQUEST_LEADERBOARD = 1;
 
+
+
     //View that will hold the add
     private AdView addView;
 
@@ -81,6 +83,9 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         menuView = new MenuView(this, size.x, size.y, NUM_BALLS, DIFFERENT_BALLS, MainActivity.RANDOM_COLOR);
         menuLayout = new RelativeLayout(this);
         menuLayout.addView(menuView);
+
+
+
 
 
         addAllButtons();
