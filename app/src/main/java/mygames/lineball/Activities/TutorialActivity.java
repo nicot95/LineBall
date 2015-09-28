@@ -52,12 +52,12 @@ public class TutorialActivity extends Activity {
 
         public TutorialView(Context context, int num_balls,
                             int different_balls, int color, Level level) {
-            super(context, num_balls, different_balls, color);
-            this.screenHeight = (int) Math.round(game_screen_factor*MathUtil.getScreenHeight());
+            super(context, num_balls, different_balls, color, true);
+            this.fullscreenHeight = MathUtil.getScreenHeight();
+            this.screenHeight = (int) Math.round(game_screen_factor*fullscreenHeight);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
-            this.fullscreenHeight = screenHeight;
             this.level = level;
-            this.commentBoxHeight = (1-game_screen_factor)*screenHeight;
+            this.commentBoxHeight = (1-game_screen_factor)*fullscreenHeight;
             whitePaint.setAntiAlias(true);
             whitePaint.setColor(Color.WHITE);
             setFontSize();
@@ -172,7 +172,7 @@ public class TutorialActivity extends Activity {
         private void startLevel() {
             if (level.getClass().equals(Tutorial_Level_2.class)) {
                 //level 2
-                InitialStateBallGenerator ballgen = new InitialStateBallGenerator(3, 1);
+                InitialStateBallGenerator ballgen = new InitialStateBallGenerator(3, 1, true);
                 balls = ballgen.generateBalls();
                 ballTracker = new BallTracker(ballgen.getDifferentTypesOfBalls());
             } else {

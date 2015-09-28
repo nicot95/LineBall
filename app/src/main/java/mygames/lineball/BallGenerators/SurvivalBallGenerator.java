@@ -25,7 +25,7 @@ public class SurvivalBallGenerator extends BallGenerator {
 
     public SurvivalBallGenerator(int numBalls, int differentTypesOfBalls,
                                  int desiredBallCount) {
-        super(numBalls, differentTypesOfBalls);
+        super(numBalls, differentTypesOfBalls, false);
 
         this.desiredBallCount        = desiredBallCount;
         this.maxSpeed                = (int) (125 * MathUtil.getScreenSizeFactor());
