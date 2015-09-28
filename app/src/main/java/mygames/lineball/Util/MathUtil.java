@@ -16,8 +16,6 @@ import mygames.lineball.GameLogic.BorderColourer;
 
 public class MathUtil {
 
-
-
     private static DisplayMetrics dm =  Resources.getSystem().getDisplayMetrics();
     private static float xDpi = dm.xdpi;
     private static float yDpi = dm.ydpi;
