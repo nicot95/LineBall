@@ -162,8 +162,12 @@ public class MainActivity extends Activity {
         private void checkStartNewRound() {
             if (ballTracker.isRoundFinished()) {
                 musicHandler.stopTimer();
-                timer.cancel();
-                fiveSecsLessTimer.cancel();
+                if(timer != null) {
+                    timer.cancel();
+                }
+                if(fiveSecsLessTimer != null) {
+                    fiveSecsLessTimer.cancel();
+                }
                 // Creates a new Round Finished Drawar to draw the text on the screen as long as we want.
                 if (roundFinishedTextDrawer == null) {
                     roundFinishedTextDrawer =
@@ -393,7 +397,7 @@ public class MainActivity extends Activity {
 
             popUpLeaderboardIfHighscore(LEADERBOARD_LONGEST_CHAIN_ID, longestChain);
 
-            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() - 1);
+            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() -1);
 
             popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
         }
