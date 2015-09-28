@@ -27,6 +27,7 @@ import com.google.android.gms.games.GamesActivityResultCodes;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.Music.MusicHandler;
 import mygames.lineball.R;
+import mygames.lineball.Util.MathUtil;
 
 
 public class MainMenuActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
@@ -61,7 +62,8 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.musicHandler = new MusicHandler(MainMenuActivity.this);
+        this.musicHandler = MusicHandler.getInstance(this);
+        musicHandler.updateContext(this);
 
 
         // Create a GoogleApiClient instance
@@ -138,31 +140,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         });
         howToPlayButt.setBackgroundResource(R.drawable.blueroundbutton);
 
-        Button aboutUsButt = new Button(this);
-        setButton(aboutUsButt, "About us");
-        aboutUsButt.setBackgroundResource(R.drawable.greenroundbutton);
-        aboutUsButt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startAboutUs();
-            }
-        });
 
-        Button[] buttons = new Button[3];
-        buttons[0] = playButton;
-        buttons[1] = howToPlayButt;
-        buttons[2] = aboutUsButt;
-
-        displayButtons(buttons);
-
-        setAndDisplayHighscoreButt();
-
-    }
-
-    public void setAndDisplayHighscoreButt() {
-        buttonParams =  new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         Button highscoresButt = new Button(this);
         setButton(highscoresButt, "Ranking");
@@ -181,18 +159,73 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
             }
         });
 
-        int diameter = menuView.screenHeight/15;
-        highscoresButt.setWidth(diameter);
-        highscoresButt.setHeight(diameter);
-        highscoresButt.setX(diameter);
-        highscoresButt.setY(menuView.screenHeight - diameter - diameter);
+
+        Button[] buttons = new Button[3];
+        buttons[0] = playButton;
+        buttons[1] = highscoresButt;
+        buttons[2] = howToPlayButt;
+        //buttons[3] = aboutUsButt;
+
+
+        displayButtons(buttons);
+
+        setAndDisplayAboutUsButt();
+        setAndDisplayMuteButt();
+
+    }
+
+    public void setAndDisplayAboutUsButt() {
+
+        Button aboutUsButt = new Button(this);
+        setButton(aboutUsButt, "About");
+        aboutUsButt.setBackgroundResource(R.drawable.greenroundbutton);
+        aboutUsButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAboutUs();
+            }
+        });
+
+        int diameter = menuView.screenHeight/12;
+        aboutUsButt.setWidth(diameter);
+        aboutUsButt.setHeight(diameter);
+        aboutUsButt.setX(3 * diameter / 4);
+        aboutUsButt.setY(menuView.screenHeight - diameter - 3 * diameter / 4);
+        aboutUsButt.setTextSize(10 * MathUtil.getScreenSizeFactor());
 
         RelativeLayout.LayoutParams highscoreParams =  new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        menuLayout.addView(highscoresButt, highscoreParams);
+        menuLayout.addView(aboutUsButt, highscoreParams);
     }
+
+    private void setAndDisplayMuteButt() {
+
+        Button muteButt = new Button(this);
+        setButton(muteButt, "Mute");
+        muteButt.setBackgroundResource(R.drawable.mutebutton);
+        muteButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                musicHandler.muteOrUnmute();
+            }
+        });
+
+        int diameter = menuView.screenHeight/12;
+        muteButt.setWidth(diameter);
+        muteButt.setHeight(diameter);
+        muteButt.setX(menuView.screenWidth - diameter - 3 * diameter / 4);
+        muteButt.setY(menuView.screenHeight - diameter - 3 * diameter / 4);
+        muteButt.setTextSize(10 * MathUtil.getScreenSizeFactor());
+
+        RelativeLayout.LayoutParams mutebuttonParams =  new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        menuLayout.addView(muteButt, mutebuttonParams);
+    }
+
 
     private void setButtonParams() {
 
@@ -215,23 +248,25 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
 
         int separation = menuView.screenHeight/25;
         int playDiameter = menuView.screenHeight/6;
-        int playPos = menuView.screenHeight/2;
+        int playButHeight = menuView.screenHeight/3;
         int diameter = menuView.screenHeight/9;
-        int initial_off = playPos + playDiameter/2 - diameter;
+        int initial_off = playButHeight + playDiameter - diameter;
 
         RelativeLayout.LayoutParams playButtParams =
                 new RelativeLayout.LayoutParams(playDiameter, playDiameter);
         playButtParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        playButtParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        //playButtParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
 
         for(int i = 0; i< buttons.length; i++) {
             if(i == 0) {
-                buttons[i].setTextSize(27);
+                buttons[i].setTextSize(27 * MathUtil.getScreenSizeFactor());
+                buttons[i].setY(menuView.screenHeight/3);
                 menuLayout.addView(buttons[i], playButtParams);
             } else {
                 buttons[i].setWidth(diameter);
                 buttons[i].setHeight(diameter);
+                buttons[i].setTextSize(diameter/11);
                 buttons[i].setY(initial_off + (separation + diameter) * i ); //;
                 menuLayout.addView(buttons[i], buttonParams);
             }

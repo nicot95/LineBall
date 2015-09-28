@@ -265,10 +265,10 @@ public class MathUtil {
     }
 
     public static int getScreenWidth() {
-        return screenX;
+        return screenX -10;
     }
 
     public static int getScreenHeight() {
-        return screenY;
+        return screenY -10;
     }
 }

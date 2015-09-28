@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 
 import mygames.lineball.R;
 import mygames.lineball.Util.MathUtil;
@@ -139,6 +137,13 @@ public class AboutUsActivity extends Activity{
 
 
 
+
+
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
     }
 
 

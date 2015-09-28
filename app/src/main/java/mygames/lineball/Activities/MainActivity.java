@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         soundPlayed = false;
 
-        this.musicHandler = new MusicHandler(MainActivity.this);
+        this.musicHandler = musicHandler.getInstance(this);
         musicHandler.playGameBackgroundMusic();
 
         this.adHandler = new AdHandler(this);
