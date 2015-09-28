@@ -388,7 +388,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     class MenuView extends GameView{
         public MenuView(Context context, int num_balls,
                         int different_type_of_balls, int color) {
-            super(context, num_balls, different_type_of_balls, color);
+            super(context, num_balls, different_type_of_balls, color, false);
         }
 
         @Override

@@ -95,7 +95,7 @@ public class MainActivity extends Activity {
         private boolean wasPaused = false;
 
         public SurvivalView(Context context, int numBalls, int different_type_of_balls, int color) {
-            super(context,  numBalls, different_type_of_balls, color);
+            super(context,  numBalls, different_type_of_balls, color, false);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
             this.borderColourer = new BorderColourer();
             this.survivalBallGenerator =

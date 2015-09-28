@@ -44,7 +44,7 @@ public class GameView extends SurfaceView implements Runnable{
 
 
     public GameView(Context context, int num_balls,
-                    int different_type_of_balls, int color) {
+                    int different_type_of_balls, int color, boolean isTutorial) {
         super(context);
         this.screenWidth = MathUtil.getScreenWidth();
         this.screenHeight = MathUtil.getScreenHeight();
@@ -52,7 +52,7 @@ public class GameView extends SurfaceView implements Runnable{
         this.different_type_of_balls = different_type_of_balls;
         this.color = color;
 
-        InitialStateBallGenerator ballGen = new InitialStateBallGenerator(num_balls, different_type_of_balls);
+        InitialStateBallGenerator ballGen = new InitialStateBallGenerator(num_balls, different_type_of_balls, isTutorial);
         balls = ballGen.generateBalls();
         this.numberOfBallsPerType = ballGen.getDifferentTypesOfBalls();
 

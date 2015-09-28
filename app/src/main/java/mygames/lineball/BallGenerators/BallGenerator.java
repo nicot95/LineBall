@@ -17,12 +17,12 @@ public abstract class BallGenerator {
 
     protected Random gen;
 
-    public BallGenerator(int numBalls, int differentTypesOfBalls) {
+    public BallGenerator(int numBalls, int differentTypesOfBalls, boolean isTutorial) {
         this.numBalls = numBalls;
 
         this.differentTypesOfBalls = differentTypesOfBalls;
         this.screenX = MathUtil.getScreenWidth();
-        this.screenY = MathUtil.getScreenHeight();
+        this.screenY = isTutorial ? (int) (0.83 * MathUtil.getScreenHeight()) : MathUtil.getScreenHeight();
 
         this.gen = new Random();
     }
