@@ -1,6 +1,7 @@
 package mygames.lineball.BallGenerators;
 
 import mygames.lineball.Balls.Ball;
+import mygames.lineball.Util.MathUtil;
 
 /*
     This class holds the logic used in the survival mode regarding where should balls appear
@@ -106,7 +107,7 @@ public class SurvivalBallGenerator extends BallGenerator {
                 break;
         }
         Ball newBall = generateBall();
-        newBall.setVelocityAndPosition(goodX, goodY, maxSpeed, candidateDirection);
+        newBall.setVelocityAndPosition(goodX, goodY, (int) (MathUtil.getScreenSizeFactor() * maxSpeed), candidateDirection);
 
         newBallsAddedThisRound++;
         ballsPerDirection[index]++;

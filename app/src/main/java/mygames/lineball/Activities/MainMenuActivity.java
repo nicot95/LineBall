@@ -81,10 +81,6 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         menuLayout = new RelativeLayout(this);
         menuLayout.addView(menuView);
 
-
-
-
-
         addAllButtons();
         addAdView(menuLayout);
 
@@ -159,13 +155,10 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
             }
         });
 
-
         Button[] buttons = new Button[3];
         buttons[0] = playButton;
         buttons[1] = highscoresButt;
         buttons[2] = howToPlayButt;
-        //buttons[3] = aboutUsButt;
-
 
         displayButtons(buttons);
 
@@ -241,7 +234,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     private void setButton(Button button, String name) {
         button.setText(name);
         button.setTextColor(Color.WHITE);
-        
+
         //button.setTextSize(15);
     }
 
@@ -419,8 +412,8 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
 
 
                 paint.setColor(Color.argb(255, 255, 255, 255));
-                paint.setTextSize(60);
-                canvas.drawText("LineBall", screenWidth / 2 - 100, screenHeight/5, paint);
+                paint.setTextSize(menuView.screenWidth/12);
+                canvas.drawText("LineBall", screenWidth / 2 - menuView.screenWidth/8, screenHeight/5, paint);
                 paint.setTextSize(30);
                 //canvas.drawText("Highscore: " + highscore, 30, 210, paint);
                // canvas.drawText("last score: " + getIntent().getIntExtra("score", 0), 30, 260, paint);
