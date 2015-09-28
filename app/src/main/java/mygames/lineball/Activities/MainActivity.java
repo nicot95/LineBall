@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,6 +11,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.android.gms.common.api.ResultCallback;
@@ -23,7 +24,6 @@ import com.google.android.gms.games.leaderboard.Leaderboards;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 import mygames.lineball.Balls.Ball;
@@ -45,7 +45,6 @@ public class MainActivity extends Activity {
     public static int RANDOM_COLOR = -1;
 
 
-    private ArrayList<RectF> lines = new ArrayList<RectF>();
     final String LEADERBOARD_HIGHSCORE_ID = "CgkIpt6w6v8GEAIQAQ";
     final String LEADERBOARD_LONGEST_CHAIN_ID = "CgkIpt6w6v8GEAIQCA";
     final String LEADERBOARD_ROUND_ID = "CgkIpt6w6v8GEAIQBw";
@@ -93,6 +92,7 @@ public class MainActivity extends Activity {
         private CountDownTimer timer;
         private CountDownTimer fiveSecsLessTimer;
         private RoundFinishedTextDrawer roundFinishedTextDrawer;
+        private boolean wasPaused = false;
 
         public SurvivalView(Context context, int numBalls, int different_type_of_balls, int color) {
             super(context,  numBalls, different_type_of_balls, color);
@@ -101,7 +101,6 @@ public class MainActivity extends Activity {
             this.survivalBallGenerator =
                     new SurvivalBallGenerator(numBalls, different_type_of_balls, numBalls);
 
-            createNewTimer(survivalBallGenerator.getRound());
         }
 
 
@@ -163,8 +162,12 @@ public class MainActivity extends Activity {
         private void checkStartNewRound() {
             if (ballTracker.isRoundFinished()) {
                 musicHandler.stopTimer();
-                timer.cancel();
-                fiveSecsLessTimer.cancel();
+                if(timer != null) {
+                    timer.cancel();
+                }
+                if(fiveSecsLessTimer != null) {
+                    fiveSecsLessTimer.cancel();
+                }
                 // Creates a new Round Finished Drawar to draw the text on the screen as long as we want.
                 if (roundFinishedTextDrawer == null) {
                     roundFinishedTextDrawer =
@@ -195,15 +198,20 @@ public class MainActivity extends Activity {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() { // The 1000 represents one second
-                    int time = (Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                    int time = (Integer.parseInt(timeLeft) * 1000);
+                    if (!wasPaused) {
+                        time += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                    }
                     timer = new CountDownTimer(time, 1000) {
-
 
 
                         @Override
                         public void onTick(long millisUntilFinished) {
-                            int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
-                            timeLeft = String.valueOf(remainingTime);
+                            if (!wasPaused) {
+                                int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
+                                timeLeft = String.valueOf(remainingTime);
+                            }
+
                         }
 
                         @Override
@@ -211,8 +219,15 @@ public class MainActivity extends Activity {
                             timeLeft = "0";
                             ballTracker.timeOut();
                         }
+
                     }.start();
-                    fiveSecsLessTimer = new CountDownTimer((Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000- 5000, 1000) {
+                    int fiveSecsLessTime = Integer.parseInt(timeLeft) * 1000 - 5000;
+                    if (!wasPaused) {
+                        fiveSecsLessTime += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                    } else {
+                        wasPaused = !wasPaused;
+                    }
+                    fiveSecsLessTimer = new CountDownTimer(fiveSecsLessTime, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
 
@@ -264,9 +279,6 @@ public class MainActivity extends Activity {
                 paint.setColor(Color.WHITE);
                 canvas.drawText(timeLeft, screenWidth - screenWidth/7, screenWidth/10, paint);
 
-
-
-
                 //Draw the game_overState
                 if (roundFinishedTextDrawer != null && roundFinishedTextDrawer.hasToDraw()) {
                     roundFinishedTextDrawer.drawRoundOverText();
@@ -302,7 +314,7 @@ public class MainActivity extends Activity {
         // The SurfaceView class implements onTouchListener
         // So we can override this method and detect screen touches.
         @Override
-        public boolean onTouchEvent(MotionEvent motionEvent) {
+        public boolean onTouchEvent(@NonNull MotionEvent motionEvent) {
 
             switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 
@@ -374,12 +386,12 @@ public class MainActivity extends Activity {
          */
         public void goToMenu() {
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
-            updateHighScoreAndChain(intent);
+            updateHighScoreAndChain();
             startActivity(intent);
 
         }
 
-        private void updateHighScoreAndChain(Intent intent) {
+        private void updateHighScoreAndChain() {
 
             int longestChain = ballTracker.getLongestChain();
 
@@ -390,12 +402,43 @@ public class MainActivity extends Activity {
             popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
         }
 
+        @Override
+        public void pause() {
+            playing = false;
+            wasPaused = true;
+            if(timer!= null) {
+                timer.cancel();
+                timer = null;
+            }
+            if(fiveSecsLessTimer != null) {
+                fiveSecsLessTimer.cancel();
+            }
+            try {
+                gameThread.join();
+            } catch (InterruptedException e) {
+                Log.e("Error:", "joining thread");
+            }
+
+        }
+
+        @Override
+        // If SimpleGameEngine Activity is started then
+        // start our thread.
+        public void resume() {
+
+            playing = true;
+            gameThread = new Thread(this);
+            gameThread.start();
+            createNewTimer(survivalBallGenerator.getRound());
+
+        }
+
+
 }
 
     private boolean popUpLeaderboardIfHighscore(final String leaderboardId, final int score) {
 
         final boolean[] ret = {false};
-        final Context context = this;
 
         Games.Leaderboards.loadCurrentPlayerLeaderboardScore(MainMenuActivity.mGoogleApiClient,
                 leaderboardId,
@@ -415,7 +458,7 @@ public class MainActivity extends Activity {
 
                 StrictMode.setThreadPolicy(policy);
 
-                if(!hasActiveInternetConnection(context)) {
+                if(!hasActiveInternetConnection()) {
                     return;
                 }
                 LeaderboardScore leaderboard = loadPlayerScoreResult.getScore();
@@ -427,15 +470,15 @@ public class MainActivity extends Activity {
                     ret[0] = true;
                 }
 
-            };
+            }
 
         });
         return ret[0];
 
     }
 
-    private boolean hasActiveInternetConnection(Context context) {
-        if (isNetworkAvailable(context)) {
+    private boolean hasActiveInternetConnection() {
+        if (isNetworkAvailable()) {
             try {
                 HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
                 urlc.setRequestProperty("User-Agent", "Test");
@@ -446,13 +489,11 @@ public class MainActivity extends Activity {
             } catch (IOException e) {
                 //Log.e(LOG_TAG, "Error checking internet connection", e);
             }
-        } else {
-           // Log.d(LOG_TAG, "No network available!");
         }
         return false;
     }
 
-    private boolean isNetworkAvailable(Context context) {
+    private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -473,7 +514,7 @@ public class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
         musicHandler.stopMusic();
-        // Tell the gameView pause method to execute
+                // Tell the gameView pause method to execute
         survivalView.pause();
     }
 

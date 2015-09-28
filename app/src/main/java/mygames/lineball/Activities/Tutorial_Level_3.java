@@ -1,8 +1,6 @@
 package mygames.lineball.Activities;
 
-/**
- * Created by nico on 10/09/15.
- */
+
 public class Tutorial_Level_3 extends Level{
 
 

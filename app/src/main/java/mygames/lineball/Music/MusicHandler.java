@@ -81,7 +81,7 @@ public class MusicHandler {
         for(MediaPlayer mp : allSounds) {
             mp.setVolume(newVolume, newVolume);
         }
-        muted = muted ? false : true;
+        muted = !muted;
     }
 
     public void playGameBackgroundMusic() {
@@ -90,7 +90,11 @@ public class MusicHandler {
     }
 
     public void playMenuBackgroundMusic() {
-        menuBackgroundSong.start();}
+
+        menuBackgroundSong.start();
+
+
+    }
 
     public void playGameOverMusic() { gameOver.start();}
 
@@ -121,16 +125,13 @@ public class MusicHandler {
 
     public void stopMusic() {
         if (gameBackgroundSong.isPlaying()) {
-            gameBackgroundSong.stop();
-            //gameBackgroundSong.release();
+            gameBackgroundSong.pause();
         }
     }
 
     public void stopMenuMusic() {
         if (menuBackgroundSong.isPlaying()) {
-            //menuBackgroundSong.pause();
-            menuBackgroundSong.stop();
-            //menuBackgroundSong.release();
+            menuBackgroundSong.pause();
         }
     }
 
@@ -139,5 +140,7 @@ public class MusicHandler {
             fiveSecsLeft.stop();
         }
     }
+
+
 
 }

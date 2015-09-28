@@ -28,7 +28,7 @@ public class SurvivalBallGenerator extends BallGenerator {
         super(numBalls, differentTypesOfBalls);
 
         this.desiredBallCount        = desiredBallCount;
-        this.maxSpeed                = 125;
+        this.maxSpeed                = (int) (125 * MathUtil.getScreenSizeFactor());
 
         ballsPerDirection            = new int[Direction.values().length];
         directions                   = Direction.values();
@@ -149,12 +149,12 @@ public class SurvivalBallGenerator extends BallGenerator {
             this.loadingNewRound = true;
             this.round++;
             int MAX_BALLS = 30;
-            if (round %2 == 0 && desiredBallCount < MAX_BALLS){
+            if (((round % 2) == 0) && (desiredBallCount < MAX_BALLS)){
                 this.desiredBallCount      += round;
             }
             this.newBallsAddedThisRound = 0;
             return true;
-        } else if (newBallsAddedThisRound == desiredBallCount){
+        } else if (newBallsAddedThisRound == desiredBallCount) {
             this.loadingNewRound = false;
             return false;
         } else if (loadingNewRound) {

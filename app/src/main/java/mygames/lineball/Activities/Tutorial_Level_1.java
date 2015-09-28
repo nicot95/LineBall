@@ -1,8 +1,5 @@
 package mygames.lineball.Activities;
 
-/**
- * Created by nico on 09/09/15.
- */
 public class Tutorial_Level_1 extends Level{
 
     public Tutorial_Level_1() {
@@ -32,10 +29,6 @@ public class Tutorial_Level_1 extends Level{
                     comment = "Figure completed! Release the finger";
                     comment2 = "and both balls will vanish.";
                     break;
-                /*case SHAPE_COMPLETE:
-                    comment = "In the next level, you will face with";
-                    comment2 = "a more challenging figure: a triangle.";
-                    comment3 = "Tap to continue.";*/
             }
 
         comments[0] = comment;

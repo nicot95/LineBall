@@ -20,7 +20,6 @@ public abstract class Level {
         THIRD_BALL,
         SHAPE_COMPLETE,
         NEXT_LEVEL,
-        //NEXT_LEVEL2,
         NOT_ALL_BALLS_SHAPE,
         LINE_CONTACT;
 

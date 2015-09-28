@@ -1,8 +1,6 @@
 package mygames.lineball.Activities;
 
-/**
- * Created by nico on 09/09/15.
- */
+
 public class Tutorial_Level_2 extends Level {
 
     public String[] getComments() {

@@ -24,7 +24,8 @@ public class RoundFinishedTextDrawer {
     public RoundFinishedTextDrawer(int round,Canvas canvas, Paint paint, int screenWidth,
                                    int screenHeight, BallTracker.Game_State text) {
         //If there has been a line contact, print the actuall round, not the next one
-        this.round = (text == BallTracker.Game_State.LINE_CONTACT) ? round : round + 1;
+        this.round = (text == BallTracker.Game_State.LINE_CONTACT ||
+                text == BallTracker.Game_State.TIME_OUT) ? round : round + 1;
         this.canvas = canvas;
         this.paint = paint;
         this.screenWidth = screenWidth;

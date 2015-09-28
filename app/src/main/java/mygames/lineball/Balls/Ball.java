@@ -2,7 +2,6 @@ package mygames.lineball.Balls;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -14,10 +13,9 @@ public class Ball {
     private float xVelocity;
     private float yVelocity;
 
-    protected float ballRadius;
+    protected float ballRadius = (float) (30 * MathUtil.getScreenSizeFactor());
     protected float x;
     protected float y;
-    private final int screenArea_ballRadius_factor = 28416;
     protected int color;
 
 
@@ -30,9 +28,6 @@ public class Ball {
 
 
     public Ball(int screenX, int screenY, int color) {
-
-        ballRadius =  (float) (30 * MathUtil.getScreenSizeFactor());
-        Log.i("radius", ballRadius + "");
 
         // Start the ball moving at a random speed and direction
         this.xVelocity = gen.nextInt((int) (Math.round(250 * MathUtil.getScreenSizeFactor()) - MathUtil.getScreenSizeFactor() * 125));

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 import mygames.lineball.BallGenerators.InitialStateBallGenerator;
@@ -22,7 +23,6 @@ public class TutorialActivity extends Activity {
 
     private int NUM_BALLS = 2;
     private int DIFFERENT_BALLS = 1;
-    private int RED = 0;
     private double game_screen_factor = 0.83;
     private final double MY_ASPECT_RATIO = 1.65;
     private final int FONT_WIDTH_RATIO = 18;
@@ -195,7 +195,7 @@ public class TutorialActivity extends Activity {
         // The SurfaceView class implements onTouchListener
         // So we can override this method and detect screen touches.
         @Override
-        public boolean onTouchEvent(MotionEvent motionEvent) {
+        public boolean onTouchEvent(@NonNull MotionEvent motionEvent) {
 
             switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 
@@ -226,8 +226,6 @@ public class TutorialActivity extends Activity {
                                 }
                             }
                         }
-                    } else {
-
                     }
                     break;
 
