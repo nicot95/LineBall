@@ -54,6 +54,7 @@ public class MainActivity extends Activity {
     int NUM_BALLS = 8;
     int DIFFERENT_TYPE_OF_BALLS = 5;
 
+    private boolean soundPlayed;
     private MusicHandler musicHandler;
     private AdHandler adHandler;
 
@@ -61,7 +62,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        soundPlayed = false;
 
         this.musicHandler = new MusicHandler(MainActivity.this);
         musicHandler.playGameBackgroundMusic();
@@ -129,7 +130,7 @@ public class MainActivity extends Activity {
 
         private void updateBalls() {
 
-            boolean soundPlayed = false;
+
             synchronized (balls) {
                 for (Ball b : balls) {
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {

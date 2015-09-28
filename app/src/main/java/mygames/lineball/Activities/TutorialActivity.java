@@ -124,7 +124,7 @@ public class TutorialActivity extends Activity {
                 //Draw the game_overState
 
                 drawComment();
-                
+
                 ourHolder.unlockCanvasAndPost(canvas);
             }
         }

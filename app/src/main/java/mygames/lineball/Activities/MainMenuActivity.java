@@ -37,7 +37,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
 
    // private int highscore;
     //private int longestChain;
-    private int NUM_BALLS = 20;
+    private int NUM_BALLS = 40;
     private int DIFFERENT_BALLS = 5;
     private RelativeLayout menuLayout;
     private RelativeLayout.LayoutParams buttonParams;
