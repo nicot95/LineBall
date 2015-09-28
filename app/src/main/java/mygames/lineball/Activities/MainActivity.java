@@ -195,16 +195,15 @@ public class MainActivity extends Activity {
                 @Override
                 public void run() { // The 1000 represents one second
                     int time = (Integer.parseInt(timeLeft) * 1000);
-                    if(!wasPaused) {
+                    if (!wasPaused) {
                         time += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
                     }
                     timer = new CountDownTimer(time, 1000) {
 
 
-
                         @Override
                         public void onTick(long millisUntilFinished) {
-                            if(!wasPaused) {
+                            if (!wasPaused) {
                                 int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
                                 timeLeft = String.valueOf(remainingTime);
                             }
@@ -218,8 +217,8 @@ public class MainActivity extends Activity {
                         }
 
                     }.start();
-                    int fiveSecsLessTime = Integer.parseInt(timeLeft) * 1000 -5000;
-                    if(!wasPaused) {
+                    int fiveSecsLessTime = Integer.parseInt(timeLeft) * 1000 - 5000;
+                    if (!wasPaused) {
                         fiveSecsLessTime += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
                     } else {
                         wasPaused = !wasPaused;
@@ -394,7 +393,7 @@ public class MainActivity extends Activity {
 
             popUpLeaderboardIfHighscore(LEADERBOARD_LONGEST_CHAIN_ID, longestChain);
 
-            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() -1);
+            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() - 1);
 
             popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
         }
@@ -403,9 +402,13 @@ public class MainActivity extends Activity {
         public void pause() {
             playing = false;
             wasPaused = true;
-            timer.cancel();
-            timer = null;
-            fiveSecsLessTimer.cancel();
+            if(timer!= null) {
+                timer.cancel();
+                timer = null;
+            }
+            if(fiveSecsLessTimer != null) {
+                fiveSecsLessTimer.cancel();
+            }
             try {
                 gameThread.join();
             } catch (InterruptedException e) {
