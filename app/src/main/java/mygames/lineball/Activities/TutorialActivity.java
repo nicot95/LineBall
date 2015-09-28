@@ -124,13 +124,7 @@ public class TutorialActivity extends Activity {
                 //Draw the game_overState
 
                 drawComment();
-                //drawGameOverText(50, ballTracker.getGameState(), screenHeight / 2, paint);
-                //Games.Leaderboards.submitScore(mGoogleApiClient, LEADERBOARD_ID, score);
-                //startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
-                //        LEADERBOARD_ID), REQUEST_LEADERBOARD);
-
-
-                // Draw everything to the screen
+                
                 ourHolder.unlockCanvasAndPost(canvas);
             }
         }
@@ -301,4 +295,12 @@ public class TutorialActivity extends Activity {
         protected void onDestroy() {
             super.onDestroy();
         }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+
+    }
 }

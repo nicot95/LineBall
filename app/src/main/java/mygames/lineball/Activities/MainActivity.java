@@ -14,7 +14,6 @@ import android.os.Looper;
 import android.os.StrictMode;
 import android.view.MotionEvent;
 
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.LeaderboardScore;
@@ -118,13 +117,7 @@ public class MainActivity extends Activity {
 
             deleteRoundFinishedDrawerIfNecessary();
             if (!adHandler.isAdOpen() && ballTracker.isGameOver()) {
-
-
-
                 goToMenu();
-
-                //startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(MainMenuActivity.mGoogleApiClient),
-                //        REQUEST_LEADERBOARD);
             }
         }
 
@@ -135,6 +128,8 @@ public class MainActivity extends Activity {
         }
 
         private void updateBalls() {
+
+            boolean soundPlayed = false;
             synchronized (balls) {
                 for (Ball b : balls) {
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
@@ -142,13 +137,20 @@ public class MainActivity extends Activity {
                         playing = false;
                         musicHandler.stopMusic();
                         musicHandler.stopTimer();
-                        musicHandler.playGameOverMusic();
+                        if(!soundPlayed) {
+                            musicHandler.playGameOverMusic();
+                            soundPlayed = true;
+                        }
+
                         break;      // We break because the game is already over (performance++)
                     } else if (ballTracker.isGameOver()) { //TimeOut!
                         playing = false;
                         musicHandler.stopMusic();
                         musicHandler.stopTimer();
-                        musicHandler.playGameOverMusic();
+                        if(!soundPlayed) {
+                            musicHandler.playGameOverMusic();
+                            soundPlayed = true;
+                        }
                         break;
                     }
                     MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);

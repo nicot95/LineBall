@@ -62,7 +62,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
 
         this.musicHandler = new MusicHandler(MainMenuActivity.this);
-        musicHandler.playMenuBackgroundMusic();
+
 
         // Create a GoogleApiClient instance
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -427,6 +427,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     protected void onRestart() {
         super.onRestart();
+        musicHandler.playMenuBackgroundMusic();
        // highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
         //longestChain = PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
     }
@@ -439,12 +440,11 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         menuView.pause();
     }
 
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
-    @Override
-    public void onBackPressed() { }
-
-}
+   }

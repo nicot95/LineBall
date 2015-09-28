@@ -41,10 +41,12 @@ public class MusicHandler {
     }
 
     public void playGameBackgroundMusic() {
+
         gameBackgroundSong.start();
     }
 
-    public void playMenuBackgroundMusic() { menuBackgroundSong.start();}
+    public void playMenuBackgroundMusic() {
+        menuBackgroundSong.start();}
 
     public void playGameOverMusic() { gameOver.start();}
 
@@ -76,12 +78,15 @@ public class MusicHandler {
     public void stopMusic() {
         if (gameBackgroundSong.isPlaying()) {
             gameBackgroundSong.stop();
+            //gameBackgroundSong.release();
         }
     }
 
     public void stopMenuMusic() {
         if (menuBackgroundSong.isPlaying()) {
+            //menuBackgroundSong.pause();
             menuBackgroundSong.stop();
+            //menuBackgroundSong.release();
         }
     }
 
