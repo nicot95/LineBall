@@ -241,6 +241,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     private void setButton(Button button, String name) {
         button.setText(name);
         button.setTextColor(Color.WHITE);
+        
         //button.setTextSize(15);
     }
 
