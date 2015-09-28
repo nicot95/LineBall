@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,6 +11,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 import com.google.android.gms.common.api.ResultCallback;
@@ -23,7 +23,6 @@ import com.google.android.gms.games.leaderboard.Leaderboards;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 import mygames.lineball.Balls.Ball;
@@ -45,7 +44,6 @@ public class MainActivity extends Activity {
     public static int RANDOM_COLOR = -1;
 
 
-    private ArrayList<RectF> lines = new ArrayList<RectF>();
     final String LEADERBOARD_HIGHSCORE_ID = "CgkIpt6w6v8GEAIQAQ";
     final String LEADERBOARD_LONGEST_CHAIN_ID = "CgkIpt6w6v8GEAIQCA";
     final String LEADERBOARD_ROUND_ID = "CgkIpt6w6v8GEAIQBw";
@@ -302,7 +300,7 @@ public class MainActivity extends Activity {
         // The SurfaceView class implements onTouchListener
         // So we can override this method and detect screen touches.
         @Override
-        public boolean onTouchEvent(MotionEvent motionEvent) {
+        public boolean onTouchEvent(@NonNull MotionEvent motionEvent) {
 
             switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 
@@ -374,12 +372,12 @@ public class MainActivity extends Activity {
          */
         public void goToMenu() {
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
-            updateHighScoreAndChain(intent);
+            updateHighScoreAndChain();
             startActivity(intent);
 
         }
 
-        private void updateHighScoreAndChain(Intent intent) {
+        private void updateHighScoreAndChain() {
 
             int longestChain = ballTracker.getLongestChain();
 
@@ -395,7 +393,6 @@ public class MainActivity extends Activity {
     private boolean popUpLeaderboardIfHighscore(final String leaderboardId, final int score) {
 
         final boolean[] ret = {false};
-        final Context context = this;
 
         Games.Leaderboards.loadCurrentPlayerLeaderboardScore(MainMenuActivity.mGoogleApiClient,
                 leaderboardId,
@@ -415,7 +412,7 @@ public class MainActivity extends Activity {
 
                 StrictMode.setThreadPolicy(policy);
 
-                if(!hasActiveInternetConnection(context)) {
+                if(!hasActiveInternetConnection()) {
                     return;
                 }
                 LeaderboardScore leaderboard = loadPlayerScoreResult.getScore();
@@ -427,15 +424,15 @@ public class MainActivity extends Activity {
                     ret[0] = true;
                 }
 
-            };
+            }
 
         });
         return ret[0];
 
     }
 
-    private boolean hasActiveInternetConnection(Context context) {
-        if (isNetworkAvailable(context)) {
+    private boolean hasActiveInternetConnection() {
+        if (isNetworkAvailable()) {
             try {
                 HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
                 urlc.setRequestProperty("User-Agent", "Test");
@@ -446,13 +443,11 @@ public class MainActivity extends Activity {
             } catch (IOException e) {
                 //Log.e(LOG_TAG, "Error checking internet connection", e);
             }
-        } else {
-           // Log.d(LOG_TAG, "No network available!");
         }
         return false;
     }
 
-    private boolean isNetworkAvailable(Context context) {
+    private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

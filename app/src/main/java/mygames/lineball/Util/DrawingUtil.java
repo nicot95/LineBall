@@ -68,6 +68,7 @@ public class DrawingUtil {
         }
     }
 
+
     private static void setBallSelectedColor(Ball b, int chainColor) {
         int newCol = -1;
         if(chainColor == getRed()) {

@@ -2,9 +2,6 @@ package mygames.lineball.Balls;
 
 import android.graphics.Color;
 
-/**
- * Created by nico on 27/09/15.
- */
 public class ColorBall {
 
     private static int red = Color.argb(255, 255, 50, 50);

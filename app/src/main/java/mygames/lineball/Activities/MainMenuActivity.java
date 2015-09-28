@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -18,7 +19,6 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
@@ -288,9 +288,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
-        if (mResolvingError) {
-            // Already attempting to resolve an error.
-        } else if (result.hasResolution()) {
+        if (result.hasResolution()) {
             try {
                 mResolvingError = true;
                 result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
@@ -329,6 +327,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         public ErrorDialogFragment() {
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Get the error code and retrieve the appropriate dialog
@@ -366,11 +365,11 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
 
 
 
-    private boolean checkPlayServices() {
+    /*private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
         return resultCode==0;
-    }
+    }*/
 
     @Override
     protected void onStart() {
@@ -378,7 +377,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         if (!mResolvingError) {
             mGoogleApiClient.connect();
         }
-        boolean works = checkPlayServices();
+        //boolean works = checkPlayServices();
     }
 
     @Override

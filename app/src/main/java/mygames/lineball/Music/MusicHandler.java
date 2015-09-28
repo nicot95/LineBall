@@ -81,7 +81,7 @@ public class MusicHandler {
         for(MediaPlayer mp : allSounds) {
             mp.setVolume(newVolume, newVolume);
         }
-        muted = muted ? false : true;
+        muted = !muted;
     }
 
     public void playGameBackgroundMusic() {

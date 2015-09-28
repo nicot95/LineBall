@@ -42,7 +42,7 @@ public class BallTracker {
         LINE_CONTACT,
         NO_POSSIBLE_MOVE,
         BOARD_CLEARED,
-        TIME_OUT;
+        TIME_OUT
     }
 
     public BallTracker(int[] numBallsPerType) {

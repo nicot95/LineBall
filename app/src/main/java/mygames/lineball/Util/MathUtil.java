@@ -3,7 +3,6 @@ package mygames.lineball.Util;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,79 +24,25 @@ public class MathUtil {
     private static int screenX = dm.widthPixels;
     private static int screenY = dm.heightPixels;
 
-    /**
-     * Returns distance to segment
-     *
-     * @param ss
-     *            segment start point
-     * @param se
-     *            segment end point
-     * @param p
-     *            point to found closest point on segment
-     * @return distance to segment
-     */
+
     public static double getDistanceToSegment(Point ss, Point se, Point p)
     {
         return getDistanceToSegment(ss.x, ss.y, se.x, se.y, p.x, p.y);
     }
 
-    private static final double CONST_BALL_RADIUS = 0.03125 ;
 
-    public static float calculateBallRadius(double screenY) {
-        Log.i("radius", (CONST_BALL_RADIUS * screenY) + "");
-        return (float) (0.03125  * screenY);
-    }
-
-    /**
-     * Returns distance to segment
-     *
-     * @param sx1
-     *            segment x coord 1
-     * @param sy1
-     *            segment y coord 1
-     * @param sx2
-     *            segment x coord 2
-     * @param sy2
-     *            segment y coord 2
-     * @param px
-     *            point x coord
-     * @param py
-     *            point y coord
-     * @return distance to segment
-     */
     public static double getDistanceToSegment(int sx1, int sy1, int sx2, int sy2, int px, int py)
     {
         Point closestPoint = getClosestPointOnSegment(sx1, sy1, sx2, sy2, px, py);
         return getDistance(closestPoint.x, closestPoint.y, px, py);
     }
-    /**
-     * Returns distance between two 2D points
-     *
-     * @param point1
-     *            first point
-     * @param point2
-     *            second point
-     * @return distance between points
-     */
+
     public static double getDistance(Point point1, Point point2)
     {
         return getDistance(point1.x, point1.y, point2.x, point2.y);
     }
 
 
-    /**
-     * Returns distance between two sets of coords
-     *
-     * @param x1
-     *            first x coord
-     * @param y1
-     *            first y coord
-     * @param x2
-     *            second x coord
-     * @param y2
-     *            second y coord
-     * @return distance between sets of coords
-     */
     public static double getDistance(float x1, float y1, float x2, float y2)
     {
         // using long to avoid possible overflows when multiplying
@@ -144,23 +89,7 @@ public class MathUtil {
 
     }
 
-    /**
-     * Returns closest point on segment to point
-     *
-     * @param sx1
-     *            segment x coord 1
-     * @param sy1
-     *            segment y coord 1
-     * @param sx2
-     *            segment x coord 2
-     * @param sy2
-     *            segment y coord 2
-     * @param px
-     *            point x coord
-     * @param py
-     *            point y coord
-     * @return closets point on segment to point
-     */
+
     public static Point getClosestPointOnSegment(int sx1, int sy1, int sx2, int sy2, int px, int py)
     {
         double xDelta = sx2 - sx1;
