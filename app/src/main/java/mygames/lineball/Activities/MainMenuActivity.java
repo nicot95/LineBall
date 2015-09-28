@@ -446,6 +446,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     protected void onResume() {
         super.onResume();
+        musicHandler = MusicHandler.getInstance(this);
         musicHandler.playMenuBackgroundMusic();
         //highscore = PreferenceManager.getDefaultSharedPreferences(this).getInt("highscore", 0);
         //longestChain = PreferenceManager.getDefaultSharedPreferences(this).getInt("LongestChain", 0);
@@ -468,11 +469,19 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         menuView.pause();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (hasFocus) {
+            musicHandler.playMenuBackgroundMusic();
+
+        }}
+
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
+
 
    }

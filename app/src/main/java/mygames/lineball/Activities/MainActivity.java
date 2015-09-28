@@ -197,8 +197,6 @@ public class MainActivity extends Activity {
                     int time = (Integer.parseInt(timeLeft) * 1000);
                     if(!wasPaused) {
                         time += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
-                    } else {
-                        wasPaused = false;
                     }
                     timer = new CountDownTimer(time, 1000) {
 
@@ -223,6 +221,8 @@ public class MainActivity extends Activity {
                     int fiveSecsLessTime = Integer.parseInt(timeLeft) * 1000 -5000;
                     if(!wasPaused) {
                         fiveSecsLessTime += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                    } else {
+                        wasPaused = !wasPaused;
                     }
                     fiveSecsLessTimer = new CountDownTimer(fiveSecsLessTime, 1000) {
                         @Override
@@ -275,9 +275,6 @@ public class MainActivity extends Activity {
                 canvas.drawText("Score: " + score, screenWidth/24, screenWidth/10, paint);
                 paint.setColor(Color.WHITE);
                 canvas.drawText(timeLeft, screenWidth - screenWidth/7, screenWidth/10, paint);
-
-
-
 
                 //Draw the game_overState
                 if (roundFinishedTextDrawer != null && roundFinishedTextDrawer.hasToDraw()) {
