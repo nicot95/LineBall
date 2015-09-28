@@ -298,7 +298,6 @@ public class TutorialActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-
         Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
 
