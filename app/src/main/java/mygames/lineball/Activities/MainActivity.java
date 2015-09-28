@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.android.gms.common.api.ResultCallback;
@@ -91,6 +92,7 @@ public class MainActivity extends Activity {
         private CountDownTimer timer;
         private CountDownTimer fiveSecsLessTimer;
         private RoundFinishedTextDrawer roundFinishedTextDrawer;
+        private boolean wasPaused = false;
 
         public SurvivalView(Context context, int numBalls, int different_type_of_balls, int color) {
             super(context,  numBalls, different_type_of_balls, color);
@@ -99,7 +101,6 @@ public class MainActivity extends Activity {
             this.survivalBallGenerator =
                     new SurvivalBallGenerator(numBalls, different_type_of_balls, numBalls);
 
-            createNewTimer(survivalBallGenerator.getRound());
         }
 
 
@@ -193,15 +194,23 @@ public class MainActivity extends Activity {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() { // The 1000 represents one second
-                    int time = (Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                    int time = (Integer.parseInt(timeLeft) * 1000);
+                    if(!wasPaused) {
+                        time += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                    } else {
+                        wasPaused = false;
+                    }
                     timer = new CountDownTimer(time, 1000) {
 
 
 
                         @Override
                         public void onTick(long millisUntilFinished) {
-                            int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
-                            timeLeft = String.valueOf(remainingTime);
+                            if(!wasPaused) {
+                                int remainingTime = (int) Math.floor(millisUntilFinished / 1000);
+                                timeLeft = String.valueOf(remainingTime);
+                            }
+
                         }
 
                         @Override
@@ -209,8 +218,13 @@ public class MainActivity extends Activity {
                             timeLeft = "0";
                             ballTracker.timeOut();
                         }
+
                     }.start();
-                    fiveSecsLessTimer = new CountDownTimer((Integer.parseInt(timeLeft) + survivalBallGenerator.getBallsInRound() * 5 / round) * 1000- 5000, 1000) {
+                    int fiveSecsLessTime = Integer.parseInt(timeLeft) * 1000 -5000;
+                    if(!wasPaused) {
+                        fiveSecsLessTime += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                    }
+                    fiveSecsLessTimer = new CountDownTimer(fiveSecsLessTime, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
 
@@ -388,6 +402,34 @@ public class MainActivity extends Activity {
             popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
         }
 
+        @Override
+        public void pause() {
+            playing = false;
+            wasPaused = true;
+            timer.cancel();
+            timer = null;
+            fiveSecsLessTimer.cancel();
+            try {
+                gameThread.join();
+            } catch (InterruptedException e) {
+                Log.e("Error:", "joining thread");
+            }
+
+        }
+
+        @Override
+        // If SimpleGameEngine Activity is started then
+        // start our thread.
+        public void resume() {
+
+            playing = true;
+            gameThread = new Thread(this);
+            gameThread.start();
+            createNewTimer(survivalBallGenerator.getRound());
+
+        }
+
+
 }
 
     private boolean popUpLeaderboardIfHighscore(final String leaderboardId, final int score) {
@@ -468,7 +510,7 @@ public class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
         musicHandler.stopMusic();
-        // Tell the gameView pause method to execute
+                // Tell the gameView pause method to execute
         survivalView.pause();
     }
 
