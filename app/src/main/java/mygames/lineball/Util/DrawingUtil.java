@@ -8,6 +8,7 @@ import java.util.List;
 
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BallTracker;
+import mygames.lineball.GameLogic.BorderColourer;
 
 import static mygames.lineball.Balls.ColorBall.getBlue;
 import static mygames.lineball.Balls.ColorBall.getGreen;
@@ -106,5 +107,24 @@ public class DrawingUtil {
                     touchY, paint);
             paint.setStrokeWidth(5);
         }
+    }
+
+    public static void drawScreenBorder(Paint paint, Canvas canvas, BorderColourer borderColourer, int screenWidth, int screenHeight) {
+        paint.setStrokeWidth(7);
+        //Draw north border
+        paint.setColor(borderColourer.getNorthBorderColour());
+        canvas.drawLine(0, 3, screenWidth, 3, paint);
+
+        //Draw west border
+        paint.setColor(borderColourer.getWestBorderColour());
+        canvas.drawLine(3, 0, 3, screenHeight, paint);
+
+        //Draw south border
+        paint.setColor(borderColourer.getSouthBorderColour());
+        canvas.drawLine(0, screenHeight, screenWidth, screenHeight, paint);
+
+        //Draw east border
+        paint.setColor(borderColourer.getEastBorderColour());
+        canvas.drawLine(screenWidth, 0, screenWidth, screenHeight+5, paint);
     }
 }

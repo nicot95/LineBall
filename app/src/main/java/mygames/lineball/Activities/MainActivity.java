@@ -256,7 +256,7 @@ public class MainActivity extends Activity {
                 // Draw the background color
                 canvas.drawColor(Color.BLACK);
 
-                drawScreenBorder();
+                DrawingUtil.drawScreenBorder(paint, canvas, borderColourer, screenWidth, screenHeight);
 
                 /*
                     This call handles the drawing of:
@@ -289,26 +289,6 @@ public class MainActivity extends Activity {
                 ourHolder.unlockCanvasAndPost(canvas);
             }
 
-        }
-
-        private void drawScreenBorder() {
-
-            paint.setStrokeWidth(7);
-            //Draw north border
-            paint.setColor(borderColourer.getNorthBorderColour());
-            canvas.drawLine(0, 3, screenWidth, 3, paint);
-
-            //Draw west border
-            paint.setColor(borderColourer.getWestBorderColour());
-            canvas.drawLine(3, 0, 3, screenHeight, paint);
-
-            //Draw south border
-            paint.setColor(borderColourer.getSouthBorderColour());
-            canvas.drawLine(0, screenHeight, screenWidth, screenHeight, paint);
-
-            //Draw east border
-            paint.setColor(borderColourer.getEastBorderColour());
-            canvas.drawLine(screenWidth, 0, screenWidth, screenHeight+5, paint);
         }
 
         // The SurfaceView class implements onTouchListener
