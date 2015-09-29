@@ -36,9 +36,9 @@ public class RoundFinishedTextDrawer {
 
     public void drawRoundOverText() {
         float textSize = paint.getTextSize();
-        paint.setTextSize(60);
+        paint.setTextSize(60 * MathUtil.getScreenSizeFactor());
         canvas.drawText("Round " + round, screenWidth / 2 - 100, 300, paint);
-        paint.setTextSize(textSize);
+        paint.setTextSize(40 * MathUtil.getScreenSizeFactor());
         String gameOverText = "";
         int extraScore = 0;
         switch (text) {
