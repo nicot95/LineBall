@@ -94,14 +94,13 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     private void addAdView(RelativeLayout menuLayout) {
         addView = new AdView(this);
         addView.setAdSize(AdSize.SMART_BANNER);
-        addView.setAdUnitId("ca-app-pub-1685157087617386/5583998552");
+        addView.setAdUnitId(getString(R.string.banner_ad_unit_id));
 
         // Create an ad request.
         AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
 
         // Optionally populate the ad request builder.
-        AdRequest adRequest = adRequestBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("CD02B0FFDDC8BD4A04EFD592E7C83808").build();
+        AdRequest adRequest = adRequestBuilder.build();
 
         // Add the AdView to the view hierarchy.
         menuLayout.addView(addView);

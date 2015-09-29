@@ -6,6 +6,8 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
+import mygames.lineball.R;
+
 /*
     Manages the initialization of the intersitial ad in the main activity.
  */
@@ -22,7 +24,7 @@ public class AdHandler {
         adCounter = 1;
 
         mInterstitialAd = new InterstitialAd(context);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); // Test
+        mInterstitialAd.setAdUnitId(context.getString(R.string.intesitial_ad_unit_id)); // Test
 
         /*mInterstitialAd.setAdUnitId(context.getResources().
                         getString(R.string.intesitial_ad_unit_id));
