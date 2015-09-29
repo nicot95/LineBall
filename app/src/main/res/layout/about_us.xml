@@ -82,7 +82,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView3"
                 android:src="@drawable/danicirclepic"
-                android:layout_below="@+id/textView3"
                 android:layout_toLeftOf="@+id/imageView"
                 android:layout_toStartOf="@+id/imageView" />
 
