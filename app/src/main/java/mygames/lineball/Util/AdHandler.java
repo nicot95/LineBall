@@ -52,9 +52,7 @@ public class AdHandler {
 
     // Loads a new ad, but it waits before showing it to the user.
     private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("CD02B0FFDDC8BD4A04EFD592E7C83808")
-                .build();
+        AdRequest adRequest = new AdRequest.Builder().build();
 
         mInterstitialAd.loadAd(adRequest);
     }
