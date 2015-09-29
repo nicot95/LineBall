@@ -296,11 +296,11 @@ public class MainActivity extends Activity {
             paint.setStrokeWidth(7);
             //Draw north border
             paint.setColor(borderColourer.getNorthBorderColour());
-            canvas.drawLine(0, 0, screenWidth, 0, paint);
+            canvas.drawLine(0, 3, screenWidth, 3, paint);
 
             //Draw west border
             paint.setColor(borderColourer.getWestBorderColour());
-            canvas.drawLine(0, 0, 0, screenHeight, paint);
+            canvas.drawLine(3, 0, 3, screenHeight, paint);
 
             //Draw south border
             paint.setColor(borderColourer.getSouthBorderColour());
@@ -308,7 +308,7 @@ public class MainActivity extends Activity {
 
             //Draw east border
             paint.setColor(borderColourer.getEastBorderColour());
-            canvas.drawLine(screenWidth, 0, screenWidth, screenHeight, paint);
+            canvas.drawLine(screenWidth, 0, screenWidth, screenHeight+5, paint);
         }
 
         // The SurfaceView class implements onTouchListener
