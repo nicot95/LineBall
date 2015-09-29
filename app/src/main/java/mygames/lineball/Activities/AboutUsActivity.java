@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.TextView;
 
 import mygames.lineball.R;
 import mygames.lineball.Util.MathUtil;
@@ -19,6 +20,7 @@ public class AboutUsActivity extends Activity{
 
     private AboutUsView view;
     Thread gameThread = null;
+    private boolean buttonPressed;
 
 
     @Override
@@ -27,11 +29,32 @@ public class AboutUsActivity extends Activity{
 
         view = new AboutUsView(this, MathUtil.getScreenWidth(), MathUtil.getScreenHeight());
         setContentView(R.layout.about_us);
+        buttonPressed = false;
     }
 
-    public void goToMenu(View view) {
-        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-        startActivity(intent);
+    public void changeText(View view) {
+        if (!buttonPressed) {
+            TextView textView = (TextView) findViewById(R.id.designedByText);
+            textView.setText("Music by:");
+
+            TextView textView2 = (TextView) findViewById(R.id.song1);
+            textView2.setText("The Builder - Kevin MacLeod");
+
+            TextView textView3 = (TextView) findViewById(R.id.song2);
+            textView3.setText("Pamgea - Kevin MacLeod");
+            buttonPressed = true;
+        } else {
+            TextView textView = (TextView) findViewById(R.id.designedByText);
+            textView.setText("Designed & Programmed by:");
+
+            TextView textView2 = (TextView) findViewById(R.id.song1);
+            textView2.setText("Danico Apps");
+
+            TextView textView3 = (TextView) findViewById(R.id.song2);
+            textView3.setText("danicoapps@gmail.com");
+            buttonPressed = false;
+        }
+
 
     }
     @Override
