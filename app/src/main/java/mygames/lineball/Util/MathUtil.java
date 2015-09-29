@@ -188,7 +188,18 @@ public class MathUtil {
 
 
     public static float getScreenSizeFactor() {
-        return (float) Math.sqrt( (((float)  screenX/ xDpi) * ((float)  screenY/yDpi)) / (float) (720/345.06 * 1184/345.87));
+        float inchesWidth = (float) ((float) 720/345.06);
+        float inchesHeight =  (float) ((float)1184/345.87);
+        float widthRatio = inchesWidth/  (screenX/ xDpi);
+        float heightRatio = inchesHeight/ ( screenY/yDpi);
+
+        if (widthRatio < heightRatio) {
+            return widthRatio;
+        }
+
+        return heightRatio;
+
+        //return (float) Math.sqrt( (((float)  screenX/ xDpi) * ((float)  screenY/yDpi)) / (float) (720/345.06 * 1184/345.87));
     }
 
     public static int getScreenWidth() {
