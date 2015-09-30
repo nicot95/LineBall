@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
     private boolean soundPlayed;
     private MusicHandler musicHandler;
     private AdHandler adHandler;
+    private float MIN_BALLS_PER_SEC = 0.5f;
 
 
     @Override
@@ -187,6 +188,7 @@ public class MainActivity extends Activity {
             }
         }
 
+
         /*
             Creates the new Timer that will depend on the round number
          */
@@ -196,7 +198,8 @@ public class MainActivity extends Activity {
                 public void run() { // The 1000 represents one second
                     int time = (Integer.parseInt(timeLeft) * 1000);
                     if (!wasPaused) {
-                        time += (survivalBallGenerator.getBallsInRound() * 4 / round) * 1000;
+                        float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : 4 /round;
+                        time += (survivalBallGenerator.getBallsInRound() * ballsPerSec) * 1000;
                     }
                     timer = new CountDownTimer(time, 1000) {
 
@@ -219,7 +222,8 @@ public class MainActivity extends Activity {
                     }.start();
                     int fiveSecsLessTime = Integer.parseInt(timeLeft) * 1000 - 5000;
                     if (!wasPaused) {
-                        fiveSecsLessTime += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                        float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : 4/round;
+                        fiveSecsLessTime += (survivalBallGenerator.getBallsInRound() * ballsPerSec) * 1000;
                     } else {
                         wasPaused = !wasPaused;
                     }
@@ -427,19 +431,19 @@ public class MainActivity extends Activity {
 
             @Override
             public void onResult(Leaderboards.LoadPlayerScoreResult loadPlayerScoreResult) {
-                if (!MainMenuActivity.mGoogleApiClient.isConnected() ) { // return if not connected
+                if (!MainMenuActivity.mGoogleApiClient.isConnected()) { // return if not connected
                     return;
                 }
                 Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, leaderboardId, score);
 
-                if(!NetworkUtil.hasActiveInternetConnection(context)) {
+                if (!NetworkUtil.hasActiveInternetConnection(context)) {
                     return;
                 }
                 LeaderboardScore leaderboard = loadPlayerScoreResult.getScore();
-                if(leaderboard != null) {
+                if (leaderboard != null) {
                     highscore = leaderboard.getRawScore();
                 }
-                if(score > highscore) {
+                if (score > highscore) {
                     startActivityForResult(Games.Leaderboards.getLeaderboardIntent(MainMenuActivity.mGoogleApiClient, leaderboardId), REQUEST_LEADERBOARD);
                     ret[0] = true;
                 }
@@ -470,8 +474,8 @@ public class MainActivity extends Activity {
         survivalView.pause();
     }
 
-
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
 
+    }
 }

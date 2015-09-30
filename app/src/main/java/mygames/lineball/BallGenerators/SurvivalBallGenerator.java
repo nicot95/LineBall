@@ -151,7 +151,7 @@ public class SurvivalBallGenerator extends BallGenerator {
             this.round++;
 
             if (((round % 2) == 0)){
-                if(desiredBallCount < MAX_BALLS) {
+                if((desiredBallCount + round) < MAX_BALLS) {
                     this.desiredBallCount += round;
                 }
             } else {
