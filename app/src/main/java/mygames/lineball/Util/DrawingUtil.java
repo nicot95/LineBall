@@ -1,14 +1,22 @@
 package mygames.lineball.Util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
+import mygames.lineball.Activities.MainActivity;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.GameLogic.BorderColourer;
+import mygames.lineball.R;
 
 import static mygames.lineball.Balls.ColorBall.getBlue;
 import static mygames.lineball.Balls.ColorBall.getGreen;
@@ -127,4 +135,29 @@ public class DrawingUtil {
         paint.setColor(borderColourer.getEastBorderColour());
         canvas.drawLine(screenWidth, 0, screenWidth, screenHeight+5, paint);
     }
+
+    private static Button restartButton;
+
+    public static Button getRestartButton(final Context context, RelativeLayout gameLayout) {
+        if (restartButton == null) {
+            restartButton = new Button(context);
+            restartButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    context.startActivity(intent);
+                }
+            });
+            restartButton.setBackgroundResource(R.drawable.blueroundbutton);
+            restartButton.setText("Restart");
+
+            RelativeLayout.LayoutParams mutebuttonParams =  new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+            gameLayout.addView(restartButton, mutebuttonParams);
+        }
+        return restartButton;
+    }
+
 }

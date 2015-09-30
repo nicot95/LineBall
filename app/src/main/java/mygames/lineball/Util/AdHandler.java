@@ -13,7 +13,7 @@ import mygames.lineball.R;
  */
 public class AdHandler {
 
-    private static final int MOD = 2;
+    private static final int MOD = 4;
     private static int adCounter; // EveryMultiple of MOD will render an intersitial ad
 
     private InterstitialAd mInterstitialAd;
@@ -21,7 +21,7 @@ public class AdHandler {
 
     public AdHandler(Context context) {
         this.isAdOpen = true;
-        adCounter = 1;
+        adCounter = MOD - 1;
 
         mInterstitialAd = new InterstitialAd(context);
         mInterstitialAd.setAdUnitId(context.getString(R.string.intesitial_ad_unit_id)); // Test
@@ -40,6 +40,7 @@ public class AdHandler {
     }
 
     public void openPossibleIntersitialAd() {
+        if (!mInterstitialAd.isLoaded()) return;
 
         if (adCounter == 0) {
             isAdOpen = true;

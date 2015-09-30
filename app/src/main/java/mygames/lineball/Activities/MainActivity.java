@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
@@ -51,6 +52,7 @@ public class MainActivity extends Activity {
     private MusicHandler musicHandler;
     private AdHandler adHandler;
     private float MIN_BALLS_PER_SEC = 0.5f;
+    private RelativeLayout gameLayout;
 
 
     @Override
@@ -65,7 +67,9 @@ public class MainActivity extends Activity {
 
         // Initialize gameView and set it as the view
         survivalView = new SurvivalView(this, NUM_BALLS, DIFFERENT_TYPE_OF_BALLS, RANDOM_COLOR);
-        setContentView(survivalView);
+        gameLayout = new RelativeLayout(this);
+        gameLayout.addView(survivalView);
+        setContentView(gameLayout);
     }
 
 
@@ -104,6 +108,7 @@ public class MainActivity extends Activity {
         // Movement, collision detection etc.
         public void update() {
             updateBalls();
+            DrawingUtil.getRestartButton(getContext(), gameLayout);
             /*
                 increases the score and removes used balles from ArrayList
                 for performance issues. Also, increase score if all balls were cleared
@@ -355,6 +360,8 @@ public class MainActivity extends Activity {
 
                     } else if (!ballTracker.isGameOver()) {
                         ballTracker.resumeMovement();
+                    } else {
+
                     }
                     break;
             }
@@ -474,8 +481,4 @@ public class MainActivity extends Activity {
         survivalView.pause();
     }
 
-    @Override
-    public void onBackPressed() {
-
-    }
 }

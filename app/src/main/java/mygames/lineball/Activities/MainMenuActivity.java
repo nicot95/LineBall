@@ -142,8 +142,6 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         });
         howToPlayButt.setBackgroundResource(R.drawable.blueroundbutton);
 
-
-
         Button highscoresButt = new Button(this);
         setButton(highscoresButt, "Ranking");
         highscoresButt.setBackgroundResource(R.drawable.highscorebutton);
