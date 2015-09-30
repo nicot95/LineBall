@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -24,10 +26,15 @@ import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesActivityResultCodes;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.Music.MusicHandler;
 import mygames.lineball.R;
 import mygames.lineball.Util.MathUtil;
+import mygames.lineball.Util.NetworkUtil;
 
 
 public class MainMenuActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
@@ -373,7 +380,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     protected void onStart() {
         super.onStart();
-        if (!mResolvingError) {
+        if (!mResolvingError && NetworkUtil.hasActiveInternetConnection(this)) {
             mGoogleApiClient.connect();
         }
         //boolean works = checkPlayServices();
@@ -482,5 +489,35 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory(Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
+    }
+
+    private boolean hasActiveInternetConnection() {
+        if (isNetworkAvailable()) {
+            try {
+                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                urlc.setRequestProperty("User-Agent", "Test");
+                urlc.setRequestProperty("Connection", "close");
+                urlc.setConnectTimeout(1500);
+                urlc.connect();
+                return (urlc.getResponseCode() == 200);
+            } catch (IOException e) {
+                //Log.e(LOG_TAG, "Error checking internet connection", e);
+            }
+        }
+        return false;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
 
    }

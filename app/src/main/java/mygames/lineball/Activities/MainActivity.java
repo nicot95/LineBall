@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,10 +18,6 @@ import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BallTracker;
@@ -33,6 +26,7 @@ import mygames.lineball.Music.MusicHandler;
 import mygames.lineball.Util.AdHandler;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
+import mygames.lineball.Util.NetworkUtil;
 import mygames.lineball.Util.RoundFinishedTextDrawer;
 
 public class MainActivity extends Activity {
@@ -184,6 +178,8 @@ public class MainActivity extends Activity {
                     final int round = survivalBallGenerator.getRound();
                     if (ballTracker.getGameState() == BallTracker.Game_State.BOARD_CLEARED) {
                         score += 100 + 50 * round;
+                        int time = Integer.parseInt(timeLeft);
+                        timeLeft = String.valueOf(time + 5 + round);
                     }
                     ballTracker.newRoundStarted();
                     createNewTimer(round);
@@ -200,7 +196,7 @@ public class MainActivity extends Activity {
                 public void run() { // The 1000 represents one second
                     int time = (Integer.parseInt(timeLeft) * 1000);
                     if (!wasPaused) {
-                        time += (survivalBallGenerator.getBallsInRound() * 5 / round) * 1000;
+                        time += (survivalBallGenerator.getBallsInRound() * 4 / round) * 1000;
                     }
                     timer = new CountDownTimer(time, 1000) {
 
@@ -420,6 +416,8 @@ public class MainActivity extends Activity {
 
         final boolean[] ret = {false};
 
+        final Context context = this;
+
         Games.Leaderboards.loadCurrentPlayerLeaderboardScore(MainMenuActivity.mGoogleApiClient,
                 leaderboardId,
                 LeaderboardVariant.TIME_SPAN_ALL_TIME,
@@ -434,11 +432,7 @@ public class MainActivity extends Activity {
                 }
                 Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, leaderboardId, score);
 
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-                StrictMode.setThreadPolicy(policy);
-
-                if(!hasActiveInternetConnection()) {
+                if(!NetworkUtil.hasActiveInternetConnection(context)) {
                     return;
                 }
                 LeaderboardScore leaderboard = loadPlayerScoreResult.getScore();
@@ -457,28 +451,6 @@ public class MainActivity extends Activity {
 
     }
 
-    private boolean hasActiveInternetConnection() {
-        if (isNetworkAvailable()) {
-            try {
-                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
-                urlc.setRequestProperty("User-Agent", "Test");
-                urlc.setRequestProperty("Connection", "close");
-                urlc.setConnectTimeout(1500);
-                urlc.connect();
-                return (urlc.getResponseCode() == 200);
-            } catch (IOException e) {
-                //Log.e(LOG_TAG, "Error checking internet connection", e);
-            }
-        }
-        return false;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null;
-    }
 
     // This method executes when the player starts the game
     @Override

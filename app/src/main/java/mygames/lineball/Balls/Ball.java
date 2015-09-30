@@ -12,6 +12,7 @@ public class Ball {
     //commit test iml shitty bug
     private float xVelocity;
     private float yVelocity;
+    private final static int MAX_SPEED = Math.round(125 * MathUtil.getScreenSizeFactor());
 
     protected float ballRadius = (float) (30 * MathUtil.getScreenSizeFactor());
     protected float x;
@@ -30,9 +31,8 @@ public class Ball {
     public Ball(int screenX, int screenY, int color) {
 
         // Start the ball moving at a random speed and direction
-        this.xVelocity = gen.nextInt((int) (Math.round(250 * MathUtil.getScreenSizeFactor()) - MathUtil.getScreenSizeFactor() * 125));
-        this.yVelocity = gen.nextInt((int) (Math.round(250 * MathUtil.getScreenSizeFactor())
-                - MathUtil.getScreenSizeFactor() * 125));
+        this.xVelocity = gen.nextInt(MAX_SPEED *2) -  MAX_SPEED;
+        this.yVelocity = gen.nextInt(MAX_SPEED *2) -  MAX_SPEED;
 
         // Place the ball in a random position within the screen. All the ball
         // must be inside the screen to avoid wallCollision bugs
@@ -144,28 +144,29 @@ public class Ball {
         return yVelocity;
     }
 
-    public void setVelocityAndPosition(int goodX, int goodY, int maxSpeed, SurvivalBallGenerator.Direction direction) {
+    public void setVelocityAndPosition(int goodX, int goodY, int extraSpeedPercentage, SurvivalBallGenerator.Direction direction) {
         this.x = goodX;
         this.y = goodY;
 
-        int extraMinimum = maxSpeed / 3;
+        int extraSpeed = MAX_SPEED * extraSpeedPercentage /100;
+        int constantExtraSpeed = MAX_SPEED/5;
 
         switch (direction) {
 
             case NORTH:
-                this.yVelocity = - (gen.nextInt(maxSpeed) + extraMinimum);
+                this.yVelocity = - (gen.nextInt(MAX_SPEED) + constantExtraSpeed + extraSpeed);
                 this.xVelocity = gen.nextInt((int) -yVelocity);
                 break;
             case WEST:
-                this.xVelocity = - (gen.nextInt(maxSpeed) + extraMinimum);
+                this.xVelocity = - (gen.nextInt(MAX_SPEED) + constantExtraSpeed + extraSpeed);
                 this.yVelocity = gen.nextInt((int) -xVelocity);
                 break;
             case SOUTH:
-                this.yVelocity = gen.nextInt(maxSpeed) + extraMinimum;
+                this.yVelocity = gen.nextInt(MAX_SPEED)  + constantExtraSpeed + extraSpeed;
                 this.xVelocity = gen.nextInt((int) yVelocity);
                 break;
             case EAST:
-                this.xVelocity = gen.nextInt(maxSpeed) + extraMinimum;
+                this.xVelocity = gen.nextInt(MAX_SPEED)  + constantExtraSpeed + extraSpeed;
                 this.yVelocity = gen.nextInt((int) xVelocity);
                 break;
         }

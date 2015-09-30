@@ -41,9 +41,11 @@ public class RoundFinishedTextDrawer {
         paint.setTextSize(40 * MathUtil.getScreenSizeFactor());
         String gameOverText = "";
         int extraScore = 0;
+        int extraTime = 0;
         switch (text) {
             case BOARD_CLEARED:
                 extraScore = 100 + 50 * round;
+                extraTime = 5 + round;
                 gameOverText = "All balls cleared!";
                 break;
             case NO_POSSIBLE_MOVE:
@@ -59,7 +61,8 @@ public class RoundFinishedTextDrawer {
         }
         canvas.drawText(gameOverText, 100f, screenHeight / 2, paint);
         if (extraScore != 0) {
-            canvas.drawText("+" + extraScore + " Bonus", 100f, (screenHeight / 2) + 70, paint);
+            canvas.drawText("+" + extraScore + " Bonus", 100f, (screenHeight / 2 ) + 70, paint);
+            canvas.drawText("+" + extraTime + " secs" + " Bonus", 100f, (screenHeight / 2) + 140, paint);
         }
     }
 

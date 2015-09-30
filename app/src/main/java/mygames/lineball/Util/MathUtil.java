@@ -59,30 +59,31 @@ public class MathUtil {
         List<Ball> ballsTracked = ballTracker.getBallsTracked();
         float x = b.getX(); float y = b.getY(); float ballRadius = b.getBallRadius();
         Point thisPoint = new Point((int) x, (int) y);
-       
-        for(int i = 1; i < ballsTracked.size(); i++) {
-            Ball ball1 = ballsTracked.get(i-1);
-            Ball ball2 = ballsTracked.get(i);
-            Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
-            Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
+       synchronized (ballsTracked) {
+           for (int i = 1; i < ballsTracked.size(); i++) {
+               Ball ball1 = ballsTracked.get(i - 1);
+               Ball ball2 = ballsTracked.get(i);
+               Point point1 = new Point((int) ball1.getX(), (int) ball1.getY());
+               Point point2 = new Point((int) ball2.getX(), (int) ball2.getY());
 
-            List<Point> intersectPoints1 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point1, ballRadius);
-            List<Point> intersectPoints2 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
+               List<Point> intersectPoints1 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point1, ballRadius);
+               List<Point> intersectPoints2 = MathUtil.getCircleLineIntersectionPoint(point1, point2, point2, ballRadius);
 
-            Point point1A = intersectPoints1.get(0);
-            Point point1B = intersectPoints1.get(1);
-            Point point2A = intersectPoints2.get(0);
-            Point point2B = intersectPoints2.get(1);
+               Point point1A = intersectPoints1.get(0);
+               Point point1B = intersectPoints1.get(1);
+               Point point2A = intersectPoints2.get(0);
+               Point point2B = intersectPoints2.get(1);
 
-            Point intersectPoint1 = getDistance(point1A, point2A) < getDistance(point1B, point2A) ?
-                                         point1A : point1B;
-            Point intersectPoint2 = getDistance(point2A, point1A) < getDistance(point2B, point1A) ?
-                                         point2A : point2B;
-            if(!ball1.equals(b) && !ball2.equals(b)
-                    && MathUtil.getDistanceToSegment(intersectPoint1, intersectPoint2, thisPoint) <= ballRadius + LINEWIDTH)
+               Point intersectPoint1 = getDistance(point1A, point2A) < getDistance(point1B, point2A) ?
+                       point1A : point1B;
+               Point intersectPoint2 = getDistance(point2A, point1A) < getDistance(point2B, point1A) ?
+                       point2A : point2B;
+               if (!ball1.equals(b) && !ball2.equals(b)
+                       && MathUtil.getDistanceToSegment(intersectPoint1, intersectPoint2, thisPoint) <= ballRadius + LINEWIDTH)
 
-                return true;
-        }
+                   return true;
+           }
+       }
         return false;
 
     }

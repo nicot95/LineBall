@@ -10,12 +10,14 @@ import mygames.lineball.Util.MathUtil;
 public class SurvivalBallGenerator extends BallGenerator {
 
 
-    private int maxSpeed; // Will increase with each round
+    private int extraSpeedPercentage; // Will increase with each round
 
     public enum Direction { NORTH, WEST, SOUTH, EAST}
     private int[] ballsPerDirection; // The number of balls that have been generated on each Direction
     private Direction[] directions;  // Array holding the values of Directon Enum {NORTH, WEST...}
     private int averageBallsPerDirection;
+    private final static int MAX_BALLS = 30;
+    private final static int MAX_SPEED_PERC = 44;
 
     private int desiredBallCount; //Max number of balls that are going to populate the screen
 
@@ -26,9 +28,8 @@ public class SurvivalBallGenerator extends BallGenerator {
     public SurvivalBallGenerator(int numBalls, int differentTypesOfBalls,
                                  int desiredBallCount) {
         super(numBalls, differentTypesOfBalls, false);
-
+        this.extraSpeedPercentage = 0;
         this.desiredBallCount        = desiredBallCount;
-        this.maxSpeed                = (int) (125 * MathUtil.getScreenSizeFactor());
 
         ballsPerDirection            = new int[Direction.values().length];
         directions                   = Direction.values();
@@ -107,7 +108,7 @@ public class SurvivalBallGenerator extends BallGenerator {
                 break;
         }
         Ball newBall = generateBall();
-        newBall.setVelocityAndPosition(goodX, goodY, (int) (MathUtil.getScreenSizeFactor() * maxSpeed), candidateDirection);
+        newBall.setVelocityAndPosition(goodX, goodY, (int) (MathUtil.getScreenSizeFactor() * extraSpeedPercentage), candidateDirection);
 
         newBallsAddedThisRound++;
         ballsPerDirection[index]++;
@@ -148,10 +149,17 @@ public class SurvivalBallGenerator extends BallGenerator {
         if (!loadingNewRound) {
             this.loadingNewRound = true;
             this.round++;
-            int MAX_BALLS = 30;
-            if (((round % 2) == 0) && (desiredBallCount < MAX_BALLS)){
-                this.desiredBallCount      += round;
+
+            if (((round % 2) == 0)){
+                if(desiredBallCount < MAX_BALLS) {
+                    this.desiredBallCount += round;
+                }
+            } else {
+                if(extraSpeedPercentage < MAX_SPEED_PERC) {
+                    this.extraSpeedPercentage = round * 4;
+                }
             }
+
             this.newBallsAddedThisRound = 0;
             return true;
         } else if (newBallsAddedThisRound == desiredBallCount) {
