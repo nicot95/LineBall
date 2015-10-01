@@ -14,10 +14,10 @@ public class SurvivalBallGenerator extends BallGenerator {
 
     public enum Direction { NORTH, WEST, SOUTH, EAST}
     private int[] ballsPerDirection; // The number of balls that have been generated on each Direction
-    private Direction[] directions;  // Array holding the values of Directon Enum {NORTH, WEST...}
+    private Direction[] directions;  // Array holding the values of Directon Enum {NORTH,/ WEST...}
     private int averageBallsPerDirection;
     private final static int MAX_BALLS = 30;
-    private final static int MAX_SPEED_PERC = 44;
+    private final static int MAX_SPEED_PERC = 33;
 
     private int desiredBallCount; //Max number of balls that are going to populate the screen
 
@@ -156,7 +156,7 @@ public class SurvivalBallGenerator extends BallGenerator {
                 }
             } else {
                 if(extraSpeedPercentage < MAX_SPEED_PERC) {
-                    this.extraSpeedPercentage = round * 4;
+                    this.extraSpeedPercentage = 3 *round;
                 }
             }
 

@@ -17,9 +17,11 @@ public class AdHandler {
     private static int adCounter; // EveryMultiple of MOD will render an intersitial ad
 
     private InterstitialAd mInterstitialAd;
-    private boolean isAdOpen;
+    private static boolean isAdOpen;
 
-    public AdHandler(Context context) {
+    private static AdHandler instance = null;
+
+    private AdHandler(Context context) {
         this.isAdOpen = true;
         adCounter = MOD - 1;
 
@@ -34,25 +36,41 @@ public class AdHandler {
             @Override
             public void onAdClosed() {
                 isAdOpen = false;
+                requestNewInterstitial();
             }
         });
-        requestNewInterstitial();
+
     }
 
-    public void openPossibleIntersitialAd() {
-        if (!mInterstitialAd.isLoaded()) return;
+    public static AdHandler getInstance(Context context) {
+
+        instance = (instance == null) ? new AdHandler(context) : instance;
+        isAdOpen = true;
+
+
+        return instance;
+
+    }
+
+    public boolean openPossibleIntersitialAd() {
+        if (!mInterstitialAd.isLoaded()) {
+            return true;
+        }
 
         if (adCounter == 0) {
             isAdOpen = true;
             mInterstitialAd.show();
+            requestNewInterstitial();
             adCounter++;
+            return true;
         } else {
             adCounter = (adCounter + 1) % MOD;
+            return false;
         }
     }
 
     // Loads a new ad, but it waits before showing it to the user.
-    private void requestNewInterstitial() {
+    public void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder().build();
 
         mInterstitialAd.loadAd(adRequest);

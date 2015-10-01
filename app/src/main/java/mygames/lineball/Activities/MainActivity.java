@@ -60,10 +60,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         soundPlayed = false;
 
-        this.musicHandler = musicHandler.getInstance(this);
+        this.musicHandler = MusicHandler.getInstance(this);
         musicHandler.playGameBackgroundMusic();
 
-        this.adHandler = new AdHandler(this);
+        //this.adHandler = AdHandler.getInstance(this);
+        //adHandler.requestNewInterstitial();
 
         // Initialize gameView and set it as the view
         survivalView = new SurvivalView(this, NUM_BALLS, DIFFERENT_TYPE_OF_BALLS, RANDOM_COLOR);
@@ -89,12 +90,12 @@ public class MainActivity extends Activity {
         private BorderColourer borderColourer;
         private String timeLeft = "0";
         private CountDownTimer timer;
-        private CountDownTimer fiveSecsLessTimer;
+        private CountDownTimer tenSecsLessTimer;
         private RoundFinishedTextDrawer roundFinishedTextDrawer;
         private boolean wasPaused = false;
 
         public SurvivalView(Context context, int numBalls, int different_type_of_balls, int color) {
-            super(context,  numBalls, different_type_of_balls, color, false);
+            super(context, numBalls, different_type_of_balls, color, false);
             this.ballTracker = new BallTracker(numberOfBallsPerType);
             this.borderColourer = new BorderColourer();
             this.survivalBallGenerator =
@@ -108,7 +109,7 @@ public class MainActivity extends Activity {
         // Movement, collision detection etc.
         public void update() {
             updateBalls();
-            DrawingUtil.getRestartButton(getContext(), gameLayout);
+            //DrawingUtil.getRestartButton(getContext(), gameLayout);
             /*
                 increases the score and removes used balles from ArrayList
                 for performance issues. Also, increase score if all balls were cleared
@@ -116,9 +117,10 @@ public class MainActivity extends Activity {
             checkStartNewRound();
 
             deleteRoundFinishedDrawerIfNecessary();
-            if (!adHandler.isAdOpen() && ballTracker.isGameOver()) {
+            /*if (!adHandler.isAdOpen() && ballTracker.isGameOver()) {
                 goToMenu();
-            }
+            }*/
+
         }
 
         private void deleteRoundFinishedDrawerIfNecessary() {
@@ -165,8 +167,8 @@ public class MainActivity extends Activity {
                 if(timer != null) {
                     timer.cancel();
                 }
-                if(fiveSecsLessTimer != null) {
-                    fiveSecsLessTimer.cancel();
+                if(tenSecsLessTimer != null) {
+                    tenSecsLessTimer.cancel();
                 }
                 // Creates a new Round Finished Drawar to draw the text on the screen as long as we want.
                 if (roundFinishedTextDrawer == null) {
@@ -203,7 +205,7 @@ public class MainActivity extends Activity {
                 public void run() { // The 1000 represents one second
                     int time = (Integer.parseInt(timeLeft) * 1000);
                     if (!wasPaused) {
-                        float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : 4 /round;
+                        float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : (float) (4 /round);
                         time += (survivalBallGenerator.getBallsInRound() * ballsPerSec) * 1000;
                     }
                     timer = new CountDownTimer(time, 1000) {
@@ -225,14 +227,15 @@ public class MainActivity extends Activity {
                         }
 
                     }.start();
-                    int fiveSecsLessTime = Integer.parseInt(timeLeft) * 1000 - 5000;
+                    int timeRemaining = Integer.parseInt(timeLeft) * 1000;
+                    int tenSecsLessTime =  timeRemaining > 10000 ? timeRemaining - 10000 : 1;
                     if (!wasPaused) {
                         float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : 4/round;
-                        fiveSecsLessTime += (survivalBallGenerator.getBallsInRound() * ballsPerSec) * 1000;
+                        tenSecsLessTime += (survivalBallGenerator.getBallsInRound() * ballsPerSec) * 1000;
                     } else {
                         wasPaused = !wasPaused;
                     }
-                    fiveSecsLessTimer = new CountDownTimer(fiveSecsLessTime, 1000) {
+                    tenSecsLessTimer = new CountDownTimer(tenSecsLessTime, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
 
@@ -318,12 +321,16 @@ public class MainActivity extends Activity {
                                 }
                             }
                         }
-                    } else {
+                    /*} else {
                         if (adHandler.isLoaded()) {
-                            adHandler.openPossibleIntersitialAd();
+                            if(!adHandler.openPossibleIntersitialAd()){
+                                goToMenu();
+                            }
                         } else {
                             goToMenu();
-                        }
+                        }*/
+                    } else {
+                        goToMenu();
                     }
                     break;
 
@@ -397,8 +404,8 @@ public class MainActivity extends Activity {
                 timer.cancel();
                 timer = null;
             }
-            if(fiveSecsLessTimer != null) {
-                fiveSecsLessTimer.cancel();
+            if(tenSecsLessTimer != null) {
+                tenSecsLessTimer.cancel();
             }
             try {
                 gameThread.join();
