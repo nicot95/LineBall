@@ -228,7 +228,7 @@ public class MainActivity extends Activity {
 
                     }.start();
                     int timeRemaining = Integer.parseInt(timeLeft) * 1000;
-                    int tenSecsLessTime =  timeRemaining > 10000 ? timeRemaining - 10000 : 1;
+                    int tenSecsLessTime =  (timeRemaining > 10000 || round < 2) ? timeRemaining - 10000 : 1;
                     if (!wasPaused) {
                         float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : 4/round;
                         tenSecsLessTime += (survivalBallGenerator.getBallsInRound() * ballsPerSec) * 1000;
