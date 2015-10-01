@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
     // gameView will be the view of the game
     // It will also hold the logic of the game
     // and respond to screen touches as well
-    GameView survivalView;
+    SurvivalView survivalView;
 
     public static int RANDOM_COLOR = -1;
 
@@ -205,7 +205,7 @@ public class MainActivity extends Activity {
                 public void run() { // The 1000 represents one second
                     int time = (Integer.parseInt(timeLeft) * 1000);
                     if (!wasPaused) {
-                        float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : (float) (4 /round);
+                        float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC :  (float) 4 /(float) round;
                         time += (survivalBallGenerator.getBallsInRound() * ballsPerSec) * 1000;
                     }
                     timer = new CountDownTimer(time, 1000) {
@@ -230,7 +230,7 @@ public class MainActivity extends Activity {
                     int timeRemaining = Integer.parseInt(timeLeft) * 1000;
                     int tenSecsLessTime =  (timeRemaining > 10000 || round < 2) ? timeRemaining - 10000 : 1;
                     if (!wasPaused) {
-                        float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : 4/round;
+                        float ballsPerSec = round > 8 ? MIN_BALLS_PER_SEC : (float) 4/ (float) round;
                         tenSecsLessTime += (survivalBallGenerator.getBallsInRound() * ballsPerSec) * 1000;
                     } else {
                         wasPaused = !wasPaused;
@@ -486,6 +486,11 @@ public class MainActivity extends Activity {
         musicHandler.stopMusic();
                 // Tell the gameView pause method to execute
         survivalView.pause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        survivalView.goToMenu();
     }
 
 }
