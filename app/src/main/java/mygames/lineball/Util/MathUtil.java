@@ -26,9 +26,24 @@ public class MathUtil {
 
     private static DisplayMetrics dm =  Resources.getSystem().getDisplayMetrics();
     private static float xDpi = dm.xdpi;
+    private static float modelxDpi = 345.06f;
     private static float yDpi = dm.ydpi;
     private static int screenX = dm.widthPixels;
     private static int screenY = dm.heightPixels;
+    private static float realInchesWidth = (float) (screenX/ xDpi);
+    private static float realInchesHeight =  (float) (screenY/yDpi);
+    private static float realInchesArea = realInchesHeight * realInchesWidth;
+    /*private static float modelInchesWidth = (float) 720/345.06f;
+    private static float modelInchesHeight = (float)1184/345.87f;
+    private static float modelInchesArea = modelInchesWidth * modelInchesHeight;
+    private static float radiusInches = 30f / modelxDpi;
+    private static float modelCircleAreaInches = (float) Math.PI *  (float) Math.pow(radiusInches,2);
+    private static int numBallsInArea = (int) Math.floor(modelInchesArea/ modelCircleAreaInches);*/
+    private static int numBallsInArea = 300;
+    private static float realRadius = (float) Math.sqrt( (realInchesArea/numBallsInArea) / Math.PI) * xDpi;
+    private static float screenSizeRatio = realRadius/30f;
+
+
 
 
     public static double getDistanceToSegment(Point ss, Point se, Point p)
@@ -197,16 +212,8 @@ public class MathUtil {
 
 
     public static float getScreenSizeFactor() {
-        float inchesWidth = (float) ((float) 720/345.06);
-        float inchesHeight =  (float) ((float)1184/345.87);
-        float widthRatio = inchesWidth/  (screenX/ xDpi);
-        float heightRatio = inchesHeight/ ( screenY/yDpi);
 
-        if (widthRatio < heightRatio) {
-            return widthRatio;
-        }
-
-        return heightRatio;
+        return screenSizeRatio;
 
         //return (float) Math.sqrt( (((float)  screenX/ xDpi) * ((float)  screenY/yDpi)) / (float) (720/345.06 * 1184/345.87));
     }
