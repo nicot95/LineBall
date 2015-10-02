@@ -9,8 +9,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mygames.lineball"
-    android:versionCode="4"
-    android:versionName="1.3">
+    android:versionCode="5"
+    android:versionName="1.4">
 
     <!-- Required for internet purposes. Checks whether there is internet access or not
       and allows the app to connect to the internet -->
