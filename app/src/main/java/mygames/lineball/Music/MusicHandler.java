@@ -40,8 +40,8 @@ public class MusicHandler {
         updateContext(context);
 
         menuBackgroundSong.setVolume(0.3f, 0.3f);
-        gameBackgroundSong.setVolume(0.5f, 0.5f);
-        fiveSecsLeft.setVolume(0.7f, 0.7f);
+        gameBackgroundSong.setVolume(0.3f, 0.3f);
+        fiveSecsLeft.setVolume(1f, 1f);
         this.shape1.setVolume(0.5f, 0.5f);
         this.shape2.setVolume(0.5f, 0.5f);
 
@@ -131,17 +131,18 @@ public class MusicHandler {
         }
     }
 
-    public void stopMusic() {
+    public void pauseGameMusic() {
         if (gameBackgroundSong.isPlaying()) {
             gameBackgroundSong.pause();
         }
     }
 
-    public void stopMenuMusic() {
+    public void pauseMenuMusic() {
         if (menuBackgroundSong.isPlaying()) {
             menuBackgroundSong.pause();
         }
     }
+
 
     public void stopTimer() {
         if(fiveSecsLeft.isPlaying()) {

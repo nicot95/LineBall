@@ -161,6 +161,7 @@ public class DrawingUtil {
             RelativeLayout.LayoutParams mutebuttonParams =  new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
+            restartButton.setVisibility(View.GONE);
 
             gameLayout.addView(restartButton, mutebuttonParams);
         }

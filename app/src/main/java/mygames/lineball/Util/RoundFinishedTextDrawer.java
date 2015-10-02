@@ -67,7 +67,7 @@ public class RoundFinishedTextDrawer {
             default:
                 break;
         }
-        canvas.drawText(gameOverText, 100f, screenHeight / 2, paint);
+        canvas.drawText(gameOverText, 100f, screenHeight / 3, paint);
         if (extraScore != 0) {
             canvas.drawText("+" + extraScore + " Bonus", 100f, (screenHeight / 2 ) + 70, paint);
             canvas.drawText("+" + extraTime + " secs" + " Bonus", 100f, (screenHeight / 2) + 140, paint);

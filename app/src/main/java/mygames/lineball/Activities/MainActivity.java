@@ -19,6 +19,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.api.ResultCallback;
@@ -32,6 +34,7 @@ import mygames.lineball.Balls.Ball;
 import mygames.lineball.GameLogic.BallTracker;
 import mygames.lineball.GameLogic.BorderColourer;
 import mygames.lineball.Music.MusicHandler;
+import mygames.lineball.R;
 import mygames.lineball.Util.AdHandler;
 import mygames.lineball.Util.DrawingUtil;
 import mygames.lineball.Util.MathUtil;
@@ -46,6 +49,8 @@ public class MainActivity extends Activity {
     SurvivalView survivalView;
 
     public static int RANDOM_COLOR = -1;
+    Button restartBut;
+    Button goToMenuBut;
 
 
     final String LEADERBOARD_HIGHSCORE_ID = "CgkIpt6w6v8GEAIQAQ";
@@ -61,6 +66,7 @@ public class MainActivity extends Activity {
     private AdHandler adHandler;
     private float MIN_BALLS_PER_SEC = 0.5f;
     private RelativeLayout gameLayout;
+    private Thread thread;
 
 
     @Override
@@ -71,6 +77,7 @@ public class MainActivity extends Activity {
         this.musicHandler = musicHandler.getInstance(this);
         musicHandler.playGameBackgroundMusic();
 
+
         //this.adHandler = AdHandler.getInstance(this);
         //adHandler.requestNewInterstitial();
 
@@ -78,9 +85,86 @@ public class MainActivity extends Activity {
         survivalView = new SurvivalView(this, NUM_BALLS, DIFFERENT_TYPE_OF_BALLS, RANDOM_COLOR);
         gameLayout = new RelativeLayout(this);
         gameLayout.addView(survivalView);
+        setRestartButton();
+        setGoToMenuBut();
         setContentView(gameLayout);
     }
 
+
+    private void setRestartButton() {
+
+
+            restartBut = new Button(this);
+            restartBut.setTextColor(Color.WHITE);
+            restartBut.setTextSize(20 * MathUtil.getScreenSizeFactor());
+
+            final Context context = this;
+
+             restartBut.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                 public void onClick(View view) {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    startActivity(intent);
+
+                }
+            });
+            restartBut.setBackgroundResource(R.drawable.redroundbutton);
+            restartBut.setText("Restart");
+
+            RelativeLayout.LayoutParams buttonParams =  new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+            buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            buttonParams.addRule(RelativeLayout.CENTER_VERTICAL);
+
+            int diameter = survivalView.screenHeight/6;
+            restartBut.setWidth(diameter);
+            restartBut.setHeight(diameter);
+
+            restartBut.setVisibility(View.GONE);
+
+        gameLayout.addView(restartBut, buttonParams);
+        }
+
+    private void setGoToMenuBut() {
+        int separation = survivalView.screenHeight/25;
+        int playDiameter = survivalView.screenHeight / 6;
+        int playButHeight = survivalView.screenHeight / 2;
+        int diameter = survivalView.screenHeight / 9;
+        int initial_off = (int) (playButHeight + playDiameter - 1.5 * (double) diameter);
+
+        goToMenuBut = new Button(this);
+        goToMenuBut.setTextSize(diameter / 11);
+        goToMenuBut.setTextColor(Color.WHITE);
+
+
+
+        goToMenuBut.setY(initial_off + (separation + diameter));
+
+        goToMenuBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                survivalView.goToMenu();
+            }
+        });
+        goToMenuBut.setBackgroundResource(R.drawable.blueroundbutton);
+        goToMenuBut.setText("Menu");
+
+        RelativeLayout.LayoutParams buttonParams =  new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+        goToMenuBut.setWidth(diameter);
+        goToMenuBut.setHeight(diameter);
+
+        goToMenuBut.setVisibility(View.GONE);
+
+        gameLayout.addView(goToMenuBut, buttonParams);
+
+    }
 
 
     class SurvivalView extends GameView {
@@ -117,7 +201,7 @@ public class MainActivity extends Activity {
         // Movement, collision detection etc.
         public void update() {
             updateBalls();
-            //DrawingUtil.getRestartButton(getContext(), gameLayout);
+
             /*
                 increases the score and removes used balles from ArrayList
                 for performance issues. Also, increase score if all balls were cleared
@@ -145,22 +229,64 @@ public class MainActivity extends Activity {
                     if (MathUtil.ballHitLineGameOver(ballTracker, b)) {
                         ballTracker.setGameStateToLineContact();
                         playing = false;
-                        musicHandler.stopMusic();
+                        musicHandler.pauseGameMusic();
                         musicHandler.stopTimer();
+
                         if(!soundPlayed) {
                             musicHandler.playGameOverMusic();
                             soundPlayed = true;
                         }
+                        submitScore(LEADERBOARD_HIGHSCORE_ID, score);
+                        submitScore(LEADERBOARD_LONGEST_CHAIN_ID, ballTracker.getLongestChain());
+                        submitScore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound()-1);
+                        thread = new Thread(){
+                            @Override
+                            public void run() {
+                                            runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                restartBut.setVisibility(VISIBLE);
+                                                goToMenuBut.setVisibility(VISIBLE);
+
+                                            }
+                                        });
+
+                                    }
+
+                        };
+                        thread.start();
+
 
                         break;      // We break because the game is already over (performance++)
                     } else if (ballTracker.isGameOver()) { //TimeOut!
                         playing = false;
-                        musicHandler.stopMusic();
+                        musicHandler.pauseGameMusic();
                         musicHandler.stopTimer();
                         if(!soundPlayed) {
                             musicHandler.playGameOverMusic();
                             soundPlayed = true;
                         }
+                        submitScore(LEADERBOARD_HIGHSCORE_ID, score);
+                        submitScore(LEADERBOARD_LONGEST_CHAIN_ID, ballTracker.getLongestChain());
+                        submitScore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound()-1);
+                        thread = new Thread(){
+                            @Override
+                            public void run() {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        restartBut.setVisibility(VISIBLE);
+                                        goToMenuBut.setVisibility(VISIBLE);
+
+                                    }
+                                });
+
+                            }
+
+                        };
+                        thread.start();
+
+
                         break;
                     }
                     MathUtil.checkWallCollision(b, borderColourer, screenWidth, screenHeight);
@@ -337,8 +463,6 @@ public class MainActivity extends Activity {
                         } else {
                             goToMenu();
                         }*/
-                    } else {
-                        goToMenu();
                     }
                     break;
 
@@ -383,6 +507,13 @@ public class MainActivity extends Activity {
             return true;
         }
 
+        private void submitScore(String leaderboardId, int score) {
+            if (MainMenuActivity.mGoogleApiClient.isConnected()) { // return if not connected
+                Games.Leaderboards.submitScore(MainMenuActivity.mGoogleApiClient, leaderboardId, score);
+            }
+
+        }
+
         /*
             Return to the main menu (MainMenuActivity) and saves highscore if needed.
          */
@@ -395,11 +526,14 @@ public class MainActivity extends Activity {
 
         private void updateHighScoreAndChain() {
 
+            restartBut.setVisibility(VISIBLE);
+            goToMenuBut.setVisibility(VISIBLE);
+
             int longestChain = ballTracker.getLongestChain();
 
             popUpLeaderboardIfHighscore(LEADERBOARD_LONGEST_CHAIN_ID, longestChain);
 
-            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() -1);
+            popUpLeaderboardIfHighscore(LEADERBOARD_ROUND_ID, survivalBallGenerator.getRound() - 1);
 
             popUpLeaderboardIfHighscore(LEADERBOARD_HIGHSCORE_ID, score);
         }
@@ -438,6 +572,9 @@ public class MainActivity extends Activity {
 
 }
 
+
+
+
     private boolean popUpLeaderboardIfHighscore(final String leaderboardId, final int score) {
 
         final boolean[] ret = {false};
@@ -469,6 +606,8 @@ public class MainActivity extends Activity {
                     startActivityForResult(Games.Leaderboards.getLeaderboardIntent(MainMenuActivity.mGoogleApiClient, leaderboardId), REQUEST_LEADERBOARD);
                     ret[0] = true;
                 }
+                restartBut.setVisibility(View.VISIBLE);
+                goToMenuBut.setVisibility(View.VISIBLE);
 
             }
 
@@ -491,14 +630,15 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        musicHandler.stopMusic();
+        musicHandler.pauseGameMusic();
                 // Tell the gameView pause method to execute
         survivalView.pause();
     }
 
     @Override
     public void onBackPressed() {
-        survivalView.goToMenu();
+
     }
+
 
 }

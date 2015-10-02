@@ -477,7 +477,7 @@ public class MainMenuActivity extends FragmentActivity implements GoogleApiClien
     @Override
     protected void onPause() {
         super.onPause();
-        musicHandler.stopMenuMusic();
+        musicHandler.pauseMenuMusic();
         menuView.pause();
     }
 
