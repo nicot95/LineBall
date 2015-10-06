@@ -28,6 +28,9 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards;
+import com.purplebrain.adbuddiz.sdk.AdBuddiz;
+import com.purplebrain.adbuddiz.sdk.AdBuddizDelegate;
+import com.purplebrain.adbuddiz.sdk.AdBuddizError;
 
 import mygames.lineball.BallGenerators.SurvivalBallGenerator;
 import mygames.lineball.Balls.Ball;
@@ -67,12 +70,45 @@ public class MainActivity extends Activity {
     private float MIN_BALLS_PER_SEC = 0.5f;
     private RelativeLayout gameLayout;
     private Thread thread;
+    private boolean addShown = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         soundPlayed = false;
+        if(NetworkUtil.hasActiveInternetConnection(this)) {
+            AdBuddiz.setPublisherKey("64232f71-f53a-4457-bf08-2f2cfd8b7aed");
+            AdBuddiz.cacheAds(this);
+            AdBuddiz.setDelegate(new AdBuddizDelegate() {
+
+
+                @Override
+                public void didCacheAd() {
+
+                }
+
+                @Override
+                public void didShowAd() {
+                    addShown = true;
+                }
+
+                @Override
+                public void didFailToShowAd(AdBuddizError adBuddizError) {
+                    addShown = true;
+                }
+
+                @Override
+                public void didClick() {
+
+                }
+
+                @Override
+                public void didHideAd() {
+
+                }
+            });
+        }
 
         this.musicHandler = musicHandler.getInstance(this);
         musicHandler.playGameBackgroundMusic();
@@ -145,7 +181,7 @@ public class MainActivity extends Activity {
         goToMenuBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                survivalView.goToMenu();
+                survivalView.showAdd();
             }
         });
         goToMenuBut.setBackgroundResource(R.drawable.blueroundbutton);
@@ -200,6 +236,10 @@ public class MainActivity extends Activity {
         // Everything that needs to be updated goes in here
         // Movement, collision detection etc.
         public void update() {
+            if(addShown) {
+                goToMenu();
+            }
+
             updateBalls();
 
             /*
@@ -210,7 +250,7 @@ public class MainActivity extends Activity {
 
             deleteRoundFinishedDrawerIfNecessary();
             /*if (!adHandler.isAdOpen() && ballTracker.isGameOver()) {
-                goToMenu();
+                showAdd();
             }*/
 
         }
@@ -455,14 +495,7 @@ public class MainActivity extends Activity {
                                 }
                             }
                         }
-                    /*} else {
-                        if (adHandler.isLoaded()) {
-                            if(!adHandler.openPossibleIntersitialAd()){
-                                goToMenu();
-                            }
-                        } else {
-                            goToMenu();
-                        }*/
+
                     }
                     break;
 
@@ -517,11 +550,21 @@ public class MainActivity extends Activity {
         /*
             Return to the main menu (MainMenuActivity) and saves highscore if needed.
          */
-        public void goToMenu() {
+        public void showAdd() {
+            if(NetworkUtil.hasActiveInternetConnection(getContext())) {
+                AdBuddiz.showAd((Activity) getContext());
+            } else {
+                addShown = true;
+            }
+
+
+        }
+
+        private void goToMenu() {
             Intent intent = new Intent(this.getContext(), MainMenuActivity.class);
             updateHighScoreAndChain();
-            startActivity(intent);
 
+            startActivity(intent);
         }
 
         private void updateHighScoreAndChain() {
@@ -569,11 +612,9 @@ public class MainActivity extends Activity {
 
         }
 
-
 }
 
-
-
+    
 
     private boolean popUpLeaderboardIfHighscore(final String leaderboardId, final int score) {
 

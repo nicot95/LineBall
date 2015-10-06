@@ -79,7 +79,6 @@ public class GameView extends SurfaceView implements Runnable{
 
             long startFrameTime = System.currentTimeMillis();
 
-
             if(!paused) {
                 update();
             }
